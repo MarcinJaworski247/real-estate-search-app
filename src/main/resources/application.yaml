@@ -1,0 +1,23 @@
+#SWAGGER CONFIG
+documentation:
+  host: localhost:8080
+springfox:
+  documentation:
+    swagger-ui:
+      base-url: /documentation
+#FILE SERVICE CONFIG
+files:
+  upload-path: /home/beata/Downloads
+
+#DATABASE CONFIG
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    driverClassName: org.postgresql.Driver
+    username: postgres
+    password: postgres
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: create
+
