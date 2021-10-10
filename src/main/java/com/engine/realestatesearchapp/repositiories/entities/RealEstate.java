@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Where;
-import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -38,7 +37,7 @@ public class RealEstate {
 
     @Id
     @Column(name = "ID")
-    @org.hibernate.annotations.Type(type="pg-uuid")
+    @org.hibernate.annotations.Type(type = "pg-uuid")
     private UUID id;
 
     @Column(name = "TITLE", nullable = false)
@@ -59,6 +58,9 @@ public class RealEstate {
 
     @Column(name = "DELETED")
     private boolean deleted;
+
+    @Column(name = "SPECIFIC_REAL_ESTATE_ID")
+    private UUID specificRealEstateId;
 
     @Column(name = "CREATED_AT", updatable = false, nullable = false)
     @CreatedDate

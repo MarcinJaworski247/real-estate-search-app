@@ -1,6 +1,5 @@
 package com.engine.realestatesearchapp.repositiories.entities;
 
-import com.engine.realestatesearchapp.repositiories.enums.FlatType;
 import com.engine.realestatesearchapp.repositiories.enums.RoomType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,7 +34,7 @@ public class Room {
 
     @Id
     @Column(name = "ID")
-    @org.hibernate.annotations.Type(type="pg-uuid")
+    @org.hibernate.annotations.Type(type = "pg-uuid")
     private UUID id;
 
     @Enumerated(EnumType.STRING)

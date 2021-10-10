@@ -1,7 +1,6 @@
 package com.engine.realestatesearchapp.repositiories.entities;
 
 import com.engine.realestatesearchapp.repositiories.enums.FlatType;
-import com.engine.realestatesearchapp.repositiories.enums.HouseType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -36,7 +35,7 @@ public class Flat {
 
     @Id
     @Column(name = "ID")
-    @org.hibernate.annotations.Type(type="pg-uuid")
+    @org.hibernate.annotations.Type(type = "pg-uuid")
     private UUID id;
 
     @Column(name = "RENT", nullable = false)

@@ -31,7 +31,7 @@ public class User {
 
     @Id
     @Column(name = "ID")
-    @org.hibernate.annotations.Type(type="pg-uuid")
+    @org.hibernate.annotations.Type(type = "pg-uuid")
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
