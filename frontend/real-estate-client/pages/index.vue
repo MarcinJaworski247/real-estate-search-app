@@ -1,8 +1,8 @@
 <template>
   <v-app>
-    <SearchPanel />
-    <LastOffers />
-    <Categories />
+    <SearchPanel class="mb-4" />
+    <LastOffers class="mb-4" />
+    <Categories class="mb-4" />
   </v-app>
 </template>
 <script>

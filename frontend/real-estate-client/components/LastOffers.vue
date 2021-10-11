@@ -1,16 +1,16 @@
 <template>
   <v-container fluid>
-    <h3 class="mb-2 mt-2 text-center">Ostatnie oferty</h3>
+    <div class="mb-2 mt-2 text-center text-h5">Ostatnie oferty</div>
     <v-row align="baseline">
       <v-col
         v-for="item in items"
         :key="item.id"
-        class="d-flex"
+        class="d-flex justify-center"
         cols="12"
-        sm="3"
-        align-self="center"
+        sm="4"
+        lg="3"
       >
-        <OfferTile class="justify-center" :offer="item" />
+        <OfferTile :offer="item" />
       </v-col>
     </v-row>
   </v-container>

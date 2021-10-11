@@ -1,27 +1,38 @@
 <template>
   <v-container fluid>
-    <h3 class="mb-5 mt-2 text-center">Kategorie</h3>
-    <v-row align="center">
-      <v-col class="d-flex" cols="12" sm="3">
+    <div class="mb-5 mt-2 text-center text-h5">Kategorie</div>
+    <v-row align="center justify-center mt-5">
+      <div class="mx-3 category">
         <v-btn fab large>
           <v-icon>home</v-icon>
         </v-btn>
-      </v-col>
-      <v-col class="d-flex" cols="12" sm="3">
+        <div class="mt-1 grey--text">Home</div>
+      </div>
+      <div class="mx-3 category">
         <v-btn fab large>
           <v-icon>home</v-icon>
         </v-btn>
-      </v-col>
-      <v-col class="d-flex" cols="12" sm="3">
+        <div class="mt-1 grey--text">Home</div>
+      </div>
+      <div class="mx-3 category">
         <v-btn fab large>
           <v-icon>home</v-icon>
         </v-btn>
-      </v-col>
-      <v-col class="d-flex" cols="12" sm="3">
+        <div class="mt-1 grey--text">Home</div>
+      </div>
+      <div class="mx-3 category">
         <v-btn fab large>
           <v-icon>home</v-icon>
         </v-btn>
-      </v-col>
+        <div class="mt-1 grey--text">Home</div>
+      </div>
     </v-row>
   </v-container>
 </template>
+<style scoped>
+.category {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+</style>
