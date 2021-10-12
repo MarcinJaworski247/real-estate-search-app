@@ -14,4 +14,8 @@ public enum PremisesPurpose {
     PremisesPurpose(String label) {
         this.label = label;
     }
+
+    public String getLabel() {
+        return label;
+    }
 }
