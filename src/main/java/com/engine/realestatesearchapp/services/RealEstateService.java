@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class RealEstateService {
 
-    //private final RealEstateRepository realEstateRepository;
+    private final RealEstateRepository realEstateRepository;
 
     public RealEstate createRealEstate(RealEstateRequest request) {
         RealEstate realEstate = RealEstate.builder()
