@@ -1,15 +1,8 @@
 <template>
   <v-container class="box" fluid>
     <div class="text-h5">Logowanie</div>
-    <v-form v-model="valid">
-      <v-text-field v-model="login" required label="Login"></v-text-field>
-      <v-text-field
-        v-model="password"
-        type="password"
-        required
-        label="Hasło"
-      ></v-text-field>
-      <v-btn color="success" @click="logIn"> Zaloguj </v-btn>
+    <v-form>
+      <LoginForm />
     </v-form>
     <div
       class="mt-5 text-subtitle-1 grey-text register"
@@ -20,13 +13,16 @@
   </v-container>
 </template>
 <script>
+import LoginForm from "@/components/Forms/LoginForm.vue";
 export default {
   name: "Login",
+  components: {
+    LoginForm,
+  },
   methods: {
     routerPushToRegister() {
       this.$router.push("/register");
     },
-    logIn() {},
   },
 };
 </script>

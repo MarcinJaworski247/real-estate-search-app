@@ -1,17 +1,16 @@
 <template>
   <v-container class="box" fluid>
-    <div class="text-h5">Rejestracja</div>
-    <v-form>
-      <RegisterForm />
-    </v-form>
+    <div class="text-h5 mt-5">Dodane do obserwowanych</div>
+    <OffersList />
   </v-container>
 </template>
 <script>
-import RegisterForm from "@/components/Forms/RegisterForm.vue";
+import OffersList from "@/components/OffersList";
+
 export default {
-  name: "Register",
+  name: "SavedOffersIndex",
   components: {
-    RegisterForm,
+    OffersList,
   },
 };
 </script>
@@ -24,5 +23,9 @@ export default {
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.photo {
+  max-width: 200px;
+  max-height: 200px;
 }
 </style>

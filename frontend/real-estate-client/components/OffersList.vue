@@ -1,13 +1,12 @@
 <template>
   <v-container fluid>
-    <div class="mb-2 mt-2 text-center text-h5">Ostatnie oferty</div>
     <v-row align="baseline">
       <v-col
         v-for="item in items"
         :key="item.id"
         class="d-flex justify-center"
         cols="12"
-        sm="4"
+        sm="6"
         lg="3"
       >
         <OfferTile :offer="item" />
@@ -18,7 +17,7 @@
 <script>
 import OfferTile from "./OfferTile";
 export default {
-  name: "LastOffers",
+  name: "OffersList",
   components: {
     OfferTile,
   },
