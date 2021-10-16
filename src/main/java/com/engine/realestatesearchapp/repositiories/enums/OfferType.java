@@ -1,13 +1,12 @@
 package com.engine.realestatesearchapp.repositiories.enums;
 
-public enum RoomType {
-    ONE_PERSON("Jednoosobowe"),
-    TWO_PEOPLE("Dwuosobowe"),
-    THREE_PEOPLE_AND_MORE("Trzyosobowe i więcej");
+public enum OfferType {
+    RENT("Wynajem"),
+    SALE("Sprzedaż");
 
     public final String label;
 
-    RoomType(String label) {
+    OfferType(String label) {
         this.label = label;
     }
 

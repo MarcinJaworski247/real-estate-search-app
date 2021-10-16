@@ -1,5 +1,7 @@
 package com.engine.realestatesearchapp.repositiories.entities;
 
+import com.engine.realestatesearchapp.repositiories.enums.OfferType;
+import com.engine.realestatesearchapp.repositiories.enums.PremisesPurpose;
 import com.engine.realestatesearchapp.repositiories.enums.RealEstateCategory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -50,6 +52,10 @@ public class RealEstate {
     @Column(name = "CATEGORY", nullable = false)
     private RealEstateCategory category;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "OFFER_TYPE", nullable = false)
+    private OfferType offerType;
+
     @Column(name = "PRICE", nullable = false)
     private BigDecimal price;
 
@@ -58,6 +64,9 @@ public class RealEstate {
 
     @Column(name = "DELETED")
     private boolean deleted;
+
+    @Column(name = "SOLD")
+    private boolean sold;
 
     @Column(name = "SPECIFIC_REAL_ESTATE_ID")
     private UUID specificRealEstateId;
