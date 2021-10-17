@@ -3,19 +3,48 @@
     <div class="text-h5">Szukaj</div>
     <v-row align="center">
       <v-col class="d-flex justify-center" cols="12" sm="2">
-        <v-select label="test" :items="items" clearable></v-select>
+        <v-select
+          v-model="categoryId"
+          label="Kategoria"
+          :items="categories"
+          item-text="name"
+          item-value="id"
+          clearable
+        ></v-select>
       </v-col>
       <v-col class="d-flex justify-center" cols="12" sm="2">
-        <v-select label="test" :items="items" clearable></v-select>
+        <v-text-field
+          v-model="priceFrom"
+          type="number"
+          label="Cena od"
+          suffix="zł"
+        ></v-text-field>
       </v-col>
       <v-col class="d-flex justify-center" cols="12" sm="2">
-        <v-select label="test" :items="items" clearable></v-select>
+        <v-text-field
+          v-model="priceTo"
+          type="number"
+          label="Cena do"
+          suffix="zł"
+        ></v-text-field>
       </v-col>
       <v-col class="d-flex justify-center" cols="12" sm="2">
-        <v-select label="test" :items="items" clearable></v-select>
+        <v-select
+          v-model="townId"
+          label="Miasto"
+          :items="towns"
+          item-text="name"
+          item-value="id"
+          clearable
+        ></v-select>
       </v-col>
       <v-col class="d-flex justify-center" cols="12" sm="2">
-        <v-select label="test" :items="items" clearable></v-select>
+        <v-text-field
+          v-model="area"
+          type="number"
+          label="Powierzchnia"
+          suffix="m2"
+        ></v-text-field>
       </v-col>
       <v-col class="d-flex justify-center" cols="12" sm="2">
         <v-btn fab large>
@@ -26,29 +55,73 @@
   </v-container>
 </template>
 <script>
+import { mapActions } from "vuex";
+
 export default {
   name: "SearchPanel",
   data() {
     return {
-      items: [
+      categoryId: "",
+      priceFrom: "",
+      priceTo: "",
+      townId: "",
+      area: "",
+      categories: [
         {
-          text: "Test1",
-          value: "1",
+          id: 1,
+          name: "Pokój",
         },
         {
-          text: "Test2",
-          value: "2",
+          id: 2,
+          name: "Mieszkanie",
         },
         {
-          text: "Test3",
-          value: "3",
+          id: 3,
+          name: "Dom",
         },
         {
-          text: "Test4",
-          value: "4",
+          id: 4,
+          name: "Garaż",
+        },
+        {
+          id: 5,
+          name: "Apartament",
+        },
+      ],
+      towns: [
+        {
+          id: 1,
+          name: "Warszawa",
+        },
+        {
+          id: 2,
+          name: "Wrocław",
+        },
+        {
+          id: 3,
+          name: "Kraków",
+        },
+        {
+          id: 4,
+          name: "Gdańsk",
+        },
+        {
+          id: 5,
+          name: "Łódź",
         },
       ],
     };
+  },
+  computed: {
+    ...mapActions(["getCategoriesToSelect", "getTownsToSelect"]),
+  },
+  mounted() {
+    // this.getCategoriesToSelect().then((response) => {
+    //   this.categories = response.data;
+    // });
+    // this.getTownsToSelect().then((response) => {
+    //   this.towns = response.data;
+    // });
   },
 };
 </script>

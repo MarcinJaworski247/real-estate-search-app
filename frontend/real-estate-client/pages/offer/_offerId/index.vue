@@ -13,16 +13,25 @@
       </v-col>
     </v-row>
     <v-row>
+      <v-col cols="12" lg="12" sm="12">
+        <v-btn class="mr-2" @click="saveOffer">
+          <v-icon left> favorite_border </v-icon>
+          dodaj do obserwowanych
+        </v-btn>
+      </v-col>
+    </v-row>
+    <v-row justify="center" align="center">
       <v-col cols="12" sm="6" lg="6">
         <span class="text-h4 grey-text">{{ title }}</span>
       </v-col>
       <v-col cols="12" sm="6" lg="6" class="d-flex justify-end">
-        <v-icon>local_offer</v-icon>{{ price }} zł
+        <v-icon class="mr-2" large>local_offer</v-icon
+        ><span class="text-h4">{{ price }} zł</span>
       </v-col>
     </v-row>
-    <v-row>
+    <v-row justify="center" align="center">
       <v-col cols="12" sm="12" lg="12">
-        <div><v-icon>place</v-icon>{{ town }}</div>
+        <v-icon>place</v-icon>{{ town }}
       </v-col>
     </v-row>
     <div class="text-h4 grey-text my-4">Opis</div>
@@ -39,12 +48,8 @@
     </v-row>
     <v-row>
       <v-col cols="12" sm="4" lg="4"> Ilość pokojów: {{ roomsCount }} </v-col>
-      <v-col cols="12" sm="4" lg="4"
-        >Dostęp do garażu: {{ garageAccess }}
-      </v-col>
-      <v-col cols="12" sm="4" lg="4"
-        >Dostęp do piwnicy: {{ basementAccess }}
-      </v-col>
+      <v-col cols="12" sm="4" lg="4">xxx </v-col>
+      <v-col cols="12" sm="4" lg="4">xxx </v-col>
     </v-row>
     <div class="text-h4 grey-text my-4">Kontakt</div>
     <v-row>
@@ -62,7 +67,7 @@ export default {
   name: "OfferDetails",
   data() {
     return {
-      photos: ["test", "test", "test", "test"],
+      photos: ["test", "test2", "test3", "test4"],
       title: "Mieszkanie 3-pokojowe, 2 piętro",
       town: "Piotrków Trybunalski",
       price: 3200,
@@ -72,11 +77,14 @@ export default {
       type: "wynajem",
       floor: 2,
       roomsCount: 3,
-      garageAccess: "nie",
-      basementAccess: "nie",
       userFirstName: "Paweł",
       userMobilePhone: "+48 555 666 777",
     };
+  },
+  methods: {
+    saveOffer() {
+      // TODO
+    },
   },
 };
 </script>

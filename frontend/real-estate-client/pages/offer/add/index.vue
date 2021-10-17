@@ -1,34 +1,31 @@
 <template>
   <v-container class="box" fluid>
     <div class="text-h5">Nowe ogłoszenie</div>
-    <v-form v-model="valid">
-      <v-text-field v-model="title" required label="Tytuł"></v-text-field>
-      <v-textarea v-model="description" required label="Opis"></v-textarea>
-      <v-text-field v-model="town" required label="Miasto"></v-text-field>
-      <v-text-field
-        v-model="price"
-        required
-        type="number"
-        suffix="zł"
-        label="Cena"
-      ></v-text-field>
-      <v-file-input
-        accept="image/*"
-        prepend-icon="mdi-camera"
-        label="Zdjęcia"
-        multiple
-        chips
-        show-size
-      ></v-file-input>
+    <v-form>
+      <div class="text-h6 mt-2">Dane ogólne</div>
+      <BaseOfferForm />
+      <div class="text-h6 mt-2">Dane szczegółowe</div>
+      <DetailedOfferForm />
       <v-btn color="success" @click="addOffer"> Dodaj </v-btn>
     </v-form>
   </v-container>
 </template>
 <script>
+import BaseOfferForm from "@/components/Forms/BaseOfferForm.vue";
+import DetailedOfferForm from "@/components/Forms/DetailedOfferForm.vue";
+
 export default {
-  name: "Login",
+  name: "AddOffer",
+  components: {
+    BaseOfferForm,
+    DetailedOfferForm,
+  },
   methods: {
-    addOffer() {},
+    addOffer() {
+      this.$store.dispatch("addOffer").then(() => {
+        this.$router.push("/profile");
+      });
+    },
   },
 };
 </script>
