@@ -52,6 +52,7 @@ public class CommonAssembler {
                 .rent(request.getRent())
                 .size(request.getSize())
                 .roomsNumber(request.getRoomsNumber())
+                .plotSize(request.getPlotSize())
                 .floors(request.getFloors())
                 .furnished(request.isFurnished())
                 .deleted(false)

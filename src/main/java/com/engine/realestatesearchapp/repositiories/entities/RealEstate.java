@@ -1,5 +1,11 @@
 package com.engine.realestatesearchapp.repositiories.entities;
 
+import com.engine.realestatesearchapp.repositiories.enums.FlatType;
+import com.engine.realestatesearchapp.repositiories.enums.HouseType;
+import com.engine.realestatesearchapp.repositiories.enums.OfferType;
+import com.engine.realestatesearchapp.repositiories.enums.PlotType;
+import com.engine.realestatesearchapp.repositiories.enums.PremisesPurpose;
+import com.engine.realestatesearchapp.repositiories.enums.RoomType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -56,6 +62,9 @@ public class RealEstate {
     @Column(name = "SIZE", nullable = false)
     private BigDecimal size;
 
+    @Column(name = "PLOT_SIZE")
+    private BigDecimal plotSize;
+
     @Column(name = "DELETED")
     private boolean deleted = false;
 
@@ -81,5 +90,29 @@ public class RealEstate {
     @Column(name = "UPDATED_AT", nullable = false)
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    public void setOfferType(String offerType) {
+        this.types.setOfferType(OfferType.valueOfLabel(offerType));
+    }
+
+    public void setPlotType(String plotType) {
+        this.types.setPlotType(PlotType.valueOfLabel(plotType));
+    }
+
+    public void setRoomType(String roomType) {
+        this.types.setRoomType(RoomType.valueOfLabel(roomType));
+    }
+
+    public void setHouseType(String houseType) {
+        this.types.setHouseType(HouseType.valueOfLabel(houseType));
+    }
+
+    public void setFlatType(String flatType) {
+        this.types.setFlatType(FlatType.valueOfLabel(flatType));
+    }
+
+    public void setPremisesPurpose(String premisesPurpose) {
+        this.types.setPremisesPurpose(PremisesPurpose.valueOfLabel(premisesPurpose));
+    }
 
 }
