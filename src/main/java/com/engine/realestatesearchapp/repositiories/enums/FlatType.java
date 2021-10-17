@@ -2,10 +2,10 @@ package com.engine.realestatesearchapp.repositiories.enums;
 
 public enum FlatType {
 
-    BLOCK_OF_FLATS("Blok"),
-    TENEMENT("Kamienica"),
-    APARTMENT_BUILDING("Apartamentowiec"),
-    LOFT("Loft"),
+    BLOCK_OF_FLATS("Bloki"),
+    TENEMENT("Kamienice"),
+    APARTMENT_BUILDING("Apartamentowce"),
+    LOFT("Lofty"),
     OTHER("Pozostałe");
 
     public final String label;
@@ -16,5 +16,14 @@ public enum FlatType {
 
     public String getLabel() {
         return label;
+    }
+
+    public static FlatType valueOfLabel(String label) {
+        for (FlatType e : values()) {
+            if (e.label.equals(label)) {
+                return e;
+            }
+        }
+        return null;
     }
 }

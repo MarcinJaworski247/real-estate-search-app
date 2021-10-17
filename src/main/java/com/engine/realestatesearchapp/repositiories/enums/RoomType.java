@@ -14,4 +14,13 @@ public enum RoomType {
     public String getLabel() {
         return label;
     }
+
+    public static RoomType valueOfLabel(String label) {
+        for (RoomType e : values()) {
+            if (e.label.equals(label)) {
+                return e;
+            }
+        }
+        return null;
+    }
 }

@@ -1,8 +1,5 @@
 package com.engine.realestatesearchapp.repositiories.entities;
 
-import com.engine.realestatesearchapp.repositiories.enums.OfferType;
-import com.engine.realestatesearchapp.repositiories.enums.PremisesPurpose;
-import com.engine.realestatesearchapp.repositiories.enums.RealEstateCategory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -15,10 +12,11 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.math.BigDecimal;
@@ -38,6 +36,7 @@ import java.util.UUID;
 public class RealEstate {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID")
     @org.hibernate.annotations.Type(type = "pg-uuid")
     private UUID id;
@@ -48,28 +47,32 @@ public class RealEstate {
     @Column(name = "DESCRIPTION", nullable = false)
     private String description;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "CATEGORY", nullable = false)
-    private RealEstateCategory category;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "OFFER_TYPE", nullable = false)
-    private OfferType offerType;
-
     @Column(name = "PRICE", nullable = false)
     private BigDecimal price;
+
+    @Column(name = "RENT")
+    private BigDecimal rent;
 
     @Column(name = "SIZE", nullable = false)
     private BigDecimal size;
 
     @Column(name = "DELETED")
-    private boolean deleted;
+    private boolean deleted = false;
 
     @Column(name = "SOLD")
-    private boolean sold;
+    private boolean sold = false;
 
-    @Column(name = "SPECIFIC_REAL_ESTATE_ID")
-    private UUID specificRealEstateId;
+    @Column(name = "ROOMS")
+    private short roomsNumber;
+
+    @Column(name = "FLOORS")
+    private short floors;
+
+    @Column(name = "FURNISHED")
+    private Boolean furnished;
+
+    @Embedded
+    private RealEstateTypes types;
 
     @Column(name = "CREATED_AT", updatable = false, nullable = false)
     @CreatedDate

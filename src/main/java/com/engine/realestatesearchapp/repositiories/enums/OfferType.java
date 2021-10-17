@@ -13,4 +13,14 @@ public enum OfferType {
     public String getLabel() {
         return label;
     }
+
+    public static OfferType valueOfLabel(String label) {
+        for (OfferType e : values()) {
+            if (e.label.equals(label)) {
+                return e;
+            }
+        }
+        return null;
+    }
+
 }

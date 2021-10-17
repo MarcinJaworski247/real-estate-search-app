@@ -20,4 +20,13 @@ public enum PlotType {
         return label;
     }
 
+    public static PlotType valueOfLabel(String label) {
+        for (PlotType e : values()) {
+            if (e.label.equals(label)) {
+                return e;
+            }
+        }
+        return null;
+    }
+
 }

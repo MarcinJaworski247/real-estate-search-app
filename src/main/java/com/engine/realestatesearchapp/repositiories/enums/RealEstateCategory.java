@@ -1,7 +1,7 @@
 package com.engine.realestatesearchapp.repositiories.enums;
 
 public enum RealEstateCategory {
-    FLATS("Miaszkania"),
+    FLATS("Mieszkania"),
     HOUSES("Domy"),
     PLOTS("Działki"),
     OFFICES_AND_PREMISES("Biura i lokale"),
@@ -19,5 +19,14 @@ public enum RealEstateCategory {
 
     public String getLabel() {
         return label;
+    }
+
+    public static RealEstateCategory valueOfLabel(String label) {
+        for (RealEstateCategory e : values()) {
+            if (e.label.equals(label)) {
+                return e;
+            }
+        }
+        return null;
     }
 }

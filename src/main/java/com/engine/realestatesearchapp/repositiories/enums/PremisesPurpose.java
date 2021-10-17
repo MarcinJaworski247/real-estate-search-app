@@ -18,4 +18,13 @@ public enum PremisesPurpose {
     public String getLabel() {
         return label;
     }
+
+    public static PremisesPurpose valueOfLabel(String label) {
+        for (PremisesPurpose e : values()) {
+            if (e.label.equals(label)) {
+                return e;
+            }
+        }
+        return null;
+    }
 }
