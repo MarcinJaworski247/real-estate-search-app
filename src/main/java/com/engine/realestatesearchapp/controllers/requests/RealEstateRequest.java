@@ -27,7 +27,7 @@ public class RealEstateRequest {
     private String description;
 
     @NotBlank
-    @ApiModelProperty(notes = "Offer category", example = "Miaszkania", required = true)
+    @ApiModelProperty(notes = "Offer category", example = "Mieszkania", required = true)
     private String category;
 
     @NotBlank

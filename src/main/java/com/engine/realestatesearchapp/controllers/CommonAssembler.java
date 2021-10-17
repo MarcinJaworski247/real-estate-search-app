@@ -22,6 +22,7 @@ public class CommonAssembler {
     }
 
     public static RealEstateResource mapToResource(RealEstate entity) {
+        RealEstateTypes types = entity.getTypes();
         return RealEstateResource.builder()
                 .id(entity.getId())
                 .title(entity.getTitle())
@@ -33,13 +34,13 @@ public class CommonAssembler {
                 .floors(entity.getFloors())
                 .furnished(entity.getFurnished())
                 .sold(entity.isSold())
-                .category(entity.getTypes().getCategory())
-                .offerType(entity.getTypes().getOfferType())
-                .houseType(entity.getTypes().getHouseType())
-                .roomType(entity.getTypes().getRoomType())
-                .plotType(entity.getTypes().getPlotType())
-                .flatType(entity.getTypes().getFlatType())
-                .premisesPurpose(entity.getTypes().getPremisesPurpose())
+                .category(types.getCategory() != null ? types.getCategory().getLabel() : null)
+                .offerType(types.getOfferType() != null ? types.getOfferType().getLabel() : null)
+                .houseType(types.getHouseType() != null ? types.getHouseType().getLabel() : null)
+                .roomType(types.getRoomType() != null ? types.getRoomType().getLabel() : null)
+                .plotType(types.getPlotType() != null ? types.getPlotType().getLabel() : null)
+                .flatType(types.getFlatType() != null ? types.getFlatType().getLabel() : null)
+                .premisesPurpose(types.getPremisesPurpose() != null ? types.getPremisesPurpose().getLabel() : null)
                 .build();
     }
 
