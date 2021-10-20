@@ -22,3 +22,13 @@ spring:
     hibernate:
       ddl-auto: create
 
+---
+spring:
+  config:
+    activate:
+      on-profile: development
+
+  datasource:
+    url: postgres://ykdazgwogmohwu:cfcea1dc19f9050eac4a5a1f834e0abd0fda4845f2c2f03c9f0a9c3e70440aad@ec2-3-218-47-9.compute-1.amazonaws.com:5432/d6kbm1r3sti6eb
+    username: ykdazgwogmohwu
+    password: cfcea1dc19f9050eac4a5a1f834e0abd0fda4845f2c2f03c9f0a9c3e70440aad

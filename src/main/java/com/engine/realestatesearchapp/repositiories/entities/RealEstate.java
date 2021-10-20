@@ -24,6 +24,7 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -79,6 +80,9 @@ public class RealEstate {
 
     @Column(name = "FURNISHED")
     private Boolean furnished;
+
+    @ManyToOne
+    private Localization localization;
 
     @Embedded
     private RealEstateTypes types;
