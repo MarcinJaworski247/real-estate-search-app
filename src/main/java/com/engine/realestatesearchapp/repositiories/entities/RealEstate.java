@@ -21,13 +21,18 @@ import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -38,6 +43,12 @@ import java.util.UUID;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
+@NamedEntityGraph(
+        name = "RealEstate.details",
+        attributeNodes = {
+                @NamedAttributeNode("localization"),
+                @NamedAttributeNode("files"),
+        })
 @Where(clause = "deleted = false")
 @EntityListeners(AuditingEntityListener.class)
 public class RealEstate {
@@ -81,11 +92,14 @@ public class RealEstate {
     @Column(name = "FURNISHED")
     private Boolean furnished;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Localization localization;
 
     @Embedded
     private RealEstateTypes types;
+
+    @OneToMany(mappedBy = "realEstateOffer", fetch = FetchType.LAZY)
+    private List<File> files;
 
     @Column(name = "CREATED_AT", updatable = false, nullable = false)
     @CreatedDate

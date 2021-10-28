@@ -10,6 +10,7 @@ import lombok.Setter;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -39,5 +40,6 @@ public class RealEstateResource extends RepresentationModel<RealEstateResource> 
     private String houseType;
     private String flatType;
     private String premisesPurpose;
-    private boolean sold = false;
+    private boolean sold;
+    private List<FileResource> files;
 }

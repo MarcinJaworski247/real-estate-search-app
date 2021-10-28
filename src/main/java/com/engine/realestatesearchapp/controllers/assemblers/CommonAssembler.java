@@ -1,7 +1,9 @@
-package com.engine.realestatesearchapp.controllers;
+package com.engine.realestatesearchapp.controllers.assemblers;
 
 import com.engine.realestatesearchapp.controllers.requests.RealEstateRequest;
+import com.engine.realestatesearchapp.controllers.resources.FileResource;
 import com.engine.realestatesearchapp.controllers.resources.RealEstateResource;
+import com.engine.realestatesearchapp.repositiories.entities.File;
 import com.engine.realestatesearchapp.repositiories.entities.RealEstate;
 import com.engine.realestatesearchapp.repositiories.entities.RealEstateTypes;
 import com.engine.realestatesearchapp.repositiories.enums.FlatType;
@@ -12,12 +14,27 @@ import com.engine.realestatesearchapp.repositiories.enums.PremisesPurpose;
 import com.engine.realestatesearchapp.repositiories.enums.RealEstateCategory;
 import com.engine.realestatesearchapp.repositiories.enums.RoomType;
 
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+
 public class CommonAssembler {
+
+    public static FileResource mapToResource(File entity) {
+        return FileResource.builder()
+                .id(entity.getId())
+                .originalFileName(entity.getOriginalFileName())
+                .contentType(entity.getContentType())
+                .version(entity.getVersion())
+                .createdAt(entity.getCreatedAt())
+                .updatedAt(entity.getUpdatedAt())
+                .build();
+    }
 
     public static RealEstate mapToEntity(RealEstateRequest request) {
         RealEstateTypes types = mapToRealEstateTypes(request);
         RealEstate entity = mapToRealEstateEntity(request);
         entity.setTypes(types);
+        entity.setFiles(new ArrayList<>());
         return entity;
     }
 
@@ -41,6 +58,7 @@ public class CommonAssembler {
                 .plotType(types.getPlotType() != null ? types.getPlotType().getLabel() : null)
                 .flatType(types.getFlatType() != null ? types.getFlatType().getLabel() : null)
                 .premisesPurpose(types.getPremisesPurpose() != null ? types.getPremisesPurpose().getLabel() : null)
+                .files(entity.getFiles().stream().map(CommonAssembler::mapToResource).collect(Collectors.toList()))
                 .build();
     }
 

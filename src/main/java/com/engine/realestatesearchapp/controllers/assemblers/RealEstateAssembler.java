@@ -1,5 +1,6 @@
-package com.engine.realestatesearchapp.controllers;
+package com.engine.realestatesearchapp.controllers.assemblers;
 
+import com.engine.realestatesearchapp.controllers.RealEstateController;
 import com.engine.realestatesearchapp.controllers.resources.RealEstateResource;
 import com.engine.realestatesearchapp.repositiories.entities.RealEstate;
 import org.springframework.beans.factory.annotation.Autowired;

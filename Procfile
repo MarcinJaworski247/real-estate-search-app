@@ -1,1 +1,1 @@
-web: java -jar target/real-estate-search-app-0.0.1-SNAPSHOT.jar
+web: java -jar target/real-estate-search-app-0.0.1-SNAPSHOT.jar -p $PORT
