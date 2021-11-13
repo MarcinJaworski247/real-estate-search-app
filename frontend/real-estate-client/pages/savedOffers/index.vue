@@ -1,7 +1,7 @@
 <template>
   <v-container class="box" fluid>
     <div class="text-h5 mt-5">Dodane do obserwowanych</div>
-    <OffersList />
+    <OffersList :offers="offers" />
   </v-container>
 </template>
 <script>
@@ -11,6 +11,14 @@ export default {
   name: "SavedOffersIndex",
   components: {
     OffersList,
+  },
+  data() {
+    return { offers: [] };
+  },
+  mounted() {
+    this.$store.dispatch("getUserOffers").then((response) => {
+      this.offers = response._embedded.realEstateResourceList;
+    });
   },
 };
 </script>

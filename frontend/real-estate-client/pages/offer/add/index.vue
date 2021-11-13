@@ -1,7 +1,7 @@
 <template>
   <v-container class="box" fluid>
     <div class="text-h5">Nowe ogłoszenie</div>
-    <v-form>
+    <v-form ref="form">
       <div class="text-h6 mt-2">Dane ogólne</div>
       <BaseOfferForm />
       <div class="text-h6 mt-2">Dane szczegółowe</div>
@@ -20,11 +20,16 @@ export default {
     BaseOfferForm,
     DetailedOfferForm,
   },
+  beforeDestroy() {
+    this.$store.commit("RESET_OFFER_FORM");
+  },
   methods: {
     addOffer() {
-      this.$store.dispatch("addOffer").then(() => {
-        this.$router.push("/profile");
-      });
+      if (this.$refs.form.validate()) {
+        this.$store.dispatch("addOffer").then(() => {
+          this.$router.push("/profile");
+        });
+      }
     },
   },
 };
@@ -38,11 +43,5 @@ export default {
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-.register {
-  text-decoration: underline;
-}
-.register:hover {
-  cursor: pointer;
 }
 </style>

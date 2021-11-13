@@ -4,6 +4,12 @@
     <v-row align="center" class="justify-center mt-5">
       <div class="mx-3 category">
         <v-btn fab large>
+          <v-icon>door_back</v-icon>
+        </v-btn>
+        <div class="mt-1 grey--text">Pokoje</div>
+      </div>
+      <div class="mx-3 category">
+        <v-btn fab large>
           <v-icon>home</v-icon>
         </v-btn>
         <div class="mt-1 grey--text">Mieszkania</div>
@@ -16,45 +22,15 @@
       </div>
       <div class="mx-3 category">
         <v-btn fab large>
-          <v-icon>home</v-icon>
+          <v-icon>garage</v-icon>
         </v-btn>
-        <div class="mt-1 grey--text">Działki</div>
+        <div class="mt-1 grey--text">Garaże</div>
       </div>
       <div class="mx-3 category">
         <v-btn fab large>
-          <v-icon>home</v-icon>
+          <v-icon>apartment</v-icon>
         </v-btn>
-        <div class="mt-1 grey--text">Biura i lokale</div>
-      </div>
-      <div class="mx-3 category">
-        <v-btn fab large>
-          <v-icon>home</v-icon>
-        </v-btn>
-        <div class="mt-1 grey--text">Garaże i parkingi</div>
-      </div>
-      <div class="mx-3 category">
-        <v-btn fab large>
-          <v-icon>home</v-icon>
-        </v-btn>
-        <div class="mt-1 grey--text">Kwatery pracownicze</div>
-      </div>
-      <div class="mx-3 category">
-        <v-btn fab large>
-          <v-icon>home</v-icon>
-        </v-btn>
-        <div class="mt-1 grey--text">Stancje i pokoje</div>
-      </div>
-      <div class="mx-3 category">
-        <v-btn fab large>
-          <v-icon>home</v-icon>
-        </v-btn>
-        <div class="mt-1 grey--text">Magazyny</div>
-      </div>
-      <div class="mx-3 category">
-        <v-btn fab large>
-          <v-icon>home</v-icon>
-        </v-btn>
-        <div class="mt-1 grey--text">Pozostałe</div>
+        <div class="mt-1 grey--text">Apartamenty</div>
       </div>
     </v-row>
   </v-container>

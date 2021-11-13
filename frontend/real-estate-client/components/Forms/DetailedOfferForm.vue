@@ -3,14 +3,14 @@
     <v-row>
       <v-col
         ><v-text-field
-          v-model="offerForm.floor"
+          v-model="offerForm.level"
           type="number"
           label="Piętro"
         ></v-text-field
       ></v-col>
       <v-col
         ><v-text-field
-          v-model="offerForm.roomsCount"
+          v-model="offerForm.roomsNumber"
           type="number"
           label="Ilość pokojów"
         ></v-text-field
@@ -26,7 +26,7 @@
     <v-row>
       <v-col
         ><v-select
-          v-model="offerForm.flatTypeId"
+          v-model="offerForm.flatType"
           label="Rodzaj zabudowy"
           :items="flatTypes"
           item-text="name"
@@ -43,7 +43,7 @@
       ></v-col>
       <v-col
         ><v-text-field
-          v-model="offerForm.floorsCount"
+          v-model="offerForm.floors"
           type="number"
           label="Ilość pięter"
         ></v-text-field
@@ -53,7 +53,7 @@
     <v-row>
       <v-col
         ><v-select
-          v-model="offerForm.houseTypeId"
+          v-model="offerForm.houseType"
           label="Rodzaj"
           :items="houseTypes"
           item-text="name"
@@ -63,7 +63,7 @@
       ></v-col>
       <v-col
         ><v-select
-          v-model="offerForm.plotTypeId"
+          v-model="offerForm.plotType"
           label="Rodzaj"
           :items="plotTypes"
           item-text="name"
@@ -73,7 +73,7 @@
       ></v-col>
       <v-col
         ><v-select
-          v-model="offerForm.premisePursposeId"
+          v-model="offerForm.premisePurspose"
           label="Przeznaczenie lokalu"
           :items="premisePurposes"
           item-text="name"
@@ -225,21 +225,21 @@ export default {
     ]),
   },
   mounted() {
-    // this.getFlatTypesToSelect().then((response) => {
-    //   this.flatTypes = response.data;
-    // });
-    // this.getHouseTypesToSelect().then((response) => {
-    //   this.houseTypes = response.data;
-    // });
-    // this.getPlotTypesToSelect().then((response) => {
-    //   this.plotTypes = response.data;
-    // });
-    // this.getPremisePurposesToSelect().then((response) => {
-    //   this.premisePurposes = response.data;
-    // });
-    // this.getRoomTypesToSelect().then((response) => {
-    //   this.roomTypes = response.data;
-    // });
+    this.$store.dispatch("getFlatTypesToSelect").then((response) => {
+      this.flatTypes = response;
+    });
+    this.$store.dispatch("getHouseTypesToSelect").then((response) => {
+      this.houseTypes = response;
+    });
+    this.$store.dispatch("getPlotTypesToSelect").then((response) => {
+      this.plotTypes = response;
+    });
+    this.$store.dispatch("getPremisePurposesToSelect").then((response) => {
+      this.premisePurposes = response;
+    });
+    this.$store.dispatch("getRoomTypesToSelect").then((response) => {
+      this.roomTypes = response;
+    });
   },
 };
 </script>
