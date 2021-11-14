@@ -59,10 +59,10 @@ public class RealEstate {
     @org.hibernate.annotations.Type(type = "pg-uuid")
     private UUID id;
 
-    @Column(name = "TITLE", nullable = false)
+    @Column(name = "TITLE", nullable = false, length = 2048)
     private String title;
 
-    @Column(name = "DESCRIPTION", nullable = false)
+    @Column(name = "DESCRIPTION", nullable = false, length = 2048)
     private String description;
 
     @Column(name = "PRICE", nullable = false)
@@ -92,7 +92,7 @@ public class RealEstate {
     @Column(name = "FURNISHED")
     private Boolean furnished;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Localization localization;
 
     @Embedded
