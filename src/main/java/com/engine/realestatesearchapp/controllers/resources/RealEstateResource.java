@@ -1,5 +1,6 @@
 package com.engine.realestatesearchapp.controllers.resources;
 
+import com.engine.realestatesearchapp.repositiories.entities.Localization;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
@@ -41,5 +42,6 @@ public class RealEstateResource extends RepresentationModel<RealEstateResource> 
     private String flatType;
     private String premisesPurpose;
     private boolean sold;
+    private Localization localization;
     private List<FileResource> files;
 }

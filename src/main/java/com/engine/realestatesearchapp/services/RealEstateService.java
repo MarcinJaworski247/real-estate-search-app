@@ -5,6 +5,7 @@ import com.engine.realestatesearchapp.controllers.requests.RealEstateRequest;
 import com.engine.realestatesearchapp.controllers.requests.UpdateRealEstateRequest;
 import com.engine.realestatesearchapp.repositiories.RealEstateRepository;
 import com.engine.realestatesearchapp.repositiories.entities.File;
+import com.engine.realestatesearchapp.repositiories.entities.Localization;
 import com.engine.realestatesearchapp.repositiories.entities.RealEstate;
 import com.engine.realestatesearchapp.utilities.exceptions.InvalidRequestException;
 import com.engine.realestatesearchapp.utilities.exceptions.NotFoundException;
@@ -31,10 +32,13 @@ import static com.engine.realestatesearchapp.utilities.specifications.RealEstate
 public class RealEstateService {
 
     private final RealEstateRepository realEstateRepository;
+    private final LocalizationService localizationService;
     private final FileService fileService;
 
     public RealEstate createRealEstate(RealEstateRequest request) {
         RealEstate entity = CommonAssembler.mapToEntity(request);
+        Localization localization = localizationService.getLocalizationById(request.getLocalizationId());
+        entity.setLocalization(localization);
         return realEstateRepository.save(entity);
     }
 
@@ -50,7 +54,10 @@ public class RealEstateService {
         request.getFloors().ifPresent(entity::setFloors);
         request.getRoomsNumber().ifPresent(entity::setRoomsNumber);
         request.getPlotSize().ifPresent(entity::setPlotSize);
-        //request.getLocalizationId().ifPresent();
+        if(request.getLocalizationId().isPresent()) {
+            Localization localization = localizationService.getLocalizationById(request.getLocalizationId().get());
+            entity.setLocalization(localization);
+        }
         request.getPlotType().ifPresent(entity::setPlotType);
         request.getRoomType().ifPresent(entity::setRoomType);
         request.getHouseType().ifPresent(entity::setHouseType);

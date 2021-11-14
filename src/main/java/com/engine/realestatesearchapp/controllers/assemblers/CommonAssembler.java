@@ -15,7 +15,7 @@ import com.engine.realestatesearchapp.repositiories.enums.RealEstateCategory;
 import com.engine.realestatesearchapp.repositiories.enums.RoomType;
 
 import java.util.ArrayList;
-import java.util.stream.Collectors;
+import java.util.Collections;
 
 public class CommonAssembler {
 
@@ -51,6 +51,7 @@ public class CommonAssembler {
                 .floors(entity.getFloors())
                 .furnished(entity.getFurnished())
                 .sold(entity.isSold())
+                .localization(entity.getLocalization())
                 .category(types.getCategory() != null ? types.getCategory().getLabel() : null)
                 .offerType(types.getOfferType() != null ? types.getOfferType().getLabel() : null)
                 .houseType(types.getHouseType() != null ? types.getHouseType().getLabel() : null)
@@ -58,7 +59,8 @@ public class CommonAssembler {
                 .plotType(types.getPlotType() != null ? types.getPlotType().getLabel() : null)
                 .flatType(types.getFlatType() != null ? types.getFlatType().getLabel() : null)
                 .premisesPurpose(types.getPremisesPurpose() != null ? types.getPremisesPurpose().getLabel() : null)
-                .files(entity.getFiles().stream().map(CommonAssembler::mapToResource).collect(Collectors.toList()))
+                .files(entity.getFiles().isEmpty() ? new ArrayList<>() :
+                        Collections.singletonList(CommonAssembler.mapToResource(entity.getFiles().get(0))))
                 .build();
     }
 

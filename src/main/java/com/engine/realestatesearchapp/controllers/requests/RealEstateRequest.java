@@ -57,10 +57,10 @@ public class RealEstateRequest {
     @ApiModelProperty(notes = "Plot size in square meters - required for houses", example = "150")
     private BigDecimal plotSize;
 
-    //@NotNull
-    @ApiModelProperty(notes = "Real estate localization id", example = "00000000-0000-0000-0000-000000000001",
+    @NotNull
+    @ApiModelProperty(notes = "Real estate localization id", example = "1",
             required = true)
-    private UUID localizationId;
+    private Integer localizationId;
 
     @ApiModelProperty(notes = "Plot type - required for category 'Działki'", example = "Rolne")
     private String plotType;

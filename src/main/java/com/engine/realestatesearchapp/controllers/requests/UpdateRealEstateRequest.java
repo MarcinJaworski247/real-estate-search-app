@@ -56,7 +56,7 @@ public class UpdateRealEstateRequest {
         return Optional.ofNullable(plotSize);
     }
 
-    public Optional<UUID> getLocalizationId() {
+    public Optional<Integer> getLocalizationId() {
         return Optional.ofNullable(localizationId);
     }
 
@@ -110,9 +110,9 @@ public class UpdateRealEstateRequest {
     @ApiModelProperty(notes = "Plot size in square meters - required for houses", example = "150")
     private BigDecimal plotSize;
 
-    @ApiModelProperty(notes = "Real estate localization id", example = "00000000-0000-0000-0000-000000000001",
+    @ApiModelProperty(notes = "Real estate localization id", example = "1",
             required = true)
-    private UUID localizationId;
+    private Integer localizationId;
 
     @ApiModelProperty(notes = "Plot type - required for category 'Działki'", example = "Rolne")
     private String plotType;

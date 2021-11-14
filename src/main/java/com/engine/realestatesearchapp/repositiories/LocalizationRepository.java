@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public interface LocalizationRepository extends JpaRepository<Localization, UUID> {
+public interface LocalizationRepository extends JpaRepository<Localization, Integer> {
 }
