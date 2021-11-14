@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row align="baseline">
       <v-col
-        v-for="item in items"
+        v-for="item in offers"
         :key="item.id"
         class="d-flex justify-center"
         cols="12"
@@ -21,36 +21,11 @@ export default {
   components: {
     OfferTile,
   },
-  data() {
-    return {
-      items: [
-        {
-          id: 1,
-          price: 3200,
-          tags: ["Mieszkanie", "Wynajem"],
-          place: "Piotrków Trybunalski",
-          avatar: "~/assets/images/apartment.jpg",
-        },
-        {
-          id: 2,
-          price: 3200,
-          tags: ["Mieszkanie", "Wynajem"],
-          place: "Piotrków Trybunalski",
-        },
-        {
-          id: 3,
-          price: 3200,
-          tags: ["Mieszkanie", "Wynajem"],
-          place: "Piotrków Trybunalski",
-        },
-        {
-          id: 4,
-          price: 3200,
-          tags: ["Mieszkanie", "Wynajem"],
-          place: "Piotrków Trybunalski",
-        },
-      ],
-    };
+  props: {
+    offers: {
+      type: Array,
+      required: false,
+    },
   },
 };
 </script>

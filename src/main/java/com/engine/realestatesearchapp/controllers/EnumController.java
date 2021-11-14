@@ -9,6 +9,7 @@ import com.engine.realestatesearchapp.repositiories.enums.RealEstateCategory;
 import com.engine.realestatesearchapp.repositiories.enums.RoomType;
 import com.engine.realestatesearchapp.repositiories.enums.Voivodeship;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("enums")
 @RequiredArgsConstructor
 public class EnumController {

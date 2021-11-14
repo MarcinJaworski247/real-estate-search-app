@@ -4,7 +4,7 @@ export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: "real-estate-client",
-    title: "real-estate-client",
+    title: "Real Estate Search App",
     htmlAttrs: {
       lang: "pl",
     },
@@ -42,13 +42,18 @@ export default {
   ],
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    baseURL: "http://localhost:8888",
+    baseURL: "http://localhost:8081",
     credentials: false,
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     customVariables: ["~/assets/variables.scss"],
+    treeShake: true,
+    defaultAssets: {
+      font: false,
+      icons: "mdiSvg",
+    },
     theme: {
       dark: false,
       themes: {

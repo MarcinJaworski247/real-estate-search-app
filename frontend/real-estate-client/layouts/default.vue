@@ -62,7 +62,7 @@ export default {
   width: 100%;
 }
 .main-container {
-  margin-top: -200px;
+  margin-top: -300px;
 }
 .app-title:hover {
   cursor: pointer;

@@ -1,20 +1,29 @@
 <template>
   <div class="tile" @click="goToDetails">
-    <img class="avatar" src="~/assets/images/apartment.jpg" />
+    <img
+      v-if="offer.avatar"
+      class="avatar"
+      src="~/assets/images/apartment.jpg"
+    />
+    <img v-else class="avatar" src="~/assets/images/image-placeholder.png" />
     <div class="description">
       <div class="ml-2">
         <div class="text-subtitle-1">
-          <v-icon left>local_offer</v-icon>{{ offer.price }} zł
+          <v-icon small left>local_offer</v-icon
+          >{{ offer.price.toLocaleString() }} zł
         </div>
       </div>
       <div class="ml-2 mt-1" style="display: flex">
-        <div v-for="tag in offer.tags" :key="tag" class="mr-1 text-subtitle-1">
-          <v-icon left>done</v-icon>{{ tag }}
+        <div v-if="offer.offerType" class="mr-1 text-subtitle-1">
+          <v-icon small left>done</v-icon>{{ offer.offerType }}
+        </div>
+        <div v-if="offer.category" class="mr-1 text-subtitle-1">
+          <v-icon small left>done</v-icon>{{ offer.category }}
         </div>
       </div>
       <div class="ml-2 mt-1">
         <div class="text-subtitle-1">
-          <v-icon left>place</v-icon> {{ offer.place }}
+          <v-icon small left>place</v-icon> {{ offer.place }}
         </div>
       </div>
     </div>
@@ -31,7 +40,7 @@ export default {
   },
   methods: {
     goToDetails() {
-      this.$router.push("/offer/1");
+      this.$router.push(`/offer/${this.offer.id}`);
     },
   },
 };

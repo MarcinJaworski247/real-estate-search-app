@@ -1,6 +1,6 @@
 <template>
-  <v-container class="box" fluid>
-    <v-row class="mb-4">
+  <v-container v-if="offer" class="box" fluid>
+    <!-- <v-row class="mb-4">
       <v-col
         v-for="photo in photos"
         :key="photo"
@@ -11,52 +11,62 @@
       >
         <img src="~/assets/images/apartment.jpg" class="mx-4 photo" />
       </v-col>
-    </v-row>
+    </v-row> -->
     <v-row>
       <v-col cols="12" lg="12" sm="12">
-        <v-btn class="mr-2" @click="saveOffer">
-          <v-icon left> favorite_border </v-icon>
-          dodaj do obserwowanych
-        </v-btn>
+        <v-icon class="ico-fav" large left @click="saveOffer">
+          favorite_border
+        </v-icon>
       </v-col>
     </v-row>
     <v-row justify="center" align="center">
       <v-col cols="12" sm="6" lg="6">
-        <span class="text-h4 grey-text">{{ title }}</span>
+        <span class="text-h5 grey-text">{{ offer.title }}</span>
       </v-col>
       <v-col cols="12" sm="6" lg="6" class="d-flex justify-end">
-        <v-icon class="mr-2" large>local_offer</v-icon
-        ><span class="text-h4">{{ price }} zł</span>
+        <v-icon class="mr-2">local_offer</v-icon
+        ><span class="text-h4">{{ offer.price.toLocaleString() }} zł</span>
       </v-col>
     </v-row>
     <v-row justify="center" align="center">
       <v-col cols="12" sm="12" lg="12">
-        <v-icon>place</v-icon>{{ town }}
+        <v-icon>place</v-icon>{{ offer.town }}
       </v-col>
     </v-row>
-    <div class="text-h4 grey-text my-4">Opis</div>
+    <div class="text-h5 grey-text my-4">Opis</div>
     <v-row>
       <v-col cols="12" sm="12" lg="12">
-        <div class="grey-text">{{ description }}</div>
+        <div class="grey-text">{{ offer.description }}</div>
       </v-col>
     </v-row>
-    <div class="text-h4 grey-text my-4">Informacje dodatkowe</div>
+    <div class="text-h5 grey-text my-4">Informacje dodatkowe</div>
     <v-row>
-      <v-col cols="12" sm="4" lg="4">Powierzchnia: {{ area }} </v-col>
-      <v-col cols="12" sm="4" lg="4">Wynajem/sprzedaż: {{ type }} </v-col>
-      <v-col cols="12" sm="4" lg="4">Piętro: {{ floor }} </v-col>
+      <v-col cols="12" sm="4" lg="4">Powierzchnia: {{ offer.size }} m2 </v-col>
+      <v-col cols="12" sm="4" lg="4"
+        >Wynajem/sprzedaż: {{ offer.offerType }}
+      </v-col>
+      <v-col cols="12" sm="4" lg="4"
+        >Piętro: {{ offer.level }} / {{ offer.floors }}
+      </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" sm="4" lg="4"> Ilość pokojów: {{ roomsCount }} </v-col>
-      <v-col cols="12" sm="4" lg="4">xxx </v-col>
-      <v-col cols="12" sm="4" lg="4">xxx </v-col>
+      <v-col cols="12" sm="4" lg="4">
+        Ilość pokojów: {{ offer.roomsNumber }}
+      </v-col>
+      <v-col cols="12" sm="4" lg="4"
+        >Rodzaj zabudowy: {{ offer.flatType }}
+      </v-col>
+      <v-col cols="12" sm="4" lg="4"
+        >Umeblowane: <span v-if="offer.furnished">tak</span>
+        <span v-if="!offer.furnished"></span>
+      </v-col>
     </v-row>
-    <div class="text-h4 grey-text my-4">Kontakt</div>
+    <div class="text-h5 grey-text my-4">Kontakt</div>
     <v-row>
       <v-col cols="12" sm="12" lg="12">
-        <div><v-icon class="mr-2">person</v-icon>{{ userFirstName }}</div>
+        <div><v-icon class="mr-2">person</v-icon></div>
         <div class="my-2">
-          <v-icon class="mr-2">phone_iphone</v-icon>{{ userMobilePhone }}
+          <v-icon class="mr-2">phone_iphone</v-icon>
         </div>
       </v-col>
     </v-row>
@@ -67,19 +77,16 @@ export default {
   name: "OfferDetails",
   data() {
     return {
-      photos: ["test", "test2", "test3", "test4"],
-      title: "Mieszkanie 3-pokojowe, 2 piętro",
-      town: "Piotrków Trybunalski",
-      price: 3200,
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-      area: "60 m2",
-      type: "wynajem",
-      floor: 2,
-      roomsCount: 3,
-      userFirstName: "Paweł",
-      userMobilePhone: "+48 555 666 777",
+      offer: null,
+      photos: null,
     };
+  },
+  mounted() {
+    this.$store
+      .dispatch("getOffer", this.$route.params.offerId)
+      .then((response) => {
+        this.offer = response;
+      });
   },
   methods: {
     saveOffer() {
@@ -101,5 +108,8 @@ export default {
 .photo {
   width: 100%;
   height: 100%;
+}
+.ico-fav:hover {
+  color: red;
 }
 </style>
