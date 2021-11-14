@@ -12,15 +12,17 @@ import java.util.stream.Collectors;
 @Component
 public class RealEstateAssembler extends RepresentationModelAssemblerSupport<RealEstate, RealEstateResource> {
 
+    private final CommonAssembler assembler;
+
     @Autowired
-    public RealEstateAssembler() {
+    public RealEstateAssembler(CommonAssembler assembler) {
         super(RealEstateController.class, RealEstateResource.class);
+        this.assembler = assembler;
     }
 
     @Override
     public RealEstateResource toModel(RealEstate entity) {
-        RealEstateResource resource = CommonAssembler.mapToResource(entity);
-        resource.setFiles(entity.getFiles().stream().map(CommonAssembler::mapToResource).collect(Collectors.toList()));
+        RealEstateResource resource = assembler.mapToResourceWithAvatar(entity);
         return resource;
     }
 

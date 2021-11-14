@@ -41,6 +41,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RealEstateController {
 
+    private final CommonAssembler assembler;
     private final FileService fileService;
     private final RealEstateService realEstateService;
     private final RealEstateAssembler realEstateAssembler;
@@ -61,14 +62,14 @@ public class RealEstateController {
     @GetMapping("/{real_estate_id}")
     @ApiOperation(value = "Get real estate offer by id")
     public RealEstateResource getRealEstateById(@PathVariable("real_estate_id") UUID realEstateId) {
-        return CommonAssembler.mapToResource(realEstateService.getRealEstateById(realEstateId));
+        return assembler.mapToResourceWithFiles(realEstateService.getRealEstateById(realEstateId));
     }
 
     @PatchMapping("/{real_estate_id}")
     @ApiOperation(value = "Update real estate offer by id")
     public RealEstateResource updateRealEstate(@PathVariable("real_estate_id") UUID realEstateId,
             @RequestBody @Valid UpdateRealEstateRequest request) {
-        return CommonAssembler.mapToResource(realEstateService.updateRealEstate(realEstateId, request));
+        return assembler.mapToResourceWithFiles(realEstateService.updateRealEstate(realEstateId, request));
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -87,7 +88,7 @@ public class RealEstateController {
     @PostMapping
     @ApiOperation(value = "Create real estate offer")
     public RealEstateResource createRealEstate(@RequestBody @Valid RealEstateRequest request) {
-        return CommonAssembler.mapToResource(realEstateService.createRealEstate(request));
+        return assembler.mapToResourceWithFiles(realEstateService.createRealEstate(request));
     }
 
     @PostMapping(value = "/{real_estate_id}/files", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -96,7 +97,7 @@ public class RealEstateController {
     public List<FileResource> uploadOfferFiles(@PathVariable("real_estate_id") UUID realEstateId,
             @RequestPart("file") MultipartFile[] files) {
         return realEstateService.uploadOfferFiles(realEstateId, files).stream()
-                .map(CommonAssembler::mapToResource)
+                .map(assembler::mapToResource)
                 .collect(Collectors.toList());
     }
 
@@ -116,8 +117,7 @@ public class RealEstateController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<byte[]> getOfferImageBytes(@PathVariable("real_estate_id") UUID realEstateId,
             @PathVariable("file_id") UUID fileId) {
-        File file = fileService.getFileById(fileId);
-        byte[] logoBytes = fileService.getFileBytes(file);
+        byte[] logoBytes = fileService.getFileBytes(fileService.getFileById(fileId).getPath());
         return new ResponseEntity<>(logoBytes, HttpStatus.OK);
     }
 

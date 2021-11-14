@@ -67,12 +67,12 @@ public class FileService {
         };
     }
 
-    public byte[] getFileBytes(File file) {
-        final java.io.File initialFile = new java.io.File(file.getPath());
+    public byte[] getFileBytes(String path) {
+        final java.io.File initialFile = new java.io.File(path);
         try {
             return FileUtils.readFileToByteArray(initialFile);
         } catch (IOException e) {
-            throw new ServerErrorException("Could not download file " + file.getOriginalFileName());
+            throw new ServerErrorException("Could not download file");
         }
     }
 

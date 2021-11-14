@@ -31,12 +31,13 @@ import static com.engine.realestatesearchapp.utilities.specifications.RealEstate
 @RequiredArgsConstructor
 public class RealEstateService {
 
+    private final CommonAssembler assembler;
     private final RealEstateRepository realEstateRepository;
     private final LocalizationService localizationService;
     private final FileService fileService;
 
     public RealEstate createRealEstate(RealEstateRequest request) {
-        RealEstate entity = CommonAssembler.mapToEntity(request);
+        RealEstate entity = assembler.mapToEntity(request);
         Localization localization = localizationService.getLocalizationById(request.getLocalizationId());
         entity.setLocalization(localization);
         return realEstateRepository.save(entity);

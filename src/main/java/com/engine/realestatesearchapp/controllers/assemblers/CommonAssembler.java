@@ -13,13 +13,21 @@ import com.engine.realestatesearchapp.repositiories.enums.PlotType;
 import com.engine.realestatesearchapp.repositiories.enums.PremisesPurpose;
 import com.engine.realestatesearchapp.repositiories.enums.RealEstateCategory;
 import com.engine.realestatesearchapp.repositiories.enums.RoomType;
+import com.engine.realestatesearchapp.services.FileService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.stream.Collectors;
 
+@Component
+@RequiredArgsConstructor
 public class CommonAssembler {
 
-    public static FileResource mapToResource(File entity) {
+    private final FileService fileService;
+
+    public FileResource mapToResource(File entity) {
         return FileResource.builder()
                 .id(entity.getId())
                 .originalFileName(entity.getOriginalFileName())
@@ -30,7 +38,19 @@ public class CommonAssembler {
                 .build();
     }
 
-    public static RealEstate mapToEntity(RealEstateRequest request) {
+    public FileResource mapToOfferFileResource(File entity) {
+        return FileResource.builder()
+                .id(entity.getId())
+                .originalFileName(entity.getOriginalFileName())
+                .contentType(entity.getContentType())
+                .version(entity.getVersion())
+                .createdAt(entity.getCreatedAt())
+                .updatedAt(entity.getUpdatedAt())
+                .bytes(fileService.getFileBytes(entity.getPath()))
+                .build();
+    }
+
+    public RealEstate mapToEntity(RealEstateRequest request) {
         RealEstateTypes types = mapToRealEstateTypes(request);
         RealEstate entity = mapToRealEstateEntity(request);
         entity.setTypes(types);
@@ -38,7 +58,21 @@ public class CommonAssembler {
         return entity;
     }
 
-    public static RealEstateResource mapToResource(RealEstate entity) {
+    public RealEstateResource mapToResourceWithFiles(RealEstate entity) {
+        RealEstateResource resource = mapToResource(entity);
+        resource.setFiles(entity.getFiles().isEmpty() ? new ArrayList<>() :
+                entity.getFiles().stream().map(this::mapToOfferFileResource).collect(Collectors.toList()));
+        return resource;
+    }
+
+    public RealEstateResource mapToResourceWithAvatar(RealEstate entity) {
+        RealEstateResource resource = mapToResource(entity);
+        resource.setFiles(entity.getFiles().isEmpty() ? new ArrayList<>() :
+                Collections.singletonList(this.mapToOfferFileResource(entity.getFiles().get(0))));
+        return resource;
+    }
+
+    private RealEstateResource mapToResource(RealEstate entity) {
         RealEstateTypes types = entity.getTypes();
         return RealEstateResource.builder()
                 .id(entity.getId())
@@ -60,11 +94,11 @@ public class CommonAssembler {
                 .flatType(types.getFlatType() != null ? types.getFlatType().getLabel() : null)
                 .premisesPurpose(types.getPremisesPurpose() != null ? types.getPremisesPurpose().getLabel() : null)
                 .files(entity.getFiles().isEmpty() ? new ArrayList<>() :
-                        Collections.singletonList(CommonAssembler.mapToResource(entity.getFiles().get(0))))
+                        Collections.singletonList(this.mapToResource(entity.getFiles().get(0))))
                 .build();
     }
 
-    private static RealEstate mapToRealEstateEntity(RealEstateRequest request) {
+    private RealEstate mapToRealEstateEntity(RealEstateRequest request) {
         return RealEstate.builder()
                 .title(request.getTitle())
                 .description(request.getDescription())
@@ -80,7 +114,7 @@ public class CommonAssembler {
                 .build();
     }
 
-    private static RealEstateTypes mapToRealEstateTypes(RealEstateRequest request) {
+    private RealEstateTypes mapToRealEstateTypes(RealEstateRequest request) {
         return RealEstateTypes.builder()
                 .category(RealEstateCategory.valueOfLabel(request.getCategory()))
                 .offerType(OfferType.valueOfLabel(request.getOfferType()))
