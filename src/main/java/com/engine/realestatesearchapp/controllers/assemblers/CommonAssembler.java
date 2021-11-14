@@ -39,15 +39,15 @@ public class CommonAssembler {
     }
 
     public FileResource mapToOfferFileResource(File entity) {
-        return FileResource.builder()
-                .id(entity.getId())
-                .originalFileName(entity.getOriginalFileName())
-                .contentType(entity.getContentType())
-                .version(entity.getVersion())
-                .createdAt(entity.getCreatedAt())
-                .updatedAt(entity.getUpdatedAt())
-                .bytes(fileService.getFileBytes(entity.getPath()))
-                .build();
+        FileResource resource = mapToResource(entity);
+        resource.setBytes(fileService.getFileBytes(entity.getPath()));
+        return resource;
+    }
+
+    public FileResource mapToAvatarFileResource(File entity) {
+        FileResource resource = mapToResource(entity);
+        resource.setBytes(fileService.getAvatarBytes(entity.getPath()));
+        return resource;
     }
 
     public RealEstate mapToEntity(RealEstateRequest request) {
@@ -68,7 +68,7 @@ public class CommonAssembler {
     public RealEstateResource mapToResourceWithAvatar(RealEstate entity) {
         RealEstateResource resource = mapToResource(entity);
         resource.setFiles(entity.getFiles().isEmpty() ? new ArrayList<>() :
-                Collections.singletonList(this.mapToOfferFileResource(entity.getFiles().get(0))));
+                Collections.singletonList(this.mapToAvatarFileResource(entity.getFiles().get(0))));
         return resource;
     }
 

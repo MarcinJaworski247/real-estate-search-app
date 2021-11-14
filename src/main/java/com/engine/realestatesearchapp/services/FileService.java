@@ -16,8 +16,13 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -73,6 +78,31 @@ public class FileService {
             return FileUtils.readFileToByteArray(initialFile);
         } catch (IOException e) {
             throw new ServerErrorException("Could not download file");
+        }
+    }
+
+    public byte[] getAvatarBytes(String path) {
+        byte[] originalFile = getFileBytes(path);
+        return scale(originalFile);
+    }
+
+    public byte[] scale(byte[] fileData) {
+        ByteArrayInputStream in = new ByteArrayInputStream(fileData);
+        try {
+            BufferedImage img = ImageIO.read(in);
+            int height = (int) (img.getHeight()*0.5);
+            int width = (int) (img.getWidth()*0.5);
+            Image scaledImage = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+            BufferedImage imageBuff = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+            imageBuff.getGraphics().drawImage(scaledImage, 0, 0, new Color(0, 0, 0), null);
+
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+
+            ImageIO.write(imageBuff, "jpg", buffer);
+
+            return buffer.toByteArray();
+        } catch (IOException e) {
+            throw new ServerErrorException("IOException in scale");
         }
     }
 
