@@ -9,7 +9,7 @@
         sm="6"
         lg="3"
       >
-        <OfferTile :offer="item" />
+        <OfferTile :offer="item" :editable="editable" />
       </v-col>
     </v-row>
   </v-container>
@@ -25,6 +25,11 @@ export default {
     offers: {
       type: Array,
       required: false,
+    },
+    editable: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
   },
 };

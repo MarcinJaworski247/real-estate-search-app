@@ -12,7 +12,7 @@ const createStore = () => {
         size: null,
         furnished: null,
         level: null,
-        town: null,
+        localizationId: null,
         roomsNumber: null,
         floors: null,
         offerType: null,
@@ -33,7 +33,7 @@ const createStore = () => {
         state.offerForm.category = null;
         state.offerForm.price = null;
         state.offerForm.size = null;
-        state.offerForm.town = null;
+        state.offerForm.localizationId = null;
         state.offerForm.offerType = null;
         state.offerForm.level = null;
         state.offerForm.roomsNumber = null;
@@ -54,7 +54,7 @@ const createStore = () => {
         state.offerForm.category = response.category;
         state.offerForm.price = response.price;
         state.offerForm.size = response.size;
-        state.offerForm.town = response.town;
+        state.offerForm.localizationId = response.localization.id;
         state.offerForm.offerType = response.offerType;
         state.offerForm.level = response.level;
         state.offerForm.roomsNumber = response.roomsNumber;
@@ -66,7 +66,7 @@ const createStore = () => {
         state.offerForm.plotType = response.plotType;
         state.offerForm.premisePurpose = response.premisePurpose;
         state.offerForm.avatar = response.avatar;
-        state.offerForm.files = response.photos;
+        state.offerForm.files = response.files;
       },
       SET_OFFER_PHOTOS(state, response) {
         state.offerForm.files = response;
@@ -84,13 +84,15 @@ const createStore = () => {
           +vuexContext.state.offerForm.plotSize;
         vuexContext.state.offerForm.floors =
           +vuexContext.state.offerForm.floors;
+        vuexContext.state.offerForm.localizationId =
+          +vuexContext.state.offerForm.localizationId;
         return this.$axios.$post(
           "http://localhost:8081/real-estate",
           vuexContext.state.offerForm
         );
       },
       getTownsToSelect(vuexContext) {
-        return this.$axios.$get("http://localhost:8081/enums/voivodeship");
+        return this.$axios.$get("http://localhost:8081/localizations");
       },
       getCategoriesToSelect(vuexContext) {
         return this.$axios.$get(
@@ -158,6 +160,8 @@ const createStore = () => {
           +vuexContext.state.offerForm.plotSize;
         vuexContext.state.offerForm.floors =
           +vuexContext.state.offerForm.floors;
+        vuexContext.state.offerForm.localizationId =
+          +vuexContext.state.offerForm.localizationId;
         return this.$axios.$patch(
           `http://localhost:8081/real-estate/${vuexContext.state.offerForm.id}`,
           vuexContext.state.offerForm
@@ -167,6 +171,11 @@ const createStore = () => {
         return this.$axios.$post(
           `http://localhost:8081/real-estate/${params.offerId}/files`,
           params.photos
+        );
+      },
+      removePhoto(vuexContext, params) {
+        return this.$axios.$delete(
+          `http://localhost:8081/real-estate/${params.offerId}/files/${params.photoId}`
         );
       },
     },

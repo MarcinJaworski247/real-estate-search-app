@@ -57,11 +57,12 @@
       </v-col>
     </v-row>
     <v-select
-      v-model="offerForm.town"
+      v-model="offerForm.localizationId"
       label="Miasto"
       :items="towns"
-      item-text="name"
+      item-text="city"
       item-value="id"
+      :rules="[rules.required]"
       clearable
     ></v-select>
   </div>

@@ -52,7 +52,7 @@ export default {
     treeShake: true,
     defaultAssets: {
       font: false,
-      icons: "mdiSvg",
+      icons: "mdi",
     },
     theme: {
       dark: false,

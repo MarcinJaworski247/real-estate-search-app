@@ -10,19 +10,19 @@
         {{ item.price.toLocaleString() }}
       </template>
       <template #[`item.sold`]="{ item }">
-        <v-icon v-if="!item.sold" large> check_box_outline_blank </v-icon>
-        <v-icon v-if="item.sold" large> check_box </v-icon>
+        <v-icon v-if="!item.sold"> check_box_outline_blank </v-icon>
+        <v-icon v-if="item.sold"> check_box </v-icon>
       </template>
       <template #[`item.actions`]="{ item }">
-        <v-icon large class="ico-details" @click="goToEdit(item)">
-          keyboard_arrow_right
-        </v-icon>
-        <v-icon large class="ico-sell" @click="markAsSold(item)">
-          check_circle
-        </v-icon>
-        <v-icon large class="ico-delete" @click="deleteOffer(item)">
-          delete
-        </v-icon>
+        <v-btn text icon @click="goToEdit(item)">
+          <v-icon class="ico-details"> keyboard_arrow_right </v-icon>
+        </v-btn>
+        <v-btn text icon @click="markAsSold(item)">
+          <v-icon class="ico-sell"> check_circle </v-icon>
+        </v-btn>
+        <v-btn text icon @click="deleteOffer(item)">
+          <v-icon class="ico-delete"> delete </v-icon>
+        </v-btn>
       </template>
     </v-data-table>
     <v-dialog v-model="deleteModalVisible" max-width="500px">
@@ -147,12 +147,12 @@ export default {
 </script>
 <style scoped>
 .ico-details:hover {
-  color: #3695e8;
+  color: #3695e8 !important;
 }
 .ico-sell:hover {
-  color: #5ab55e;
+  color: #5ab55e !important;
 }
 .ico-delete:hover {
-  color: red;
+  color: red !important;
 }
 </style>

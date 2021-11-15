@@ -13,6 +13,26 @@
         ></v-select>
       </v-col>
       <v-col class="d-flex justify-center" cols="12" sm="2">
+        <v-select
+          v-model="townId"
+          label="Miasto"
+          :items="towns"
+          item-text="city"
+          item-value="id"
+          clearable
+        ></v-select>
+      </v-col>
+      <v-col class="d-flex justify-center" cols="12" sm="2">
+        <v-select
+          v-model="offerType"
+          label="Rodzaj oferty"
+          :items="offerTypes"
+          item-text="name"
+          item-value="id"
+          clearable
+        ></v-select>
+      </v-col>
+      <v-col class="d-flex justify-center" cols="12" sm="2">
         <v-text-field
           v-model="priceFrom"
           type="number"
@@ -29,25 +49,7 @@
         ></v-text-field>
       </v-col>
       <v-col class="d-flex justify-center" cols="12" sm="2">
-        <v-select
-          v-model="townId"
-          label="Miasto"
-          :items="towns"
-          item-text="name"
-          item-value="id"
-          clearable
-        ></v-select>
-      </v-col>
-      <v-col class="d-flex justify-center" cols="12" sm="2">
-        <v-text-field
-          v-model="area"
-          type="number"
-          label="Powierzchnia"
-          suffix="m2"
-        ></v-text-field>
-      </v-col>
-      <v-col class="d-flex justify-center" cols="12" sm="2">
-        <v-btn fab large>
+        <v-btn fab medium>
           <v-icon>search</v-icon>
         </v-btn>
       </v-col>
@@ -55,73 +57,30 @@
   </v-container>
 </template>
 <script>
-import { mapActions } from "vuex";
-
 export default {
   name: "SearchPanel",
   data() {
     return {
-      categoryId: "",
+      category: "",
       priceFrom: "",
       priceTo: "",
       townId: "",
-      area: "",
-      categories: [
-        {
-          id: 1,
-          name: "Pokój",
-        },
-        {
-          id: 2,
-          name: "Mieszkanie",
-        },
-        {
-          id: 3,
-          name: "Dom",
-        },
-        {
-          id: 4,
-          name: "Garaż",
-        },
-        {
-          id: 5,
-          name: "Apartament",
-        },
-      ],
-      towns: [
-        {
-          id: 1,
-          name: "Warszawa",
-        },
-        {
-          id: 2,
-          name: "Wrocław",
-        },
-        {
-          id: 3,
-          name: "Kraków",
-        },
-        {
-          id: 4,
-          name: "Gdańsk",
-        },
-        {
-          id: 5,
-          name: "Łódź",
-        },
-      ],
+      offerType: "",
+      categories: [],
+      towns: [],
+      offerTypes: [],
     };
   },
-  computed: {
-    ...mapActions(["getCategoriesToSelect", "getTownsToSelect"]),
-  },
   mounted() {
-    // this.getCategoriesToSelect().then((response) => {
-    //   this.categories = response.data;
-    // });
-    // this.getTownsToSelect().then((response) => {
-    //   this.towns = response.data;
-    // });
+    this.$store.dispatch("getCategoriesToSelect").then((response) => {
+      this.categories = response;
+    });
+    this.$store.dispatch("getTownsToSelect").then((response) => {
+      this.towns = response;
+    });
+    this.$store.dispatch("getTypesToSelect").then((response) => {
+      this.offerTypes = response;
+    });
   },
 };
 </script>

@@ -4,10 +4,19 @@
     <v-form ref="form">
       <div class="text-h6 mt-2">Dane ogólne</div>
       <BaseOfferForm />
-      <v-btn color="success" @click="addPhotos"> Dodaj zdjęcia </v-btn>
+      <v-btn class="mb-2" color="success" @click="addPhotos">
+        Dodaj zdjęcia
+      </v-btn>
+      <v-row v-if="offerForm.files.length" align="baseline">
+        <PhotoCarousel
+          :photos="offerForm.files"
+          editable
+          @removePhoto="removePhoto"
+        />
+      </v-row>
       <div class="text-h6 mt-2">Dane szczegółowe</div>
       <DetailedOfferForm />
-      <v-btn color="success" @click="editOffer"> Edytuj </v-btn>
+      <v-btn color="success" @click="editOffer"> Zapisz </v-btn>
     </v-form>
     <v-dialog v-model="photoModalVisible" max-width="500px">
       <v-card>
@@ -37,20 +46,27 @@
   </v-container>
 </template>
 <script>
+import { mapState } from "vuex";
+
 import BaseOfferForm from "@/components/Forms/BaseOfferForm.vue";
 import DetailedOfferForm from "@/components/Forms/DetailedOfferForm.vue";
+import PhotoCarousel from "@/components/PhotoCarousel.vue";
 
 export default {
   name: "EditOffer",
   components: {
     BaseOfferForm,
     DetailedOfferForm,
+    PhotoCarousel,
   },
   data() {
     return {
       photoModalVisible: false,
       photos: null,
     };
+  },
+  computed: {
+    ...mapState(["offerForm"]),
   },
   mounted() {
     this.$store.dispatch("getOfferToEdit", this.$route.params.offerId);
@@ -80,14 +96,27 @@ export default {
       for (const item of this.photos) {
         formData.append("file", item);
       }
-      this.$store.dispatch("uploadPhotos", {
-        offerId: this.$route.params.offerId,
-        photos: formData,
-      });
-      this.$store.dispatch("getOfferImages", this.$route.params.offerId);
+      this.$store
+        .dispatch("uploadPhotos", {
+          offerId: this.$route.params.offerId,
+          photos: formData,
+        })
+        .then(() => {
+          this.$store.dispatch("getOfferToEdit", this.$route.params.offerId);
+        });
     },
     selectImage(photos) {
       this.photos = photos;
+    },
+    removePhoto(id) {
+      this.$store
+        .dispatch("removePhoto", {
+          offerId: this.$route.params.offerId,
+          photoId: id,
+        })
+        .then(() => {
+          this.$store.dispatch("getOfferToEdit", this.$route.params.offerId);
+        });
     },
   },
 };
@@ -101,6 +130,7 @@ export default {
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  width: 67%;
 }
 .photo {
   width: 300px;

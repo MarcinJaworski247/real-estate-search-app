@@ -1,22 +1,18 @@
 <template>
   <v-container v-if="offer" class="box" fluid>
-    <!-- <v-row class="mb-4">
-      <v-col
-        v-for="photo in photos"
-        :key="photo"
-        class="d-flex justify-center"
-        cols="12"
-        sm="4"
-        lg="3"
-      >
-        <img src="~/assets/images/apartment.jpg" class="mx-4 photo" />
-      </v-col>
-    </v-row> -->
+    <v-row class="mb-4">
+      <div v-if="offer.files.length">
+        <photo-carousel :photos="offer.files" />
+      </div>
+      <div v-else>
+        <img class="photo" src="~/assets/images/image-placeholder.png" />
+      </div>
+    </v-row>
     <v-row>
       <v-col cols="12" lg="12" sm="12">
-        <v-icon class="ico-fav" large left @click="saveOffer">
-          favorite_border
-        </v-icon>
+        <v-btn medium left icon text @click="saveOffer">
+          <v-icon class="ico-fav"> favorite_border </v-icon>
+        </v-btn>
       </v-col>
     </v-row>
     <v-row justify="center" align="center">
@@ -25,21 +21,21 @@
       </v-col>
       <v-col cols="12" sm="6" lg="6" class="d-flex justify-end">
         <v-icon class="mr-2">local_offer</v-icon
-        ><span class="text-h4">{{ offer.price.toLocaleString() }} zł</span>
+        ><span class="text-h5">{{ offer.price.toLocaleString() }} zł</span>
       </v-col>
     </v-row>
     <v-row justify="center" align="center">
       <v-col cols="12" sm="12" lg="12">
-        <v-icon>place</v-icon>{{ offer.town }}
+        <v-icon large left>place</v-icon>{{ offer.localization.city }}
       </v-col>
     </v-row>
-    <div class="text-h5 grey-text my-4">Opis</div>
+    <div class="text-h5 grey--text my-4">Opis</div>
     <v-row>
       <v-col cols="12" sm="12" lg="12">
-        <div class="grey-text">{{ offer.description }}</div>
+        <div class="">{{ offer.description }}</div>
       </v-col>
     </v-row>
-    <div class="text-h5 grey-text my-4">Informacje dodatkowe</div>
+    <div class="text-h5 grey--text my-4">Informacje dodatkowe</div>
     <v-row>
       <v-col cols="12" sm="4" lg="4">Powierzchnia: {{ offer.size }} m2 </v-col>
       <v-col cols="12" sm="4" lg="4"
@@ -61,7 +57,7 @@
         <span v-if="!offer.furnished"></span>
       </v-col>
     </v-row>
-    <div class="text-h5 grey-text my-4">Kontakt</div>
+    <div class="text-h5 grey--text my-4">Kontakt</div>
     <v-row>
       <v-col cols="12" sm="12" lg="12">
         <div><v-icon class="mr-2">person</v-icon></div>
@@ -73,8 +69,13 @@
   </v-container>
 </template>
 <script>
+import PhotoCarousel from "@/components/PhotoCarousel.vue";
+
 export default {
   name: "OfferDetails",
+  components: {
+    PhotoCarousel,
+  },
   data() {
     return {
       offer: null,
@@ -104,10 +105,13 @@ export default {
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  width: 67%;
+  padding-left: 64px;
+  padding-right: 64px;
 }
 .photo {
-  width: 100%;
-  height: 100%;
+  width: 300px;
+  height: 200px;
 }
 .ico-fav:hover {
   color: red;

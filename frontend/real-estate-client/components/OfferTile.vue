@@ -1,9 +1,14 @@
 <template>
-  <div class="tile" @click="goToDetails">
+  <div
+    class="tile"
+    @click="goToDetails"
+    @mouseenter="actionsVisible = true"
+    @mouseleave="actionsVisible = false"
+  >
     <img
-      v-if="offer.avatar"
+      v-if="offer.files.length"
       class="avatar"
-      src="~/assets/images/apartment.jpg"
+      :src="`data:image/png;base64,${offer.files[0].bytes}`"
     />
     <img v-else class="avatar" src="~/assets/images/image-placeholder.png" />
     <div class="description">
@@ -23,9 +28,12 @@
       </div>
       <div class="ml-2 mt-1">
         <div class="text-subtitle-1">
-          <v-icon small left>place</v-icon> {{ offer.place }}
+          <v-icon small left>place</v-icon> {{ offer.localization.city }}
         </div>
       </div>
+    </div>
+    <div v-if="editable && actionsVisible">
+      <v-icon @click="goToEdit">keyboard_arrow_right</v-icon>
     </div>
   </div>
 </template>
@@ -37,17 +45,32 @@ export default {
       type: Object,
       required: true,
     },
+    editable: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+  },
+  data() {
+    return {
+      actionsVisible: false,
+    };
   },
   methods: {
     goToDetails() {
-      this.$router.push(`/offer/${this.offer.id}`);
+      if (!this.editable) {
+        this.$router.push(`/offer/${this.offer.id}`);
+      }
+    },
+    goToEdit() {
+      this.$router.push(`/offer/edit/${this.offer.id}`);
     },
   },
 };
 </script>
 <style scoped>
 .tile {
-  width: 380;
+  width: 380px;
   height: 220px;
   position: relative;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
