@@ -55,7 +55,7 @@ public class RealEstateService {
         request.getFloors().ifPresent(entity::setFloors);
         request.getRoomsNumber().ifPresent(entity::setRoomsNumber);
         request.getPlotSize().ifPresent(entity::setPlotSize);
-        if(request.getLocalizationId().isPresent()) {
+        if (request.getLocalizationId().isPresent()) {
             Localization localization = localizationService.getLocalizationById(request.getLocalizationId().get());
             entity.setLocalization(localization);
         }

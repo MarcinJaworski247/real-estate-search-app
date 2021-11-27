@@ -3,8 +3,9 @@ package com.engine.realestatesearchapp.services;
 import com.engine.realestatesearchapp.controllers.assemblers.CommonAssembler;
 import com.engine.realestatesearchapp.controllers.requests.RealEstateRequest;
 import com.engine.realestatesearchapp.controllers.requests.UpdateRealEstateRequest;
-import com.engine.realestatesearchapp.repositiories.RealEstateRepository;
+import com.engine.realestatesearchapp.repositiories.HouseRepository;
 import com.engine.realestatesearchapp.repositiories.entities.File;
+import com.engine.realestatesearchapp.repositiories.entities.House;
 import com.engine.realestatesearchapp.repositiories.entities.Localization;
 import com.engine.realestatesearchapp.repositiories.entities.RealEstate;
 import com.engine.realestatesearchapp.utilities.exceptions.InvalidRequestException;
@@ -25,26 +26,28 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
+import static com.engine.realestatesearchapp.utilities.specifications.HouseSpecifications.getHouseSpecifications;
 import static com.engine.realestatesearchapp.utilities.specifications.RealEstateSpecifications.getRealEstateSpecification;
 
 @Service
 @RequiredArgsConstructor
-public class RealEstateService {
+public class HouseService {
 
     private final CommonAssembler assembler;
-    private final RealEstateRepository realEstateRepository;
+    private final HouseRepository houseRepository;
     private final LocalizationService localizationService;
     private final FileService fileService;
 
-    public RealEstate createRealEstate(RealEstateRequest request) {
-        RealEstate entity = assembler.mapToEntity(request);
+    public House createHouseOffer(RealEstateRequest request) {
+        request.validateHouseFields();
+        House entity = assembler.mapToHouseEntity(request);
         Localization localization = localizationService.getLocalizationById(request.getLocalizationId());
         entity.setLocalization(localization);
-        return realEstateRepository.save(entity);
+        return houseRepository.save(entity);
     }
 
     public RealEstate updateRealEstate(UUID realEstateId, UpdateRealEstateRequest request) {
-        RealEstate entity = getRealEstateById(realEstateId);
+        RealEstate entity = getHouseOfferById(realEstateId);
         request.getTitle().ifPresent(entity::setTitle);
         request.getDescription().ifPresent(entity::setDescription);
         request.getOfferType().ifPresent(entity::setOfferType);
@@ -64,33 +67,33 @@ public class RealEstateService {
         request.getHouseType().ifPresent(entity::setHouseType);
         request.getFlatType().ifPresent(entity::setFlatType);
         request.getPremisesPurpose().ifPresent(entity::setPremisesPurpose);
-        return realEstateRepository.save(entity);
+        return houseRepository.save(entity);
     }
 
     public RealEstate setRealEstateAsSold(UUID realEstateId) {
-        RealEstate entity = getRealEstateById(realEstateId);
+        RealEstate entity = getHouseOfferById(realEstateId);
         entity.setSold(true);
-        return realEstateRepository.save(entity);
+        return houseRepository.save(entity);
     }
 
     public RealEstate deleteRealEstate(UUID realEstateId) {
-        RealEstate entity = getRealEstateById(realEstateId);
+        RealEstate entity = getHouseOfferById(realEstateId);
         entity.setDeleted(true);
-        return realEstateRepository.save(entity);
+        return houseRepository.save(entity);
     }
 
-    public RealEstate getRealEstateById(UUID id) {
-        return realEstateRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(String.format("Real estate with id %s not found", id)));
+    public House getHouseOfferById(UUID id) {
+        return houseRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(String.format("House with id %s not found", id)));
     }
 
-    public Page<RealEstate> getRealEstatePage(RealEstateQueryFilters filters, Pageable pageable) {
-        Specification<RealEstate> specification = getRealEstateSpecification(filters);
-        return realEstateRepository.findAll(specification, pageable);
+    public Page<House> getRealEstatePage(RealEstateQueryFilters filters, Pageable pageable) {
+        Specification<House> specification = getHouseSpecifications(filters);
+        return houseRepository.findAll(specification, pageable);
     }
 
     public List<File> uploadOfferFiles(UUID realEstateId, MultipartFile[] files) {
-        RealEstate realEstate = getRealEstateById(realEstateId);
+        House realEstate = getHouseOfferById(realEstateId);
         List<File> filesList = new ArrayList<>();
         Arrays.asList(files).forEach(file -> filesList.add(uploadFileForOffer(realEstate, file)));
         return filesList;
@@ -108,9 +111,9 @@ public class RealEstateService {
 
     @Transactional
     public void deleteOfferFile(UUID realEstateId, UUID fileId) {
-        RealEstate realEstate = getRealEstateById(realEstateId);
-        realEstate.getFiles().removeIf(file -> file.getId().equals(fileId));
-        realEstateRepository.save(realEstate);
+        House house = getHouseOfferById(realEstateId);
+        house.getFiles().removeIf(file -> file.getId().equals(fileId));
+        houseRepository.save(house);
         fileService.deleteFile(fileId);
     }
 

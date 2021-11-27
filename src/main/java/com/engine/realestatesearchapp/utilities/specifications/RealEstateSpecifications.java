@@ -2,6 +2,8 @@ package com.engine.realestatesearchapp.utilities.specifications;
 
 import com.engine.realestatesearchapp.repositiories.entities.RealEstate;
 import com.engine.realestatesearchapp.repositiories.entities.RealEstate_;
+import com.engine.realestatesearchapp.repositiories.enums.OfferType;
+import com.engine.realestatesearchapp.repositiories.enums.RealEstateCategory;
 import com.engine.realestatesearchapp.utilities.filters.RealEstateQueryFilters;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -29,7 +31,7 @@ public class RealEstateSpecifications {
         return specification;
     }
 
-/*    public static Specification<RealEstate> categoryEquals(RealEstateCategory category) {
+    public static Specification<RealEstate> categoryEquals(RealEstateCategory category) {
         return (root, query, criteriaBuilder) ->
                 criteriaBuilder.equal(root.get(RealEstate_.ID), category);
     }
@@ -37,7 +39,7 @@ public class RealEstateSpecifications {
     public static Specification<RealEstate> offerTypeEquals(OfferType offerType) {
         return (root, query, criteriaBuilder) ->
                 criteriaBuilder.equal(root.get(RealEstate_.ID), offerType);
-    }*/
+    }
 
     public static Specification<RealEstate> createdAtGreaterThanOrEqualTo(LocalDateTime createdAtFrom) {
         return (root, query, criteriaBuilder) ->

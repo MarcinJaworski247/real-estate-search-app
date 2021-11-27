@@ -1,5 +1,6 @@
 package com.engine.realestatesearchapp.controllers.requests;
 
+import com.engine.realestatesearchapp.utilities.exceptions.InvalidRequestException;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -9,7 +10,6 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
@@ -76,4 +76,10 @@ public class RealEstateRequest {
 
     @ApiModelProperty(notes = "Premises purpose - required for category 'Biura i lokale'", example = "Usługowe")
     private String premisesPurpose;
+
+    public void validateHouseFields() {
+        if (this.houseType == null || this.plotSize == null) {
+            throw new InvalidRequestException("House type and plot size are mandatory.");
+        }
+    }
 }

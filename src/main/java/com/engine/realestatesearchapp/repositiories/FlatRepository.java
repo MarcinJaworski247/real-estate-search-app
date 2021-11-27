@@ -1,11 +1,11 @@
 package com.engine.realestatesearchapp.repositiories;
 
-import com.engine.realestatesearchapp.repositiories.entities.Localization;
+import com.engine.realestatesearchapp.repositiories.entities.Flat;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
 @Repository
-public interface LocalizationRepository extends JpaRepository<Localization, Integer> {
+public interface FlatRepository extends JpaRepository<Flat, UUID> {
 }

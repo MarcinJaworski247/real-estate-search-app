@@ -4,6 +4,7 @@ import com.engine.realestatesearchapp.controllers.requests.RealEstateRequest;
 import com.engine.realestatesearchapp.controllers.resources.FileResource;
 import com.engine.realestatesearchapp.controllers.resources.RealEstateResource;
 import com.engine.realestatesearchapp.repositiories.entities.File;
+import com.engine.realestatesearchapp.repositiories.entities.House;
 import com.engine.realestatesearchapp.repositiories.entities.RealEstate;
 import com.engine.realestatesearchapp.repositiories.entities.RealEstateTypes;
 import com.engine.realestatesearchapp.repositiories.enums.FlatType;
@@ -50,6 +51,37 @@ public class CommonAssembler {
         return resource;
     }
 
+    public House mapToHouseEntity(RealEstateRequest request) {
+        House house = new House();
+        house.setTitle(request.getTitle());
+        house.setDescription(request.getDescription());
+        house.setCategory(RealEstateCategory.HOUSES);
+        house.setPrice(request.getPrice());
+        house.setSize(request.getSize());
+        house.setDeleted(false);
+        house.setPlotSize(request.getPlotSize());
+        house.setFurnished(request.isFurnished());
+        house.setType(HouseType.valueOfLabel(request.getHouseType()));
+        house.setRoomsNumber(request.getRoomsNumber());
+        house.setFloorsNumber(request.getRoomsNumber());
+        return house;
+    }
+
+    public RealEstateResource mapToHouseResource(House entity) {
+        RealEstateResource resource = new RealEstateResource();
+        resource.setTitle(entity.getTitle());
+        resource.setDescription(entity.getDescription());
+        resource.setCategory(RealEstateCategory.HOUSES.getLabel());
+        resource.setPrice(entity.getPrice());
+        resource.setSize(entity.getSize());
+        resource.setPlotSize(entity.getPlotSize());
+        resource.setFurnished(entity.getFurnished());
+        resource.setHouseType(entity.getType().getLabel());
+        resource.setRoomsNumber(entity.getRoomsNumber());
+        resource.setFloorsNumber(entity.getRoomsNumber());
+        return resource;
+    }
+
     public RealEstate mapToEntity(RealEstateRequest request) {
         RealEstateTypes types = mapToRealEstateTypes(request);
         RealEstate entity = mapToRealEstateEntity(request);
@@ -82,7 +114,7 @@ public class CommonAssembler {
                 .rent(entity.getRent())
                 .size(entity.getSize())
                 .roomsNumber(entity.getRoomsNumber())
-                .floors(entity.getFloors())
+                .floorsNumber(entity.getFloors())
                 .furnished(entity.getFurnished())
                 .sold(entity.isSold())
                 .localization(entity.getLocalization())
