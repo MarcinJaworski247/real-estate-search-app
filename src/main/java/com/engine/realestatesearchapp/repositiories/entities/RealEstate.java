@@ -87,6 +87,9 @@ public class RealEstate {
     @Column(name = "SOLD")
     private boolean sold;
 
+    @Column(name = "REAL_ESTATE_ID", nullable = false)
+    private UUID realEstateId;
+
     @ManyToOne
     private Localization localization;
 

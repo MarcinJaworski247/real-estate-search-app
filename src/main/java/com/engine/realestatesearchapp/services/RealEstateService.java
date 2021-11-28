@@ -51,6 +51,8 @@ public class RealEstateService {
         if(request.getCategory().equals(RealEstateCategory.HOUSES.label)) {
             House house = assembler.mapToHouseEntity(request);
             house.setBasicInfo(basicInfo);
+            house = houseRepository.save(house);
+            basicInfo.setRealEstateId(house.getId());
         } else {
             throw new InvalidRequestException("Category not supported");
         }
