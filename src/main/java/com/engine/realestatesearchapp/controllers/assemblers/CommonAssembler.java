@@ -6,14 +6,8 @@ import com.engine.realestatesearchapp.controllers.resources.RealEstateResource;
 import com.engine.realestatesearchapp.repositiories.entities.File;
 import com.engine.realestatesearchapp.repositiories.entities.House;
 import com.engine.realestatesearchapp.repositiories.entities.RealEstate;
-import com.engine.realestatesearchapp.repositiories.entities.RealEstateTypes;
-import com.engine.realestatesearchapp.repositiories.enums.FlatType;
 import com.engine.realestatesearchapp.repositiories.enums.HouseType;
-import com.engine.realestatesearchapp.repositiories.enums.OfferType;
-import com.engine.realestatesearchapp.repositiories.enums.PlotType;
-import com.engine.realestatesearchapp.repositiories.enums.PremisesPurpose;
 import com.engine.realestatesearchapp.repositiories.enums.RealEstateCategory;
-import com.engine.realestatesearchapp.repositiories.enums.RoomType;
 import com.engine.realestatesearchapp.services.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -53,12 +47,6 @@ public class CommonAssembler {
 
     public House mapToHouseEntity(RealEstateRequest request) {
         House house = new House();
-        house.setTitle(request.getTitle());
-        house.setDescription(request.getDescription());
-        house.setCategory(RealEstateCategory.HOUSES);
-        house.setPrice(request.getPrice());
-        house.setSize(request.getSize());
-        house.setDeleted(false);
         house.setPlotSize(request.getPlotSize());
         house.setFurnished(request.isFurnished());
         house.setType(HouseType.valueOfLabel(request.getHouseType()));
@@ -67,25 +55,8 @@ public class CommonAssembler {
         return house;
     }
 
-    public RealEstateResource mapToHouseResource(House entity) {
-        RealEstateResource resource = new RealEstateResource();
-        resource.setTitle(entity.getTitle());
-        resource.setDescription(entity.getDescription());
-        resource.setCategory(RealEstateCategory.HOUSES.getLabel());
-        resource.setPrice(entity.getPrice());
-        resource.setSize(entity.getSize());
-        resource.setPlotSize(entity.getPlotSize());
-        resource.setFurnished(entity.getFurnished());
-        resource.setHouseType(entity.getType().getLabel());
-        resource.setRoomsNumber(entity.getRoomsNumber());
-        resource.setFloorsNumber(entity.getRoomsNumber());
-        return resource;
-    }
-
     public RealEstate mapToEntity(RealEstateRequest request) {
-        RealEstateTypes types = mapToRealEstateTypes(request);
         RealEstate entity = mapToRealEstateEntity(request);
-        entity.setTypes(types);
         entity.setFiles(new ArrayList<>());
         return entity;
     }
@@ -97,6 +68,18 @@ public class CommonAssembler {
         return resource;
     }
 
+    public RealEstateResource mapToHouseResource(House house) {
+        RealEstateResource resource = mapToResourceWithFiles(house.getBasicInfo());
+        resource.setCategory(RealEstateCategory.HOUSES.getLabel());
+        resource.setRealEstateId(house.getId());
+        resource.setPlotSize(house.getPlotSize());
+        resource.setFurnished(house.getFurnished());
+        resource.setHouseType(house.getType().getLabel());
+        resource.setRoomsNumber(house.getRoomsNumber());
+        resource.setFloorsNumber(house.getRoomsNumber());
+        return resource;
+    }
+
     public RealEstateResource mapToResourceWithAvatar(RealEstate entity) {
         RealEstateResource resource = mapToResource(entity);
         resource.setFiles(entity.getFiles().isEmpty() ? new ArrayList<>() :
@@ -105,26 +88,14 @@ public class CommonAssembler {
     }
 
     private RealEstateResource mapToResource(RealEstate entity) {
-        RealEstateTypes types = entity.getTypes();
         return RealEstateResource.builder()
-                .id(entity.getId())
+                .basicInfoId(entity.getId())
                 .title(entity.getTitle())
                 .description(entity.getDescription())
                 .price(entity.getPrice())
-                .rent(entity.getRent())
                 .size(entity.getSize())
-                .roomsNumber(entity.getRoomsNumber())
-                .floorsNumber(entity.getFloors())
-                .furnished(entity.getFurnished())
                 .sold(entity.isSold())
                 .localization(entity.getLocalization())
-                .category(types.getCategory() != null ? types.getCategory().getLabel() : null)
-                .offerType(types.getOfferType() != null ? types.getOfferType().getLabel() : null)
-                .houseType(types.getHouseType() != null ? types.getHouseType().getLabel() : null)
-                .roomType(types.getRoomType() != null ? types.getRoomType().getLabel() : null)
-                .plotType(types.getPlotType() != null ? types.getPlotType().getLabel() : null)
-                .flatType(types.getFlatType() != null ? types.getFlatType().getLabel() : null)
-                .premisesPurpose(types.getPremisesPurpose() != null ? types.getPremisesPurpose().getLabel() : null)
                 .files(entity.getFiles().isEmpty() ? new ArrayList<>() :
                         Collections.singletonList(this.mapToResource(entity.getFiles().get(0))))
                 .build();
@@ -135,26 +106,10 @@ public class CommonAssembler {
                 .title(request.getTitle())
                 .description(request.getDescription())
                 .price(request.getPrice())
-                .rent(request.getRent())
                 .size(request.getSize())
-                .roomsNumber(request.getRoomsNumber())
-                .plotSize(request.getPlotSize())
-                .floors(request.getFloors())
-                .furnished(request.isFurnished())
                 .deleted(false)
                 .sold(false)
                 .build();
     }
 
-    private RealEstateTypes mapToRealEstateTypes(RealEstateRequest request) {
-        return RealEstateTypes.builder()
-                .category(RealEstateCategory.valueOfLabel(request.getCategory()))
-                .offerType(OfferType.valueOfLabel(request.getOfferType()))
-                .houseType(HouseType.valueOfLabel(request.getHouseType()))
-                .roomType(RoomType.valueOfLabel(request.getRoomType()))
-                .plotType(PlotType.valueOfLabel(request.getPlotType()))
-                .flatType(FlatType.valueOfLabel(request.getFlatType()))
-                .premisesPurpose(PremisesPurpose.valueOfLabel(request.getPremisesPurpose()))
-                .build();
-    }
 }

@@ -2,7 +2,6 @@ package com.engine.realestatesearchapp.repositiories.entities;
 
 import com.engine.realestatesearchapp.repositiories.enums.HouseType;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,11 +12,11 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "HOUSES")
@@ -26,7 +25,12 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class House extends RealEstateInfo {
+public class House {
+
+    @Id
+    @Column(name = "ID")
+    @org.hibernate.annotations.Type(type = "pg-uuid")
+    private UUID id;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "TYPE", nullable = false)
@@ -44,7 +48,10 @@ public class House extends RealEstateInfo {
     @Column(name = "FLOORS_NUMBER")
     private short floorsNumber;
 
-    @OneToMany(mappedBy = "realEstateOffer", fetch = FetchType.LAZY)
-    private List<File> files;
+    @Column(name = "RENT")
+    private BigDecimal rent;
+
+    @OneToOne
+    private RealEstate basicInfo;
 
 }

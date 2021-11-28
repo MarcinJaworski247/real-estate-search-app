@@ -13,8 +13,11 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Entity
 @Table(name = "FLATS")
@@ -24,9 +27,14 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class Flat extends RealEstateInfo {
+public class Flat {
 
-    @Column(name = "RENT", nullable = false)
+    @Id
+    @Column(name = "ID")
+    @org.hibernate.annotations.Type(type = "pg-uuid")
+    private UUID id;
+
+    @Column(name = "RENT")
     private BigDecimal rent;
 
     @Enumerated(EnumType.STRING)
@@ -41,5 +49,8 @@ public class Flat extends RealEstateInfo {
 
     @Column(name = "ROOMS_NUMBER")
     private short roomsNumber;
+
+    @OneToOne
+    private RealEstate basicInfo;
 
 }

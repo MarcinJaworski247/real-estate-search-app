@@ -69,17 +69,17 @@ public class RealEstateController {
         return paged.toModel(realEstateService.getRealEstatePage(filters, pageable), realEstateAssembler);
     }
 
-    @GetMapping("/{real_estate_id}")
+    @GetMapping("/{basic_info_id}/{real_estate_id}")
     @ApiOperation(value = "Get real estate offer by id")
-    public RealEstateResource getRealEstateById(@PathVariable("real_estate_id") UUID realEstateId) {
-        return assembler.mapToResourceWithFiles(realEstateService.getRealEstateById(realEstateId));
+    public RealEstateResource getRealEstateById(@PathVariable("basic_info_id") UUID basicInfoId,@PathVariable("real_estate_id") UUID realEstateId) {
+        return realEstateService.getRealEstateResourceById(basicInfoId, realEstateId);
     }
 
-    @PatchMapping("/{real_estate_id}")
+    @PatchMapping("/{basic_info_id}/{real_estate_id}")
     @ApiOperation(value = "Update real estate offer by id")
-    public RealEstateResource updateRealEstate(@PathVariable("real_estate_id") UUID realEstateId,
+    public RealEstateResource updateRealEstate(@PathVariable("basic_info_id") UUID basicInfoId, @PathVariable("real_estate_id") UUID realEstateId,
             @RequestBody @Valid UpdateRealEstateRequest request) {
-        return assembler.mapToResourceWithFiles(realEstateService.updateRealEstate(realEstateId, request));
+        return assembler.mapToResourceWithFiles(realEstateService.updateRealEstate(basicInfoId, realEstateId, request));
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

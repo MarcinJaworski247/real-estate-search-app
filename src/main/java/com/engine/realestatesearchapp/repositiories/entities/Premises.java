@@ -13,7 +13,10 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.util.UUID;
 
 @Entity
 @Table(name = "PREMISES")
@@ -23,7 +26,12 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class Premises extends RealEstateInfo {
+public class Premises {
+
+    @Id
+    @Column(name = "ID")
+    @org.hibernate.annotations.Type(type = "pg-uuid")
+    private UUID id;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "PURPOSE", nullable = false)
@@ -31,6 +39,9 @@ public class Premises extends RealEstateInfo {
 
     @Column(name = "FURNISHED")
     private Boolean furnished;
+
+    @OneToOne
+    private RealEstate basicInfo;
 
 }
 

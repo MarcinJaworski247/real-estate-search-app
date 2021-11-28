@@ -3,10 +3,16 @@ package com.engine.realestatesearchapp.services;
 import com.engine.realestatesearchapp.controllers.assemblers.CommonAssembler;
 import com.engine.realestatesearchapp.controllers.requests.RealEstateRequest;
 import com.engine.realestatesearchapp.controllers.requests.UpdateRealEstateRequest;
+import com.engine.realestatesearchapp.controllers.resources.RealEstateResource;
+import com.engine.realestatesearchapp.repositiories.HouseRepository;
 import com.engine.realestatesearchapp.repositiories.RealEstateRepository;
 import com.engine.realestatesearchapp.repositiories.entities.File;
+import com.engine.realestatesearchapp.repositiories.entities.House;
 import com.engine.realestatesearchapp.repositiories.entities.Localization;
 import com.engine.realestatesearchapp.repositiories.entities.RealEstate;
+import com.engine.realestatesearchapp.repositiories.enums.HouseType;
+import com.engine.realestatesearchapp.repositiories.enums.OfferType;
+import com.engine.realestatesearchapp.repositiories.enums.RealEstateCategory;
 import com.engine.realestatesearchapp.utilities.exceptions.InvalidRequestException;
 import com.engine.realestatesearchapp.utilities.exceptions.NotFoundException;
 import com.engine.realestatesearchapp.utilities.filters.RealEstateQueryFilters;
@@ -33,38 +39,48 @@ public class RealEstateService {
 
     private final CommonAssembler assembler;
     private final RealEstateRepository realEstateRepository;
+    private final HouseRepository houseRepository;
     private final LocalizationService localizationService;
     private final FileService fileService;
 
     public RealEstate createRealEstate(RealEstateRequest request) {
-        RealEstate entity = assembler.mapToEntity(request);
+        RealEstate basicInfo = assembler.mapToEntity(request);
         Localization localization = localizationService.getLocalizationById(request.getLocalizationId());
-        entity.setLocalization(localization);
-        return realEstateRepository.save(entity);
+        basicInfo.setLocalization(localization);
+        basicInfo = realEstateRepository.save(basicInfo);
+        if(request.getCategory().equals(RealEstateCategory.HOUSES.label)) {
+            House house = assembler.mapToHouseEntity(request);
+            house.setBasicInfo(basicInfo);
+        } else {
+            throw new InvalidRequestException("Category not supported");
+        }
+        return realEstateRepository.save(basicInfo);
     }
 
-    public RealEstate updateRealEstate(UUID realEstateId, UpdateRealEstateRequest request) {
-        RealEstate entity = getRealEstateById(realEstateId);
-        request.getTitle().ifPresent(entity::setTitle);
-        request.getDescription().ifPresent(entity::setDescription);
-        request.getOfferType().ifPresent(entity::setOfferType);
-        request.getPrice().ifPresent(entity::setPrice);
-        request.getSize().ifPresent(entity::setSize);
-        request.getRent().ifPresent(entity::setRent);
-        request.isFurnished().ifPresent(entity::setFurnished);
-        request.getFloors().ifPresent(entity::setFloors);
-        request.getRoomsNumber().ifPresent(entity::setRoomsNumber);
-        request.getPlotSize().ifPresent(entity::setPlotSize);
+    public RealEstate updateRealEstate(UUID basicInfoId, UUID realEstateId, UpdateRealEstateRequest request) {
+        RealEstate basicInfo = getRealEstateById(basicInfoId);
+        request.getTitle().ifPresent(basicInfo::setTitle);
+        request.getDescription().ifPresent(basicInfo::setDescription);
+        request.getPrice().ifPresent(basicInfo::setPrice);
+        request.getSize().ifPresent(basicInfo::setSize);
+        request.getOfferType().ifPresent(basicInfo::setOfferType);
         if (request.getLocalizationId().isPresent()) {
             Localization localization = localizationService.getLocalizationById(request.getLocalizationId().get());
-            entity.setLocalization(localization);
+            basicInfo.setLocalization(localization);
         }
-        request.getPlotType().ifPresent(entity::setPlotType);
-        request.getRoomType().ifPresent(entity::setRoomType);
-        request.getHouseType().ifPresent(entity::setHouseType);
-        request.getFlatType().ifPresent(entity::setFlatType);
-        request.getPremisesPurpose().ifPresent(entity::setPremisesPurpose);
-        return realEstateRepository.save(entity);
+        if(basicInfo.getCategory().equals(RealEstateCategory.HOUSES)) {
+            House house = getHouseById(realEstateId);
+            request.getHouseType().ifPresent(type -> house.setType(HouseType.valueOfLabel(request.getHouseType().get())));
+            request.getRent().ifPresent(house::setRent);
+            request.isFurnished().ifPresent(house::setFurnished);
+            request.getFloors().ifPresent(house::setFloorsNumber);
+            request.getRoomsNumber().ifPresent(house::setRoomsNumber);
+            request.getPlotSize().ifPresent(house::setPlotSize);
+            house.setBasicInfo(basicInfo);
+        } else {
+            throw new InvalidRequestException("Category not supported");
+        }
+        return realEstateRepository.save(basicInfo);
     }
 
     public RealEstate setRealEstateAsSold(UUID realEstateId) {
@@ -82,6 +98,21 @@ public class RealEstateService {
     public RealEstate getRealEstateById(UUID id) {
         return realEstateRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(String.format("Real estate with id %s not found", id)));
+    }
+
+    public RealEstateResource getRealEstateResourceById(UUID basicInfoId, UUID realEstateId) {
+        RealEstate basicInfo = getRealEstateById(basicInfoId);
+        if (basicInfo.getCategory().equals(RealEstateCategory.HOUSES)) {
+            House house = getHouseById(realEstateId);
+            return assembler.mapToHouseResource(house);
+        } else {
+            throw new InvalidRequestException("Category not supported");
+        }
+    }
+
+    public House getHouseById(UUID id) {
+        return houseRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(String.format("House with id %s not found", id)));
     }
 
     public Page<RealEstate> getRealEstatePage(RealEstateQueryFilters filters, Pageable pageable) {

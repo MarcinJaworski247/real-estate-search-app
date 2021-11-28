@@ -13,7 +13,10 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.util.UUID;
 
 @Entity
 @Table(name = "ROOMS")
@@ -23,10 +26,18 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class Room extends RealEstateInfo {
+public class Room {
+
+    @Id
+    @Column(name = "ID")
+    @org.hibernate.annotations.Type(type = "pg-uuid")
+    private UUID id;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "TYPE", nullable = false)
     private RoomType type;
+
+    @OneToOne
+    private RealEstate basicInfo;
 
 }
