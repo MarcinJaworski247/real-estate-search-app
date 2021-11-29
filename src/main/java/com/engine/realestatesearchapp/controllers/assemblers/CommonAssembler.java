@@ -5,9 +5,11 @@ import com.engine.realestatesearchapp.controllers.resources.FileResource;
 import com.engine.realestatesearchapp.controllers.resources.RealEstateResource;
 import com.engine.realestatesearchapp.repositiories.entities.File;
 import com.engine.realestatesearchapp.repositiories.entities.House;
+import com.engine.realestatesearchapp.repositiories.entities.Plot;
 import com.engine.realestatesearchapp.repositiories.entities.RealEstate;
 import com.engine.realestatesearchapp.repositiories.enums.HouseType;
 import com.engine.realestatesearchapp.repositiories.enums.OfferType;
+import com.engine.realestatesearchapp.repositiories.enums.PlotType;
 import com.engine.realestatesearchapp.repositiories.enums.RealEstateCategory;
 import com.engine.realestatesearchapp.services.FileService;
 import lombok.RequiredArgsConstructor;
@@ -56,6 +58,12 @@ public class CommonAssembler {
         return house;
     }
 
+    public Plot mapToPlotEntity(RealEstateRequest request) {
+        Plot plot = new Plot();
+        plot.setType(PlotType.valueOfLabel(request.getPlotType()));
+        return plot;
+    }
+
     public RealEstate mapToEntity(RealEstateRequest request) {
         RealEstate entity = mapToRealEstateEntity(request);
         entity.setFiles(new ArrayList<>());
@@ -81,6 +89,14 @@ public class CommonAssembler {
         return resource;
     }
 
+    public RealEstateResource mapToPlotResource(Plot plot) {
+        RealEstateResource resource = mapToResourceWithFiles(plot.getBasicInfo());
+        resource.setCategory(RealEstateCategory.PLOTS.getLabel());
+        resource.setRealEstateId(plot.getId());
+        resource.setPlotType(plot.getType().getLabel());
+        return resource;
+    }
+
     public RealEstateResource mapToResourceWithAvatar(RealEstate entity) {
         RealEstateResource resource = mapToResource(entity);
         resource.setFiles(entity.getFiles().isEmpty() ? new ArrayList<>() :
@@ -97,9 +113,12 @@ public class CommonAssembler {
                 .price(entity.getPrice())
                 .size(entity.getSize())
                 .sold(entity.isSold())
+                .category(entity.getCategory().getLabel())
                 .localization(entity.getLocalization())
                 .files(entity.getFiles().isEmpty() ? new ArrayList<>() :
                         Collections.singletonList(this.mapToResource(entity.getFiles().get(0))))
+                .createdAt(entity.getCreatedAt())
+                .updatedAt(entity.getUpdatedAt())
                 .build();
     }
 

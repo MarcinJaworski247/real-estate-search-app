@@ -11,6 +11,7 @@ import lombok.Setter;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -45,4 +46,6 @@ public class RealEstateResource extends RepresentationModel<RealEstateResource> 
     private boolean sold;
     private Localization localization;
     private List<FileResource> files;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

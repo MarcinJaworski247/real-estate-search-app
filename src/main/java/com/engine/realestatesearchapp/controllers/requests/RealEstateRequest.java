@@ -82,4 +82,10 @@ public class RealEstateRequest {
             throw new InvalidRequestException("House type and plot size are mandatory.");
         }
     }
+
+    public void validatePlotFields() {
+        if (this.plotType == null) {
+            throw new InvalidRequestException("Plot type is mandatory.");
+        }
+    }
 }

@@ -5,13 +5,12 @@ import com.engine.realestatesearchapp.controllers.requests.RealEstateRequest;
 import com.engine.realestatesearchapp.controllers.requests.UpdateRealEstateRequest;
 import com.engine.realestatesearchapp.controllers.resources.RealEstateResource;
 import com.engine.realestatesearchapp.repositiories.HouseRepository;
+import com.engine.realestatesearchapp.repositiories.PlotRepository;
 import com.engine.realestatesearchapp.repositiories.RealEstateRepository;
-import com.engine.realestatesearchapp.repositiories.entities.File;
-import com.engine.realestatesearchapp.repositiories.entities.House;
-import com.engine.realestatesearchapp.repositiories.entities.Localization;
-import com.engine.realestatesearchapp.repositiories.entities.RealEstate;
+import com.engine.realestatesearchapp.repositiories.entities.*;
 import com.engine.realestatesearchapp.repositiories.enums.HouseType;
 import com.engine.realestatesearchapp.repositiories.enums.OfferType;
+import com.engine.realestatesearchapp.repositiories.enums.PlotType;
 import com.engine.realestatesearchapp.repositiories.enums.RealEstateCategory;
 import com.engine.realestatesearchapp.utilities.exceptions.InvalidRequestException;
 import com.engine.realestatesearchapp.utilities.exceptions.NotFoundException;
@@ -40,6 +39,7 @@ public class RealEstateService {
     private final CommonAssembler assembler;
     private final RealEstateRepository realEstateRepository;
     private final HouseRepository houseRepository;
+    private final PlotRepository plotRepository;
     private final LocalizationService localizationService;
     private final FileService fileService;
 
@@ -48,11 +48,18 @@ public class RealEstateService {
         Localization localization = localizationService.getLocalizationById(request.getLocalizationId());
         basicInfo.setLocalization(localization);
         basicInfo = realEstateRepository.save(basicInfo);
-        if(request.getCategory().equals(RealEstateCategory.HOUSES.label)) {
+        if (request.getCategory().equals(RealEstateCategory.HOUSES.label)) {
+            request.validateHouseFields();
             House house = assembler.mapToHouseEntity(request);
             house.setBasicInfo(basicInfo);
             house = houseRepository.save(house);
             basicInfo.setRealEstateId(house.getId());
+        } else if (request.getCategory().equals(RealEstateCategory.PLOTS.label)) {
+            request.validatePlotFields();
+            Plot plot = assembler.mapToPlotEntity(request);
+            plot.setBasicInfo(basicInfo);
+            plot = plotRepository.save(plot);
+            basicInfo.setRealEstateId(plot.getId());
         } else {
             throw new InvalidRequestException("Category not supported");
         }
@@ -70,7 +77,7 @@ public class RealEstateService {
             Localization localization = localizationService.getLocalizationById(request.getLocalizationId().get());
             basicInfo.setLocalization(localization);
         }
-        if(basicInfo.getCategory().equals(RealEstateCategory.HOUSES)) {
+        if (basicInfo.getCategory().equals(RealEstateCategory.HOUSES)) {
             House house = getHouseById(realEstateId);
             request.getHouseType().ifPresent(type -> house.setType(HouseType.valueOfLabel(request.getHouseType().get())));
             request.getRent().ifPresent(house::setRent);
@@ -79,6 +86,12 @@ public class RealEstateService {
             request.getRoomsNumber().ifPresent(house::setRoomsNumber);
             request.getPlotSize().ifPresent(house::setPlotSize);
             house.setBasicInfo(basicInfo);
+            houseRepository.save(house);
+        } else if (basicInfo.getCategory().equals(RealEstateCategory.PLOTS)) {
+            Plot plot = getPlotById(realEstateId);
+            request.getPlotType().ifPresent(type -> plot.setType(PlotType.valueOfLabel(request.getPlotType().get())));
+            plot.setBasicInfo(basicInfo);
+            plotRepository.save(plot);
         } else {
             throw new InvalidRequestException("Category not supported");
         }
@@ -91,10 +104,10 @@ public class RealEstateService {
         return realEstateRepository.save(entity);
     }
 
-    public RealEstate deleteRealEstate(UUID realEstateId) {
+    public void deleteRealEstate(UUID realEstateId) {
         RealEstate entity = getRealEstateById(realEstateId);
         entity.setDeleted(true);
-        return realEstateRepository.save(entity);
+        realEstateRepository.save(entity);
     }
 
     public RealEstate getRealEstateById(UUID id) {
@@ -107,6 +120,9 @@ public class RealEstateService {
         if (basicInfo.getCategory().equals(RealEstateCategory.HOUSES)) {
             House house = getHouseById(realEstateId);
             return assembler.mapToHouseResource(house);
+        } else if (basicInfo.getCategory().equals(RealEstateCategory.PLOTS)) {
+            Plot plot = getPlotById(realEstateId);
+            return assembler.mapToPlotResource(plot);
         } else {
             throw new InvalidRequestException("Category not supported");
         }
@@ -115,6 +131,11 @@ public class RealEstateService {
     public House getHouseById(UUID id) {
         return houseRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(String.format("House with id %s not found", id)));
+    }
+
+    public Plot getPlotById(UUID id) {
+        return plotRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(String.format("Plot with id %s not found", id)));
     }
 
     public Page<RealEstate> getRealEstatePage(RealEstateQueryFilters filters, Pageable pageable) {
