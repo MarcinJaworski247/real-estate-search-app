@@ -22,12 +22,12 @@ public class RealEstateQueryFilters {
     @ApiModelProperty(
             notes = "Real estate category",
             example = "Domy")
-    private RealEstateCategory category;
+    private String category;
 
     @ApiModelProperty(
             notes = "Offer type",
             example = "Wynajem")
-    private OfferType offerType;
+    private String offerType;
 
     @ApiModelProperty(
             notes = "Timestamp to filter out created date-time earlier than it / ISO8601",

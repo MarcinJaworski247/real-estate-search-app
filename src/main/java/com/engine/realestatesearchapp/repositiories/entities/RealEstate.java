@@ -57,6 +57,7 @@ import java.util.UUID;
 public class RealEstate {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID")
     @org.hibernate.annotations.Type(type = "pg-uuid")
     private UUID id;
@@ -87,7 +88,7 @@ public class RealEstate {
     @Column(name = "SOLD")
     private boolean sold;
 
-    @Column(name = "REAL_ESTATE_ID", nullable = false)
+    @Column(name = "REAL_ESTATE_ID")
     private UUID realEstateId;
 
     @ManyToOne

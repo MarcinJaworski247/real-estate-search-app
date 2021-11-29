@@ -30,12 +30,11 @@ public class RealEstateResource extends RepresentationModel<RealEstateResource> 
     private BigDecimal price;
     private BigDecimal size;
     private BigDecimal rent;
-    private boolean furnished;
-    private short level;
-    private short roomsNumber;
+    private Boolean furnished;
+    private Short roomsNumber;
     private BigDecimal plotSize;
-    private short floorsNumber;
-    private short floorNumber;
+    private Short floorsNumber;
+    private Short floorNumber;
     private String offerType;
     private UUID localizationId;
     private String plotType;

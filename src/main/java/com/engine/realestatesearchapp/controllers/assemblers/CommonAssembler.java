@@ -7,6 +7,7 @@ import com.engine.realestatesearchapp.repositiories.entities.File;
 import com.engine.realestatesearchapp.repositiories.entities.House;
 import com.engine.realestatesearchapp.repositiories.entities.RealEstate;
 import com.engine.realestatesearchapp.repositiories.enums.HouseType;
+import com.engine.realestatesearchapp.repositiories.enums.OfferType;
 import com.engine.realestatesearchapp.repositiories.enums.RealEstateCategory;
 import com.engine.realestatesearchapp.services.FileService;
 import lombok.RequiredArgsConstructor;
@@ -90,6 +91,7 @@ public class CommonAssembler {
     private RealEstateResource mapToResource(RealEstate entity) {
         return RealEstateResource.builder()
                 .basicInfoId(entity.getId())
+                .realEstateId(entity.getRealEstateId())
                 .title(entity.getTitle())
                 .description(entity.getDescription())
                 .price(entity.getPrice())
@@ -107,6 +109,8 @@ public class CommonAssembler {
                 .description(request.getDescription())
                 .price(request.getPrice())
                 .size(request.getSize())
+                .category(RealEstateCategory.valueOfLabel(request.getCategory()))
+                .offerType(OfferType.valueOfLabel(request.getOfferType()))
                 .deleted(false)
                 .sold(false)
                 .build();
