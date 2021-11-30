@@ -3,14 +3,8 @@ package com.engine.realestatesearchapp.controllers.assemblers;
 import com.engine.realestatesearchapp.controllers.requests.RealEstateRequest;
 import com.engine.realestatesearchapp.controllers.resources.FileResource;
 import com.engine.realestatesearchapp.controllers.resources.RealEstateResource;
-import com.engine.realestatesearchapp.repositiories.entities.File;
-import com.engine.realestatesearchapp.repositiories.entities.House;
-import com.engine.realestatesearchapp.repositiories.entities.Plot;
-import com.engine.realestatesearchapp.repositiories.entities.RealEstate;
-import com.engine.realestatesearchapp.repositiories.enums.HouseType;
-import com.engine.realestatesearchapp.repositiories.enums.OfferType;
-import com.engine.realestatesearchapp.repositiories.enums.PlotType;
-import com.engine.realestatesearchapp.repositiories.enums.RealEstateCategory;
+import com.engine.realestatesearchapp.repositiories.entities.*;
+import com.engine.realestatesearchapp.repositiories.enums.*;
 import com.engine.realestatesearchapp.services.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -64,6 +58,29 @@ public class CommonAssembler {
         return plot;
     }
 
+    public Premises mapToPremisesEntity(RealEstateRequest request) {
+        Premises premises = new Premises();
+        premises.setPurpose(PremisesPurpose.valueOfLabel(request.getPremisesPurpose()));
+        premises.setFurnished(request.isFurnished());
+        return premises;
+    }
+
+    public Flat mapToFlatEntity(RealEstateRequest request) {
+        Flat flat = new Flat();
+        flat.setRent(request.getRent());
+        flat.setType(FlatType.valueOfLabel(request.getFlatType()));
+        flat.setFurnished(request.isFurnished());
+        flat.setRoomsNumber(request.getRoomsNumber());
+        flat.setLevel(request.getFloors());
+        return flat;
+    }
+
+    public Room mapToRoomEntity(RealEstateRequest request) {
+        Room room = new Room();
+        room.setType(RoomType.valueOfLabel(request.getRoomType()));
+        return room;
+    }
+
     public RealEstate mapToEntity(RealEstateRequest request) {
         RealEstate entity = mapToRealEstateEntity(request);
         entity.setFiles(new ArrayList<>());
@@ -94,6 +111,35 @@ public class CommonAssembler {
         resource.setCategory(RealEstateCategory.PLOTS.getLabel());
         resource.setRealEstateId(plot.getId());
         resource.setPlotType(plot.getType().getLabel());
+        return resource;
+    }
+
+    public RealEstateResource mapToPremisesResource(Premises premises) {
+        RealEstateResource resource = mapToResourceWithFiles(premises.getBasicInfo());
+        resource.setCategory(RealEstateCategory.OFFICES_AND_PREMISES.getLabel());
+        resource.setRealEstateId(premises.getId());
+        resource.setPremisesPurpose(premises.getPurpose().getLabel());
+        resource.setFurnished(premises.getFurnished());
+        return resource;
+    }
+
+    public RealEstateResource mapToFlatResource(Flat flat) {
+        RealEstateResource resource = mapToResourceWithFiles(flat.getBasicInfo());
+        resource.setCategory(RealEstateCategory.FLATS.getLabel());
+        resource.setRealEstateId(flat.getId());
+        resource.setRent(flat.getRent());
+        resource.setFlatType(flat.getType().getLabel());
+        resource.setFurnished(flat.isFurnished());
+        resource.setRoomsNumber(flat.getRoomsNumber());
+        resource.setFloorNumber(flat.getLevel());
+        return resource;
+    }
+
+    public RealEstateResource mapToRoomResource(Room room) {
+        RealEstateResource resource = mapToResourceWithFiles(room.getBasicInfo());
+        resource.setCategory(RealEstateCategory.ROOMS.getLabel());
+        resource.setRealEstateId(room.getId());
+        resource.setRoomType(room.getType().getLabel());
         return resource;
     }
 

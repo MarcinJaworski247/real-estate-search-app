@@ -88,4 +88,22 @@ public class RealEstateRequest {
             throw new InvalidRequestException("Plot type is mandatory.");
         }
     }
+
+    public void validatePremisesFields(){
+        if(this.premisesPurpose == null){
+            throw new InvalidRequestException("Premises purpose is mandatory");
+        }
+    }
+
+    public void validateFlatFields(){
+        if(this.flatType == null){
+            throw new InvalidRequestException("Flat type is mandatory");
+        }
+    }
+
+    public void validateRoomFields(){
+        if(this.roomType == null){
+            throw new InvalidRequestException("Room type is mandatory");
+        }
+    }
 }

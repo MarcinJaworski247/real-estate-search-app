@@ -4,14 +4,9 @@ import com.engine.realestatesearchapp.controllers.assemblers.CommonAssembler;
 import com.engine.realestatesearchapp.controllers.requests.RealEstateRequest;
 import com.engine.realestatesearchapp.controllers.requests.UpdateRealEstateRequest;
 import com.engine.realestatesearchapp.controllers.resources.RealEstateResource;
-import com.engine.realestatesearchapp.repositiories.HouseRepository;
-import com.engine.realestatesearchapp.repositiories.PlotRepository;
-import com.engine.realestatesearchapp.repositiories.RealEstateRepository;
+import com.engine.realestatesearchapp.repositiories.*;
 import com.engine.realestatesearchapp.repositiories.entities.*;
-import com.engine.realestatesearchapp.repositiories.enums.HouseType;
-import com.engine.realestatesearchapp.repositiories.enums.OfferType;
-import com.engine.realestatesearchapp.repositiories.enums.PlotType;
-import com.engine.realestatesearchapp.repositiories.enums.RealEstateCategory;
+import com.engine.realestatesearchapp.repositiories.enums.*;
 import com.engine.realestatesearchapp.utilities.exceptions.InvalidRequestException;
 import com.engine.realestatesearchapp.utilities.exceptions.NotFoundException;
 import com.engine.realestatesearchapp.utilities.filters.RealEstateQueryFilters;
@@ -40,6 +35,9 @@ public class RealEstateService {
     private final RealEstateRepository realEstateRepository;
     private final HouseRepository houseRepository;
     private final PlotRepository plotRepository;
+    private final PremisesRepository premisesRepository;
+    private final FlatRepository flatRepository;
+    private final RoomRepository roomRepository;
     private final LocalizationService localizationService;
     private final FileService fileService;
 
@@ -60,6 +58,24 @@ public class RealEstateService {
             plot.setBasicInfo(basicInfo);
             plot = plotRepository.save(plot);
             basicInfo.setRealEstateId(plot.getId());
+        } else if (request.getCategory().equals(RealEstateCategory.OFFICES_AND_PREMISES.label)) {
+            request.validatePremisesFields();
+            Premises premises = assembler.mapToPremisesEntity(request);
+            premises.setBasicInfo(basicInfo);
+            premises = premisesRepository.save(premises);
+            basicInfo.setRealEstateId(premises.getId());
+        } else if (request.getCategory().equals(RealEstateCategory.FLATS.label)) {
+            request.validateFlatFields();
+            Flat flat = assembler.mapToFlatEntity(request);
+            flat.setBasicInfo(basicInfo);
+            flat = flatRepository.save(flat);
+            basicInfo.setRealEstateId(flat.getId());
+        } else if (request.getCategory().equals(RealEstateCategory.ROOMS.label)) {
+            request.validateRoomFields();
+            Room room = assembler.mapToRoomEntity(request);
+            room.setBasicInfo(basicInfo);
+            room = roomRepository.save(room);
+            basicInfo.setRealEstateId(room.getId());
         } else {
             throw new InvalidRequestException("Category not supported");
         }
@@ -92,6 +108,26 @@ public class RealEstateService {
             request.getPlotType().ifPresent(type -> plot.setType(PlotType.valueOfLabel(request.getPlotType().get())));
             plot.setBasicInfo(basicInfo);
             plotRepository.save(plot);
+        } else if (basicInfo.getCategory().equals(RealEstateCategory.OFFICES_AND_PREMISES)) {
+            Premises premises = getPremisesById(realEstateId);
+            request.getPremisesPurpose().ifPresent(purpose -> premises.setPurpose(PremisesPurpose.valueOfLabel((request.getPremisesPurpose().get()))));
+            request.isFurnished().ifPresent(premises::setFurnished);
+            premises.setBasicInfo(basicInfo);
+            premisesRepository.save(premises);
+        } else if (basicInfo.getCategory().equals(RealEstateCategory.FLATS)) {
+            Flat flat = getFlatById(realEstateId);
+            request.getRent().ifPresent(flat::setRent);
+            request.getFlatType().ifPresent(type -> flat.setType(FlatType.valueOfLabel(request.getFlatType().get())));
+            request.isFurnished().ifPresent(flat::setFurnished);
+            request.getRoomsNumber().ifPresent(flat::setRoomsNumber);
+            request.getFloors().ifPresent(flat::setLevel);
+            flat.setBasicInfo(basicInfo);
+            flatRepository.save(flat);
+        } else if (basicInfo.getCategory().equals(RealEstateCategory.ROOMS)) {
+            Room room = getRoomById(realEstateId);
+            request.getRoomType().ifPresent(type -> room.setType(RoomType.valueOfLabel(request.getRoomType().get())));
+            room.setBasicInfo(basicInfo);
+            roomRepository.save(room);
         } else {
             throw new InvalidRequestException("Category not supported");
         }
@@ -136,6 +172,21 @@ public class RealEstateService {
     public Plot getPlotById(UUID id) {
         return plotRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(String.format("Plot with id %s not found", id)));
+    }
+
+    public Premises getPremisesById(UUID id) {
+        return premisesRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(String.format("Premises with id %s not found", id)));
+    }
+
+    public Flat getFlatById(UUID id) {
+        return flatRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(String.format("Flat with id %s not found", id)));
+    }
+
+    public Room getRoomById(UUID id) {
+        return roomRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(String.format("Flat with id %s not found", id)));
     }
 
     public Page<RealEstate> getRealEstatePage(RealEstateQueryFilters filters, Pageable pageable) {
