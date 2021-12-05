@@ -18,5 +18,5 @@ import java.util.UUID;
 public class UserResource {
     private UUID id;
     private String username;
-    private Integer phoneNumber;
+    private String phoneNumber;
 }

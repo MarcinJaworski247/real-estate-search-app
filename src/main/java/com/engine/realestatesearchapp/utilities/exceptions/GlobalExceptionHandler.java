@@ -20,7 +20,7 @@ public class GlobalExceptionHandler {
     }
 
     @ResponseBody
-    @ExceptionHandler({ServerErrorException.class, Exception.class})
+    @ExceptionHandler({ServerErrorException.class})
     ResponseEntity<ErrorMessage> handle500Error(HttpServletRequest req, Exception ex) {
         return sendExceptionMessage(ex, HttpStatus.INTERNAL_SERVER_ERROR, req.getRequestURL().toString());
     }
@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
     }
 
     @ResponseBody
-    @ExceptionHandler({InvalidRequestException.class})
+    @ExceptionHandler({InvalidRequestException.class, Exception.class, AlreadyExistsException.class})
     ResponseEntity<ErrorMessage> handle400(HttpServletRequest req, Exception ex) {
         return sendExceptionMessage(ex, HttpStatus.BAD_REQUEST, req.getRequestURL().toString());
     }

@@ -24,6 +24,6 @@ public class UserRequest {
 
     @NotBlank
     @ApiModelProperty(notes = "Phone number", required = true)
-    private Integer phoneNumber;
+    private String phoneNumber;
 
 }

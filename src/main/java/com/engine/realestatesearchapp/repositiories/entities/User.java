@@ -1,5 +1,6 @@
 package com.engine.realestatesearchapp.repositiories.entities;
 
+import com.engine.realestatesearchapp.repositiories.enums.UserRole;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,14 +13,13 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -47,8 +47,9 @@ public class User {
     private String password;
 
     @JoinColumn(name = "PHONE_NUMBER", nullable = false)
-    private Integer phoneNumber;
+    private String phoneNumber;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    private List<Role> roles;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ROLE_NAME", nullable = false)
+    private UserRole role;
 }
