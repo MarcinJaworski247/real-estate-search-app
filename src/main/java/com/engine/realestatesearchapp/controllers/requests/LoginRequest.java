@@ -11,7 +11,7 @@ import javax.validation.constraints.NotBlank;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel(description = "Request to create real estate")
+@ApiModel(description = "Request to login")
 public class LoginRequest {
 
     @NotBlank

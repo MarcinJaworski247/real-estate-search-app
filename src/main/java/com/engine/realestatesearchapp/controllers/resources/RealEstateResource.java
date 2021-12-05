@@ -48,4 +48,5 @@ public class RealEstateResource extends RepresentationModel<RealEstateResource> 
     private List<FileResource> files;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private UserResource user;
 }

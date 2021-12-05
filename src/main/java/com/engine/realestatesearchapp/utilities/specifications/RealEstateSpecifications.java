@@ -11,6 +11,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RealEstateSpecifications {
@@ -25,6 +26,9 @@ public class RealEstateSpecifications {
         }
         if (filters.getLocalizationId() != null) {
             specification = specification.and(localizationIdEquals(filters.getLocalizationId()));
+        }
+        if (filters.getUserId() != null) {
+            specification = specification.and(userIdEquals(filters.getUserId()));
         }
         if (filters.getPriceFrom() != null) {
             specification = specification.and(priceGreaterThanOrEqualTo(filters.getPriceFrom()));
@@ -54,6 +58,11 @@ public class RealEstateSpecifications {
     public static Specification<RealEstate> localizationIdEquals(Long localizationId) {
         return (root, query, criteriaBuilder) ->
                 criteriaBuilder.equal(root.get(RealEstate_.LOCALIZATION), localizationId);
+    }
+
+    public static Specification<RealEstate> userIdEquals(UUID userId) {
+        return (root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get(RealEstate_.USER).get("id"), userId);
     }
 
     public static Specification<RealEstate> priceGreaterThanOrEqualTo(BigDecimal price) {

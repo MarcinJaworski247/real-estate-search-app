@@ -10,6 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Setter
 @Getter
@@ -25,8 +26,13 @@ public class RealEstateQueryFilters {
 
     @ApiModelProperty(
             notes = "Real estate localization",
-            example = "Gdańśk")
+            example = "1")
     private Long localizationId;
+
+    @ApiModelProperty(
+            notes = "User id",
+            example = "84e3ff3d-f6e9-434b-83c3-73e70ee86622")
+    private UUID userId;
 
     @ApiModelProperty(
             notes = "Offer type",

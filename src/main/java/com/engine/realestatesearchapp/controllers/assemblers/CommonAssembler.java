@@ -187,6 +187,7 @@ public class CommonAssembler {
                         Collections.singletonList(this.mapToResource(entity.getFiles().get(0))))
                 .createdAt(entity.getCreatedAt())
                 .updatedAt(entity.getUpdatedAt())
+                .user(mapToUserResource(entity.getUser()))
                 .build();
     }
 

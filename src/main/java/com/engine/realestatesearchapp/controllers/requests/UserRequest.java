@@ -11,7 +11,7 @@ import javax.validation.constraints.NotBlank;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel(description = "Request to create real estate")
+@ApiModel(description = "Request to register")
 public class UserRequest {
 
     @NotBlank
@@ -23,7 +23,7 @@ public class UserRequest {
     private String password;
 
     @NotBlank
-    @ApiModelProperty(notes = "Phone number", required = true)
+    @ApiModelProperty(notes = "Phone number", example = "534129099", required = true)
     private String phoneNumber;
 
 }

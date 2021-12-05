@@ -1,5 +1,6 @@
 package com.engine.realestatesearchapp.services;
 
+import com.engine.realestatesearchapp.controllers.requests.UpdateUserRequest;
 import com.engine.realestatesearchapp.controllers.requests.UserRequest;
 import com.engine.realestatesearchapp.repositiories.UserRepository;
 import com.engine.realestatesearchapp.repositiories.entities.User;
@@ -26,6 +27,7 @@ import static java.lang.String.format;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final CurrentUserService currentUserService;
     private final BCryptPasswordEncoder bcryptEncoder;
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -39,10 +41,8 @@ public class UserService implements UserDetailsService {
 
     private Set<SimpleGrantedAuthority> getAuthority(User user) {
         Set<SimpleGrantedAuthority> authorities = new HashSet<>();
-        //authorities.add(new SimpleGrantedAuthority(role.getName()));
         authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
         return authorities;
-        //return Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN"));
     }
 
     public List<User> findAll() {
@@ -52,6 +52,10 @@ public class UserService implements UserDetailsService {
     public void delete(UUID id) {
         findById(id);
         userRepository.deleteById(id);
+    }
+
+    public User getCurrentUser() {
+        return findByUsername(currentUserService.getUsername());
     }
 
     public User findByUsername(String username) {
@@ -64,13 +68,20 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new NotFoundException(format("User with id %s not found", id)));
     }
 
+    public User updateUser(UpdateUserRequest request) {
+        User entity = getCurrentUser();
+        request.getPassword().ifPresent(password -> entity.setPassword(bcryptEncoder.encode(password)));
+        request.getPhoneNumber().ifPresent(entity::setPhoneNumber);
+        return userRepository.save(entity);
+    }
+
     public User save(UserRequest request) {
-        System.out.println("admin pass" + bcryptEncoder.encode("admin"));
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new AlreadyExistsException(format("User with username %s already exists", request.getUsername()));
         }
         User entity = User.builder().username(request.getUsername())
-                .password(bcryptEncoder.encode(request.getPassword())).phoneNumber(request.getPhoneNumber())
+                .password(bcryptEncoder.encode(request.getPassword()))
+                .phoneNumber(request.getPhoneNumber())
                 .role(UserRole.USER)
                 .build();
         return userRepository.save(entity);

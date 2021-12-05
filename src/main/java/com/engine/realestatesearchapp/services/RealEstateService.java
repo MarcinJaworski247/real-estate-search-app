@@ -18,6 +18,7 @@ import com.engine.realestatesearchapp.repositiories.entities.Plot;
 import com.engine.realestatesearchapp.repositiories.entities.Premises;
 import com.engine.realestatesearchapp.repositiories.entities.RealEstate;
 import com.engine.realestatesearchapp.repositiories.entities.Room;
+import com.engine.realestatesearchapp.repositiories.entities.User;
 import com.engine.realestatesearchapp.repositiories.enums.FlatType;
 import com.engine.realestatesearchapp.repositiories.enums.HouseType;
 import com.engine.realestatesearchapp.repositiories.enums.PlotType;
@@ -57,11 +58,14 @@ public class RealEstateService {
     private final RoomRepository roomRepository;
     private final LocalizationService localizationService;
     private final FileService fileService;
+    private final UserService userService;
 
     public RealEstate createRealEstate(RealEstateRequest request) {
         RealEstate basicInfo = assembler.mapToEntity(request);
         Localization localization = localizationService.getLocalizationById(request.getLocalizationId());
         basicInfo.setLocalization(localization);
+        User user = userService.getCurrentUser();
+        basicInfo.setUser(user);
         basicInfo = realEstateRepository.save(basicInfo);
         if (request.getCategory().equals(RealEstateCategory.HOUSES.label)) {
             request.validateHouseFields();

@@ -23,7 +23,7 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -46,7 +46,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("real-estate")
 @RequiredArgsConstructor
 public class RealEstateController {
@@ -76,6 +76,7 @@ public class RealEstateController {
         return realEstateService.getRealEstateResourceById(basicInfoId, realEstateId);
     }
 
+    @PreAuthorize("hasRole('USER')")
     @PatchMapping("/{basic_info_id}/{real_estate_id}")
     @ApiOperation(value = "Update real estate offer by id")
     public RealEstateResource updateRealEstate(@PathVariable("basic_info_id") UUID basicInfoId,
@@ -84,6 +85,7 @@ public class RealEstateController {
         return assembler.mapToResourceWithFiles(realEstateService.updateRealEstate(basicInfoId, realEstateId, request));
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{real_estate_id}")
     @ApiOperation(value = "Delete real estate offer by id")
@@ -91,18 +93,21 @@ public class RealEstateController {
         realEstateService.deleteRealEstate(realEstateId);
     }
 
+    @PreAuthorize("hasRole('USER')")
     @PatchMapping("/{real_estate_id}/set-sold")
     @ApiOperation(value = "Mark real estate offer as sold")
     public void sellRealEstate(@PathVariable("real_estate_id") UUID realEstateId) {
         realEstateService.setRealEstateAsSold(realEstateId);
     }
 
+    @PreAuthorize("hasRole('USER')")
     @PostMapping
     @ApiOperation(value = "Create real estate offer")
     public RealEstateResource createRealEstate(@RequestBody @Valid RealEstateRequest request) {
         return assembler.mapToResourceWithFiles(realEstateService.createRealEstate(request));
     }
 
+    @PreAuthorize("hasRole('USER')")
     @PostMapping(value = "/{real_estate_id}/files", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiOperation(value = "Upload file for the offer")
     @ResponseStatus(HttpStatus.CREATED)
@@ -113,6 +118,7 @@ public class RealEstateController {
                 .collect(Collectors.toList());
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping(value = "/{real_estate_id}/files/{file_id}")
     @ApiOperation(value = "Download file related to the offer")
     public ResponseEntity<StreamingResponseBody> downloadFile(@PathVariable("real_estate_id") UUID realEstateId,
@@ -122,6 +128,7 @@ public class RealEstateController {
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping(value = "/{real_estate_id}/files/{file_id}/img",
             produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_PNG_VALUE,
                     MediaType.APPLICATION_JSON_VALUE})
@@ -133,6 +140,7 @@ public class RealEstateController {
         return new ResponseEntity<>(logoBytes, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @DeleteMapping(value = "/{real_estate_id}/files/{file_id}")
     @ApiOperation(value = "Delete file related to the offer")
     public void deleteApplicationFile(@PathVariable("real_estate_id") UUID realEstateId,

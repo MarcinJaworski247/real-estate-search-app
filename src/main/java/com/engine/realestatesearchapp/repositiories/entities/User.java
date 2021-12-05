@@ -18,7 +18,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 import java.util.UUID;
 
@@ -46,7 +45,7 @@ public class User {
     @JsonIgnore
     private String password;
 
-    @JoinColumn(name = "PHONE_NUMBER", nullable = false)
+    @Column(name = "PHONE_NUMBER", nullable = false)
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
