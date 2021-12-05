@@ -1,6 +1,5 @@
 package com.engine.realestatesearchapp.repositiories.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -12,18 +11,13 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import java.util.List;
-import java.util.UUID;
 
 @Entity
-@Table(name = "USERS")
+@Table(name = "LOCALIZATIONS")
 @Builder
 @Getter
 @Setter
@@ -31,24 +25,16 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class User {
+public class Role {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
-    @org.hibernate.annotations.Type(type = "pg-uuid")
-    private UUID id;
+    private Integer id;
 
-    @Column(name = "USERNAME", nullable = false)
-    private String username;
+    @Column
+    private String name;
 
-    @Column(name = "PASSWORD", nullable = false)
-    @JsonIgnore
-    private String password;
-
-    @JoinColumn(name = "PHONE_NUMBER", nullable = false)
-    private Integer phoneNumber;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    private List<Role> roles;
+    @Column
+    private String description;
 }

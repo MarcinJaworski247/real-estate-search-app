@@ -3,6 +3,7 @@ package com.engine.realestatesearchapp.controllers.assemblers;
 import com.engine.realestatesearchapp.controllers.requests.RealEstateRequest;
 import com.engine.realestatesearchapp.controllers.resources.FileResource;
 import com.engine.realestatesearchapp.controllers.resources.RealEstateResource;
+import com.engine.realestatesearchapp.controllers.resources.UserResource;
 import com.engine.realestatesearchapp.repositiories.entities.File;
 import com.engine.realestatesearchapp.repositiories.entities.Flat;
 import com.engine.realestatesearchapp.repositiories.entities.House;
@@ -10,6 +11,7 @@ import com.engine.realestatesearchapp.repositiories.entities.Plot;
 import com.engine.realestatesearchapp.repositiories.entities.Premises;
 import com.engine.realestatesearchapp.repositiories.entities.RealEstate;
 import com.engine.realestatesearchapp.repositiories.entities.Room;
+import com.engine.realestatesearchapp.repositiories.entities.User;
 import com.engine.realestatesearchapp.repositiories.enums.FlatType;
 import com.engine.realestatesearchapp.repositiories.enums.HouseType;
 import com.engine.realestatesearchapp.repositiories.enums.OfferType;
@@ -97,6 +99,14 @@ public class CommonAssembler {
         RealEstate entity = mapToRealEstateEntity(request);
         entity.setFiles(new ArrayList<>());
         return entity;
+    }
+
+    public UserResource mapToUserResource(User entity) {
+        return UserResource.builder()
+                .id(entity.getId())
+                .username(entity.getUsername())
+                .phoneNumber(entity.getPhoneNumber())
+                .build();
     }
 
     public RealEstateResource mapToResourceWithFiles(RealEstate entity) {

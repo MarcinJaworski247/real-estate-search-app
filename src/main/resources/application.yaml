@@ -28,6 +28,15 @@ spring:
     init:
       mode: always
 
+#SECURITY CONFIG
+
+security:
+  token:
+    validity:
+      seconds: 3600
+  signing-key: QNqfec5qxwwIqCLVJX7qY55WSxMBrbMiO
+
+
 ---
 spring:
   config:

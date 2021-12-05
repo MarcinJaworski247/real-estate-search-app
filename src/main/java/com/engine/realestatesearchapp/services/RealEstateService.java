@@ -182,14 +182,24 @@ public class RealEstateService {
 
     public RealEstateResource getRealEstateResourceById(UUID basicInfoId, UUID realEstateId) {
         RealEstate basicInfo = getRealEstateById(basicInfoId);
-        if (basicInfo.getCategory().equals(RealEstateCategory.HOUSES)) {
-            House house = getHouseById(realEstateId);
-            return assembler.mapToHouseResource(house);
-        } else if (basicInfo.getCategory().equals(RealEstateCategory.PLOTS)) {
-            Plot plot = getPlotById(realEstateId);
-            return assembler.mapToPlotResource(plot);
-        } else {
-            throw new InvalidRequestException("Category not supported");
+        switch (basicInfo.getCategory()) {
+            case HOUSES:
+                House house = getHouseById(realEstateId);
+                return assembler.mapToHouseResource(house);
+            case PLOTS:
+                Plot plot = getPlotById(realEstateId);
+                return assembler.mapToPlotResource(plot);
+            case OFFICES_AND_PREMISES:
+                Premises premises = getPremisesById(realEstateId);
+                return assembler.mapToPremisesResource(premises);
+            case FLATS:
+                Flat flat = getFlatById(realEstateId);
+                return assembler.mapToFlatResource(flat);
+            case ROOMS:
+                Room room = getRoomById(realEstateId);
+                return assembler.mapToRoomResource(room);
+            default:
+                throw new InvalidRequestException("Category not supported");
         }
     }
 
