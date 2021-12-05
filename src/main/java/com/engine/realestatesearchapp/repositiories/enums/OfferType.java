@@ -1,5 +1,7 @@
 package com.engine.realestatesearchapp.repositiories.enums;
 
+import com.engine.realestatesearchapp.utilities.exceptions.InvalidRequestException;
+
 public enum OfferType {
     RENT("Wynajem"),
     SALE("Sprzedaż");
@@ -20,7 +22,7 @@ public enum OfferType {
                 return e;
             }
         }
-        return null;
+        throw new InvalidRequestException(String.format("Invalid label %s - doesn't exist in enum OfferType", label));
     }
 
 }

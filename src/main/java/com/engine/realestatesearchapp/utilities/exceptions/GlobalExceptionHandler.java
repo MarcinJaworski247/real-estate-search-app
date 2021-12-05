@@ -20,7 +20,7 @@ public class GlobalExceptionHandler {
     }
 
     @ResponseBody
-    @ExceptionHandler({ServerErrorException.class})
+    @ExceptionHandler({ServerErrorException.class, Exception.class})
     ResponseEntity<ErrorMessage> handle500Error(HttpServletRequest req, Exception ex) {
         return sendExceptionMessage(ex, HttpStatus.INTERNAL_SERVER_ERROR, req.getRequestURL().toString());
     }

@@ -89,20 +89,20 @@ public class RealEstateRequest {
         }
     }
 
-    public void validatePremisesFields(){
-        if(this.premisesPurpose == null){
+    public void validatePremisesFields() {
+        if (this.premisesPurpose == null) {
             throw new InvalidRequestException("Premises purpose is mandatory");
         }
     }
 
-    public void validateFlatFields(){
-        if(this.flatType == null){
+    public void validateFlatFields() {
+        if (this.flatType == null) {
             throw new InvalidRequestException("Flat type is mandatory");
         }
     }
 
-    public void validateRoomFields(){
-        if(this.roomType == null){
+    public void validateRoomFields() {
+        if (this.roomType == null) {
             throw new InvalidRequestException("Room type is mandatory");
         }
     }

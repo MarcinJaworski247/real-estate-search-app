@@ -71,13 +71,15 @@ public class RealEstateController {
 
     @GetMapping("/{basic_info_id}/{real_estate_id}")
     @ApiOperation(value = "Get real estate offer by id")
-    public RealEstateResource getRealEstateById(@PathVariable("basic_info_id") UUID basicInfoId,@PathVariable("real_estate_id") UUID realEstateId) {
+    public RealEstateResource getRealEstateById(@PathVariable("basic_info_id") UUID basicInfoId,
+            @PathVariable("real_estate_id") UUID realEstateId) {
         return realEstateService.getRealEstateResourceById(basicInfoId, realEstateId);
     }
 
     @PatchMapping("/{basic_info_id}/{real_estate_id}")
     @ApiOperation(value = "Update real estate offer by id")
-    public RealEstateResource updateRealEstate(@PathVariable("basic_info_id") UUID basicInfoId, @PathVariable("real_estate_id") UUID realEstateId,
+    public RealEstateResource updateRealEstate(@PathVariable("basic_info_id") UUID basicInfoId,
+            @PathVariable("real_estate_id") UUID realEstateId,
             @RequestBody @Valid UpdateRealEstateRequest request) {
         return assembler.mapToResourceWithFiles(realEstateService.updateRealEstate(basicInfoId, realEstateId, request));
     }

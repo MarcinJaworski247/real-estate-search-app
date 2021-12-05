@@ -1,12 +1,7 @@
 package com.engine.realestatesearchapp.repositiories.entities;
 
-import com.engine.realestatesearchapp.repositiories.enums.FlatType;
-import com.engine.realestatesearchapp.repositiories.enums.HouseType;
 import com.engine.realestatesearchapp.repositiories.enums.OfferType;
-import com.engine.realestatesearchapp.repositiories.enums.PlotType;
-import com.engine.realestatesearchapp.repositiories.enums.PremisesPurpose;
 import com.engine.realestatesearchapp.repositiories.enums.RealEstateCategory;
-import com.engine.realestatesearchapp.repositiories.enums.RoomType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -19,7 +14,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;

@@ -1,6 +1,5 @@
 package com.engine.realestatesearchapp.repositiories;
 
-import com.engine.realestatesearchapp.repositiories.entities.Premises;
 import com.engine.realestatesearchapp.repositiories.entities.Room;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
