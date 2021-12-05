@@ -1,7 +1,5 @@
 package com.engine.realestatesearchapp.utilities.filters;
 
-import com.engine.realestatesearchapp.repositiories.enums.OfferType;
-import com.engine.realestatesearchapp.repositiories.enums.RealEstateCategory;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Setter
@@ -25,9 +24,24 @@ public class RealEstateQueryFilters {
     private String category;
 
     @ApiModelProperty(
+            notes = "Real estate localization",
+            example = "Gdańśk")
+    private Long localizationId;
+
+    @ApiModelProperty(
             notes = "Offer type",
             example = "Wynajem")
     private String offerType;
+
+    @ApiModelProperty(
+            notes = "Offer price from",
+            example = "1000")
+    private BigDecimal priceFrom;
+
+    @ApiModelProperty(
+            notes = "Offer price to",
+            example = "1000")
+    private BigDecimal priceTo;
 
     @ApiModelProperty(
             notes = "Timestamp to filter out created date-time earlier than it / ISO8601",

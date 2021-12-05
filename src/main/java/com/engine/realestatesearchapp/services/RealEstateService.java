@@ -93,43 +93,55 @@ public class RealEstateService {
             Localization localization = localizationService.getLocalizationById(request.getLocalizationId().get());
             basicInfo.setLocalization(localization);
         }
-        if (basicInfo.getCategory().equals(RealEstateCategory.HOUSES)) {
-            House house = getHouseById(realEstateId);
-            request.getHouseType().ifPresent(type -> house.setType(HouseType.valueOfLabel(request.getHouseType().get())));
-            request.getRent().ifPresent(house::setRent);
-            request.isFurnished().ifPresent(house::setFurnished);
-            request.getFloors().ifPresent(house::setFloorsNumber);
-            request.getRoomsNumber().ifPresent(house::setRoomsNumber);
-            request.getPlotSize().ifPresent(house::setPlotSize);
-            house.setBasicInfo(basicInfo);
-            houseRepository.save(house);
-        } else if (basicInfo.getCategory().equals(RealEstateCategory.PLOTS)) {
-            Plot plot = getPlotById(realEstateId);
-            request.getPlotType().ifPresent(type -> plot.setType(PlotType.valueOfLabel(request.getPlotType().get())));
-            plot.setBasicInfo(basicInfo);
-            plotRepository.save(plot);
-        } else if (basicInfo.getCategory().equals(RealEstateCategory.OFFICES_AND_PREMISES)) {
-            Premises premises = getPremisesById(realEstateId);
-            request.getPremisesPurpose().ifPresent(purpose -> premises.setPurpose(PremisesPurpose.valueOfLabel((request.getPremisesPurpose().get()))));
-            request.isFurnished().ifPresent(premises::setFurnished);
-            premises.setBasicInfo(basicInfo);
-            premisesRepository.save(premises);
-        } else if (basicInfo.getCategory().equals(RealEstateCategory.FLATS)) {
-            Flat flat = getFlatById(realEstateId);
-            request.getRent().ifPresent(flat::setRent);
-            request.getFlatType().ifPresent(type -> flat.setType(FlatType.valueOfLabel(request.getFlatType().get())));
-            request.isFurnished().ifPresent(flat::setFurnished);
-            request.getRoomsNumber().ifPresent(flat::setRoomsNumber);
-            request.getFloors().ifPresent(flat::setLevel);
-            flat.setBasicInfo(basicInfo);
-            flatRepository.save(flat);
-        } else if (basicInfo.getCategory().equals(RealEstateCategory.ROOMS)) {
-            Room room = getRoomById(realEstateId);
-            request.getRoomType().ifPresent(type -> room.setType(RoomType.valueOfLabel(request.getRoomType().get())));
-            room.setBasicInfo(basicInfo);
-            roomRepository.save(room);
-        } else {
-            throw new InvalidRequestException("Category not supported");
+        switch (basicInfo.getCategory()) {
+            case HOUSES:
+                House house = getHouseById(realEstateId);
+                request.getHouseType()
+                        .ifPresent(type -> house.setType(HouseType.valueOfLabel(request.getHouseType().get())));
+                request.getRent().ifPresent(house::setRent);
+                request.isFurnished().ifPresent(house::setFurnished);
+                request.getFloors().ifPresent(house::setFloorsNumber);
+                request.getRoomsNumber().ifPresent(house::setRoomsNumber);
+                request.getPlotSize().ifPresent(house::setPlotSize);
+                house.setBasicInfo(basicInfo);
+                houseRepository.save(house);
+                break;
+            case PLOTS:
+                Plot plot = getPlotById(realEstateId);
+                request.getPlotType()
+                        .ifPresent(type -> plot.setType(PlotType.valueOfLabel(request.getPlotType().get())));
+                plot.setBasicInfo(basicInfo);
+                plotRepository.save(plot);
+                break;
+            case OFFICES_AND_PREMISES:
+                Premises premises = getPremisesById(realEstateId);
+                request.getPremisesPurpose()
+                        .ifPresent(purpose -> premises.setPurpose(PremisesPurpose.valueOfLabel((request.getPremisesPurpose()
+                                .get()))));
+                request.isFurnished().ifPresent(premises::setFurnished);
+                premises.setBasicInfo(basicInfo);
+                premisesRepository.save(premises);
+                break;
+            case FLATS:
+                Flat flat = getFlatById(realEstateId);
+                request.getRent().ifPresent(flat::setRent);
+                request.getFlatType()
+                        .ifPresent(type -> flat.setType(FlatType.valueOfLabel(request.getFlatType().get())));
+                request.isFurnished().ifPresent(flat::setFurnished);
+                request.getRoomsNumber().ifPresent(flat::setRoomsNumber);
+                request.getFloors().ifPresent(flat::setLevel);
+                flat.setBasicInfo(basicInfo);
+                flatRepository.save(flat);
+                break;
+            case ROOMS:
+                Room room = getRoomById(realEstateId);
+                request.getRoomType()
+                        .ifPresent(type -> room.setType(RoomType.valueOfLabel(request.getRoomType().get())));
+                room.setBasicInfo(basicInfo);
+                roomRepository.save(room);
+                break;
+            default:
+                throw new InvalidRequestException("Category not supported");
         }
         return realEstateRepository.save(basicInfo);
     }
