@@ -181,6 +181,8 @@ public class CommonAssembler {
                 .price(entity.getPrice())
                 .size(entity.getSize())
                 .sold(entity.isSold())
+                .visitsCounter(entity.getVisitsCounter())
+                .phoneViewsCounter(entity.getPhoneViewsCounter())
                 .category(entity.getCategory().getLabel())
                 .localization(entity.getLocalization())
                 .files(entity.getFiles().isEmpty() ? new ArrayList<>() :

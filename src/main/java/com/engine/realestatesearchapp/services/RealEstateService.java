@@ -173,6 +173,18 @@ public class RealEstateService {
         return realEstateRepository.save(entity);
     }
 
+    public RealEstate incrementVisitsCounter(UUID realEstateId) {
+        RealEstate entity = getRealEstateById(realEstateId);
+        entity.setVisitsCounter(entity.getVisitsCounter() + 1);
+        return realEstateRepository.save(entity);
+    }
+
+    public RealEstate incrementPhoneViewsCounter(UUID realEstateId) {
+        RealEstate entity = getRealEstateById(realEstateId);
+        entity.setPhoneViewsCounter(entity.getPhoneViewsCounter() + 1);
+        return realEstateRepository.save(entity);
+    }
+
     public void deleteRealEstate(UUID realEstateId) {
         RealEstate entity = getRealEstateById(realEstateId);
         entity.setDeleted(true);

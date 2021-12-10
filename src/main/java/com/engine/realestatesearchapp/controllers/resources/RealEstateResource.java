@@ -44,6 +44,8 @@ public class RealEstateResource extends RepresentationModel<RealEstateResource> 
     private String flatType;
     private String premisesPurpose;
     private boolean sold;
+    private int visitsCounter;
+    private int phoneViewsCounter;
     private Localization localization;
     private List<FileResource> files;
     private LocalDateTime createdAt;
