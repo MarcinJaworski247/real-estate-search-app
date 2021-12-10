@@ -14,4 +14,4 @@ INSERT INTO localizations (city, voivodeship) VALUES ('Katowice', 'SLASKIE') ON 
 INSERT INTO localizations (city, voivodeship) VALUES ('Kraków', 'MALOPOLSKIE') ON CONFLICT DO NOTHING
 INSERT INTO localizations (city, voivodeship) VALUES ('Rzeszów', 'PODKARPACKIE') ON CONFLICT DO NOTHING
 
-INSERT INTO users (id, username, password, phone_number, role_name) VALUES ('84e3ff3d-f6e9-434b-83c3-73e70ee86621', 'admin', '$2a$10$IgIGCmzMW5flnhzQ4PkD1e6yyxNNsf9Gis8dYK6kzFUuiJX1Yisw2', 000000000, 'ADMIN') ON CONFLICT DO NOTHING
+INSERT INTO users (id, first_name, last_name, username, password, phone_number, role_name) VALUES ('84e3ff3d-f6e9-434b-83c3-73e70ee86621', '', '', 'admin', '$2a$10$IgIGCmzMW5flnhzQ4PkD1e6yyxNNsf9Gis8dYK6kzFUuiJX1Yisw2', 000000000, 'ADMIN') ON CONFLICT DO NOTHING

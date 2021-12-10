@@ -19,6 +19,14 @@ public class UserRequest {
     private String username;
 
     @NotBlank
+    @ApiModelProperty(notes = "First name", required = true)
+    private String firstName;
+
+    @NotBlank
+    @ApiModelProperty(notes = "Last name", required = true)
+    private String lastName;
+
+    @NotBlank
     @ApiModelProperty(notes = "Password", required = true)
     private String password;
 

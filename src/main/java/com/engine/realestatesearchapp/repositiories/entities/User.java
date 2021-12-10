@@ -50,6 +50,12 @@ public class User {
     @JsonIgnore
     private String password;
 
+    @Column(name = "FIRST_NAME", nullable = false)
+    private String firstName;
+
+    @Column(name = "LAST_NAME", nullable = false)
+    private String lastName;
+
     @Column(name = "PHONE_NUMBER", nullable = false)
     private String phoneNumber;
 

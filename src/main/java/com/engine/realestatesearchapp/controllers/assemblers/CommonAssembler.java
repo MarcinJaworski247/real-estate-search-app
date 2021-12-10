@@ -105,6 +105,8 @@ public class CommonAssembler {
         return UserResource.builder()
                 .id(entity.getId())
                 .username(entity.getUsername())
+                .firstName(entity.getFirstName())
+                .lastName(entity.getLastName())
                 .phoneNumber(entity.getPhoneNumber())
                 .build();
     }
