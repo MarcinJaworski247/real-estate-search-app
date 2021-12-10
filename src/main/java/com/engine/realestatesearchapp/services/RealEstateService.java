@@ -198,6 +198,14 @@ public class RealEstateService {
         userService.saveUser(user);
     }
 
+    public void removeRealEstateFromCurrentUserFavourites(UUID realEstateId) {
+        User user = userService.getCurrentUser();
+        RealEstate entity = getRealEstateById(realEstateId);
+        user.getFavourites().remove(entity);
+        userService.saveUser(user);
+    }
+
+
     public List<RealEstate> getCurrentUserFavourites() {
         return userService.getCurrentUser().getFavourites();
     }

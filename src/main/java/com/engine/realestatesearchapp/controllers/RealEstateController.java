@@ -116,6 +116,13 @@ public class RealEstateController {
     }
 
     @PreAuthorize("hasRole('USER')")
+    @PatchMapping("/{basic_info_id}/unset-favourite")
+    @ApiOperation(value = "Unmark real estate offer as user favourite")
+    public void removeRealEstateFromFavourites(@PathVariable("basic_info_id") UUID realEstateId) {
+        realEstateService.removeRealEstateFromCurrentUserFavourites(realEstateId);
+    }
+
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/{basic_info_id}/offer-visits")
     @ApiOperation(value = "Increment offer visits counter")
     public RealEstateResource incrementVisitsCounter(@PathVariable("basic_info_id") UUID realEstateId) {

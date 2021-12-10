@@ -43,6 +43,7 @@ public class RealEstateResource extends RepresentationModel<RealEstateResource> 
     private String houseType;
     private String flatType;
     private String premisesPurpose;
+    private boolean favourite;
     private boolean sold;
     private int visitsCounter;
     private int phoneViewsCounter;
