@@ -15,10 +15,15 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -51,4 +56,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(name = "ROLE_NAME", nullable = false)
     private UserRole role;
+
+    @ManyToMany
+    private List<RealEstate> favourites = new ArrayList<>();
 }

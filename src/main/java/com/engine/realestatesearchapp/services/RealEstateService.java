@@ -191,6 +191,17 @@ public class RealEstateService {
         realEstateRepository.save(entity);
     }
 
+    public void addRealEstateToCurrentUserFavourites(UUID realEstateId) {
+        User user = userService.getCurrentUser();
+        RealEstate entity = getRealEstateById(realEstateId);
+        user.getFavourites().add(entity);
+        userService.saveUser(user);
+    }
+
+    public List<RealEstate> getCurrentUserFavourites() {
+        return userService.getCurrentUser().getFavourites();
+    }
+
     public RealEstate getRealEstateById(UUID id) {
         return realEstateRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(String.format("Real estate with id %s not found", id)));

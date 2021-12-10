@@ -76,6 +76,14 @@ public class RealEstateController {
         return realEstateService.getRealEstateResourceById(basicInfoId, realEstateId);
     }
 
+    @GetMapping("/favourites")
+    @ApiOperation(value = "Get current user favourite offers")
+    public List<RealEstateResource> getCurrentUserFavourites() {
+        return realEstateService.getCurrentUserFavourites().stream()
+                .map(assembler::mapToResourceWithAvatar)
+                .collect(Collectors.toList());
+    }
+
     @PreAuthorize("hasRole('USER')")
     @PatchMapping("/{basic_info_id}/{real_estate_id}")
     @ApiOperation(value = "Update real estate offer by id")
@@ -98,6 +106,13 @@ public class RealEstateController {
     @ApiOperation(value = "Mark real estate offer as sold")
     public void sellRealEstate(@PathVariable("basic_info_id") UUID realEstateId) {
         realEstateService.setRealEstateAsSold(realEstateId);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PatchMapping("/{basic_info_id}/set-favourite")
+    @ApiOperation(value = "Mark real estate offer as user favourite")
+    public void setRealEstateAsFavourite(@PathVariable("basic_info_id") UUID realEstateId) {
+        realEstateService.addRealEstateToCurrentUserFavourites(realEstateId);
     }
 
     @PreAuthorize("hasRole('USER')")

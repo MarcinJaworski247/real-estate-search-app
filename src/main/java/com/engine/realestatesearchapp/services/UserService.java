@@ -75,6 +75,10 @@ public class UserService implements UserDetailsService {
         return userRepository.save(entity);
     }
 
+    public User saveUser(User user) {
+       return userRepository.save(user);
+    }
+
     public User save(UserRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new AlreadyExistsException(format("User with username %s already exists", request.getUsername()));
