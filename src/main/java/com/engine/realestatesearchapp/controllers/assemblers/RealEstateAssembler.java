@@ -24,7 +24,10 @@ public class RealEstateAssembler extends RepresentationModelAssemblerSupport<Rea
     @Override
     public RealEstateResource toModel(RealEstate entity) {
         RealEstateResource resource = assembler.mapToResourceWithAvatar(entity);
-        resource.setFavourite(realEstateService.getCurrentUserFavourites().contains(entity));
+        try {
+            resource.setFavourite(realEstateService.getCurrentUserFavourites().contains(entity));
+        } catch (Exception e) {
+        }
         return resource;
     }
 
