@@ -20,7 +20,7 @@ export default {
     return { offers: [] };
   },
   mounted() {
-    this.$store.dispatch("getUserOffers").then((response) => {
+    this.$store.dispatch("getAllOffers").then((response) => {
       if (response._embedded && response._embedded.realEstateResourceList)
         this.offers = response._embedded.realEstateResourceList;
     });

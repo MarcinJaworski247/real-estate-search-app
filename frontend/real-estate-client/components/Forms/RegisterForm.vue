@@ -4,6 +4,11 @@
     <v-text-field v-model="lastName" required label="Nazwisko"></v-text-field>
     <v-text-field v-model="mail" required label="Email"></v-text-field>
     <v-text-field
+      v-model="phoneNumber"
+      required
+      label="Numer telefonu"
+    ></v-text-field>
+    <v-text-field
       v-model="password"
       type="password"
       required
@@ -20,6 +25,7 @@ export default {
       firstName: "",
       lastName: "",
       mail: "",
+      phoneNumber: "",
       password: "",
     };
   },
@@ -30,6 +36,7 @@ export default {
           firstName: this.firstName,
           lastName: this.lastName,
           mail: this.mail,
+          phoneNumber: this.phoneNumber,
           password: this.password,
         })
         .then(() => {

@@ -9,13 +9,13 @@
         sm="6"
         lg="3"
       >
-        <OfferTile :offer="item" :editable="editable" />
+        <OfferTile :offer="item" />
       </v-col>
     </v-row>
   </v-container>
 </template>
 <script>
-import OfferTile from "./OfferTile";
+import OfferTile from "./OfferTile.vue";
 export default {
   name: "OffersList",
   components: {
@@ -25,11 +25,6 @@ export default {
     offers: {
       type: Array,
       required: false,
-    },
-    editable: {
-      type: Boolean,
-      required: false,
-      default: false,
     },
   },
 };

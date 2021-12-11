@@ -2,6 +2,7 @@ import colors from "vuetify/es5/util/colors";
 
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
+  ssr: false,
   head: {
     titleTemplate: "real-estate-client",
     title: "Real Estate Search App",
@@ -69,7 +70,9 @@ export default {
       },
     },
   },
-
+  router: {
+    middleware: "check-auth",
+  },
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
 };

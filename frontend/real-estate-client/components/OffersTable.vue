@@ -104,7 +104,7 @@ export default {
   },
   methods: {
     deleteOffer(data) {
-      this.idToDelete = data.id;
+      this.idToDelete = data.basicInfoId;
       this.titleToDelete = data.title;
       this.deleteModalVisible = true;
     },
@@ -126,10 +126,10 @@ export default {
       this.deleteModalVisible = false;
     },
     goToEdit(data) {
-      this.$router.push(`/offer/edit/${data.id}`);
+      this.$router.push(`/offer/edit/${data.basicInfoId}/${data.realEstateId}`);
     },
     markAsSold(data) {
-      this.idToSold = data.id;
+      this.idToSold = data.basicInfoId;
       this.titleToSold = data.title;
       this.soldModalVisible = true;
     },

@@ -21,15 +21,14 @@ export default {
     };
   },
   methods: {
-    logIn() {
-      this.$store
-        .dispatch("login", {
-          mail: this.mail,
-          password: this.password,
-        })
-        .then(() => {
-          this.$router.push("/profile");
-        });
+    async logIn() {
+      await this.$store.dispatch("login", {
+        username: this.mail,
+        password: this.password,
+      });
+      if (this.$store.getters.isAuthenticated) {
+        this.$router.push("/");
+      }
     },
   },
 };

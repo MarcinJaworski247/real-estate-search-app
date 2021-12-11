@@ -4,10 +4,10 @@
     <v-form ref="form">
       <div class="text-h6 mt-2">Dane ogólne</div>
       <BaseOfferForm />
-      <v-btn class="mb-2" color="success" @click="addPhotos">
+      <v-btn class="mb-2 mb-2" color="success" @click="addPhotos">
         Dodaj zdjęcia
       </v-btn>
-      <v-row v-if="offerForm.files.length" align="baseline">
+      <v-row v-if="offerForm.files.length" align="baseline" class="my-2">
         <PhotoCarousel
           :photos="offerForm.files"
           editable
@@ -69,7 +69,10 @@ export default {
     ...mapState(["offerForm"]),
   },
   mounted() {
-    this.$store.dispatch("getOfferToEdit", this.$route.params.offerId);
+    this.$store.dispatch("getOfferToEdit", {
+      basicInfoId: this.$route.params.basicInfoId,
+      realEstateId: this.$route.params.realEstateId,
+    });
   },
   beforeDestroy() {
     this.$store.commit("RESET_OFFER_FORM");
@@ -98,11 +101,14 @@ export default {
       }
       this.$store
         .dispatch("uploadPhotos", {
-          offerId: this.$route.params.offerId,
+          offerId: this.$route.params.basicInfoId,
           photos: formData,
         })
         .then(() => {
-          this.$store.dispatch("getOfferToEdit", this.$route.params.offerId);
+          this.$store.dispatch("getOfferToEdit", {
+            basicInfoId: this.$route.params.basicInfoId,
+            realEstateId: this.$route.params.realEstateId,
+          });
         });
     },
     selectImage(photos) {

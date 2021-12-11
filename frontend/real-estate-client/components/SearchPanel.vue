@@ -48,7 +48,12 @@
           suffix="zł"
         ></v-text-field>
       </v-col>
-      <v-col class="d-flex justify-center" cols="12" sm="2">
+      <v-col
+        class="d-flex justify-center"
+        cols="12"
+        sm="2"
+        @click="goToSearchResults"
+      >
         <v-btn fab medium>
           <v-icon>search</v-icon>
         </v-btn>
@@ -61,7 +66,7 @@ export default {
   name: "SearchPanel",
   data() {
     return {
-      category: "",
+      categoryId: "",
       priceFrom: "",
       priceTo: "",
       townId: "",
@@ -81,6 +86,11 @@ export default {
     this.$store.dispatch("getTypesToSelect").then((response) => {
       this.offerTypes = response;
     });
+  },
+  methods: {
+    goToSearchResults() {
+      this.$router.push("/searchResults");
+    },
   },
 };
 </script>

@@ -36,6 +36,12 @@ export default {
       mobilePhone: "",
     };
   },
+  mounted() {
+    this.$store.dispatch("getProfileData").then((response) => {
+      this.mail = response.username;
+      this.mobilePhone = response.phoneNumber;
+    });
+  },
   methods: {
     save() {
       this.$store.dispatch("editProfile", {

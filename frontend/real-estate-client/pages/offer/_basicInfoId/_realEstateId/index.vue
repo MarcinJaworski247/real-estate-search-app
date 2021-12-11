@@ -60,9 +60,10 @@
     <div class="text-h5 grey--text my-4">Kontakt</div>
     <v-row>
       <v-col cols="12" sm="12" lg="12">
-        <div><v-icon class="mr-2">person</v-icon></div>
+        <div><v-icon class="mr-2">person</v-icon>{{ offer.user.username }}</div>
         <div class="my-2">
           <v-icon class="mr-2">phone_iphone</v-icon>
+          {{ offer.user.phoneNumber }}
         </div>
       </v-col>
     </v-row>
@@ -84,7 +85,10 @@ export default {
   },
   mounted() {
     this.$store
-      .dispatch("getOffer", this.$route.params.offerId)
+      .dispatch("getOffer", {
+        basicInfoId: this.$route.params.basicInfoId,
+        realEstateId: this.$route.params.realEstateId,
+      })
       .then((response) => {
         this.offer = response;
       });
