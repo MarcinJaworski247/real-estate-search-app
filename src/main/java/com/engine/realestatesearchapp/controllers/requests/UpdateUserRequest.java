@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
 import java.util.Optional;
 
 @Getter
@@ -13,6 +14,12 @@ import java.util.Optional;
 @AllArgsConstructor
 @ApiModel(description = "Request to update user")
 public class UpdateUserRequest {
+
+    @ApiModelProperty(notes = "First name")
+    private String firstName;
+
+    @ApiModelProperty(notes = "Last name")
+    private String lastName;
 
     @ApiModelProperty(notes = "Password")
     private String password;
@@ -26,5 +33,13 @@ public class UpdateUserRequest {
 
     public Optional<String> getPhoneNumber() {
         return Optional.ofNullable(phoneNumber);
+    }
+
+    public Optional<String> getFirstName() {
+        return Optional.ofNullable(firstName);
+    }
+
+    public Optional<String> getLastName() {
+        return Optional.ofNullable(lastName);
     }
 }

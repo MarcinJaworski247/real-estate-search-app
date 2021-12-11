@@ -72,7 +72,13 @@ public class UserService implements UserDetailsService {
         User entity = getCurrentUser();
         request.getPassword().ifPresent(password -> entity.setPassword(bcryptEncoder.encode(password)));
         request.getPhoneNumber().ifPresent(entity::setPhoneNumber);
+        request.getFirstName().ifPresent(entity::setFirstName);
+        request.getLastName().ifPresent(entity::setLastName);
         return userRepository.save(entity);
+    }
+
+    public User saveUser(User user) {
+       return userRepository.save(user);
     }
 
     public User save(UserRequest request) {
@@ -82,6 +88,8 @@ public class UserService implements UserDetailsService {
         User entity = User.builder().username(request.getUsername())
                 .password(bcryptEncoder.encode(request.getPassword()))
                 .phoneNumber(request.getPhoneNumber())
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
                 .role(UserRole.USER)
                 .build();
         return userRepository.save(entity);

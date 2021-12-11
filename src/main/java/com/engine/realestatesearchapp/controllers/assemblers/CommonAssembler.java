@@ -105,6 +105,8 @@ public class CommonAssembler {
         return UserResource.builder()
                 .id(entity.getId())
                 .username(entity.getUsername())
+                .firstName(entity.getFirstName())
+                .lastName(entity.getLastName())
                 .phoneNumber(entity.getPhoneNumber())
                 .build();
     }
@@ -181,6 +183,8 @@ public class CommonAssembler {
                 .price(entity.getPrice())
                 .size(entity.getSize())
                 .sold(entity.isSold())
+                .visitsCounter(entity.getVisitsCounter())
+                .phoneViewsCounter(entity.getPhoneViewsCounter())
                 .category(entity.getCategory().getLabel())
                 .localization(entity.getLocalization())
                 .files(entity.getFiles().isEmpty() ? new ArrayList<>() :

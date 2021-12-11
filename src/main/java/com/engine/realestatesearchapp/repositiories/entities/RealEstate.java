@@ -81,6 +81,12 @@ public class RealEstate {
     @Column(name = "DELETED")
     private boolean deleted;
 
+    @Column(name = "VISITS_COUNTER")
+    private int visitsCounter;
+
+    @Column(name = "PHONE_VIEWS_COUNTER")
+    private int phoneViewsCounter;
+
     @Column(name = "SOLD")
     private boolean sold;
 

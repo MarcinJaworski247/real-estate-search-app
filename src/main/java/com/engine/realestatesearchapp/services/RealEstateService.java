@@ -173,10 +173,41 @@ public class RealEstateService {
         return realEstateRepository.save(entity);
     }
 
+    public RealEstate incrementVisitsCounter(UUID realEstateId) {
+        RealEstate entity = getRealEstateById(realEstateId);
+        entity.setVisitsCounter(entity.getVisitsCounter() + 1);
+        return realEstateRepository.save(entity);
+    }
+
+    public RealEstate incrementPhoneViewsCounter(UUID realEstateId) {
+        RealEstate entity = getRealEstateById(realEstateId);
+        entity.setPhoneViewsCounter(entity.getPhoneViewsCounter() + 1);
+        return realEstateRepository.save(entity);
+    }
+
     public void deleteRealEstate(UUID realEstateId) {
         RealEstate entity = getRealEstateById(realEstateId);
         entity.setDeleted(true);
         realEstateRepository.save(entity);
+    }
+
+    public void addRealEstateToCurrentUserFavourites(UUID realEstateId) {
+        User user = userService.getCurrentUser();
+        RealEstate entity = getRealEstateById(realEstateId);
+        user.getFavourites().add(entity);
+        userService.saveUser(user);
+    }
+
+    public void removeRealEstateFromCurrentUserFavourites(UUID realEstateId) {
+        User user = userService.getCurrentUser();
+        RealEstate entity = getRealEstateById(realEstateId);
+        user.getFavourites().remove(entity);
+        userService.saveUser(user);
+    }
+
+
+    public List<RealEstate> getCurrentUserFavourites() {
+        return userService.getCurrentUser().getFavourites();
     }
 
     public RealEstate getRealEstateById(UUID id) {
