@@ -55,7 +55,12 @@
         @click="goToSearchResults"
       >
         <v-btn fab medium>
-          <v-icon>search</v-icon>
+          <v-tooltip top>
+            <template v-slot:activator="{ on, attrs }">
+              <v-icon v-bind="attrs" v-on="on">search</v-icon>
+            </template>
+            <span>Szukaj</span>
+          </v-tooltip>
         </v-btn>
       </v-col>
     </v-row>
@@ -89,7 +94,15 @@ export default {
   },
   methods: {
     goToSearchResults() {
-      this.$router.push("/searchResults");
+      if (this.priceFrom == null || this.priceFrom === "") {
+        this.priceFrom = 0;
+      }
+      if (this.priceTo == null || this.priceTo === "") {
+        this.priceTo = 0;
+      }
+      this.$router.push(
+        `/searchResults/${this.categoryId}/${this.townId}/${this.offerType}/${this.priceFrom}/${this.priceTo}`
+      );
     },
   },
 };

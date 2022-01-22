@@ -64,15 +64,21 @@
         />
       </v-col>
     </v-row>
-    <OffersList :offers="offers" />
+    <div style="display: flex; justify-content: center">
+      <Loader v-if="loading" />
+    </div>
+    <OffersList v-if="!loading" :offers="offers" />
   </v-container>
 </template>
 <script>
 import OffersList from "@/components/OffersList";
+import Loader from "@/components/Loader";
+
 export default {
   name: "SearchResults",
   components: {
     OffersList,
+    Loader,
   },
   data() {
     return {
@@ -94,6 +100,8 @@ export default {
         "Od najtańszych",
         "Od najdroższych",
       ],
+      timeoutId: null,
+      loading: false,
     };
   },
   computed: {
@@ -102,7 +110,18 @@ export default {
       return this.offers.length;
     },
   },
-  mounted() {
+  async mounted() {
+    // get filters from url
+    this.searchParams.category = this.$route.params.categoryId;
+    this.searchParams.localizationId = +this.$route.params.localizationId;
+    this.searchParams.offerType = this.$route.params.offerType;
+    this.searchParams.priceFrom =
+      this.$route.params.priceFrom === "0"
+        ? null
+        : this.$route.params.priceFrom;
+    this.searchParams.priceTo =
+      this.$route.params.priceTo === "0" ? null : this.$route.params.priceTo;
+
     this.$store.dispatch("getCategoriesToSelect").then((response) => {
       this.categories = response;
     });
@@ -112,15 +131,20 @@ export default {
     this.$store.dispatch("getTypesToSelect").then((response) => {
       this.offerTypes = response;
     });
-
-    this.$store.dispatch("getAllOffers").then((response) => {
+    this.loading = true;
+    await this.$store.dispatch("getAllOffers").then((response) => {
       if (response._embedded && response._embedded.realEstateResourceList)
         this.offers = response._embedded.realEstateResourceList;
     });
+    this.loading = false;
   },
   methods: {
     refresh() {
-      window.setTimeout(() => {
+      if (this.timeoutId) {
+        window.clearTimeout(this.timeoutId);
+      }
+      this.loading = true;
+      this.timeoutId = window.setTimeout(() => {
         this.$store
           .dispatch("searchOffers", this.searchParams)
           .then((response) => {
@@ -134,6 +158,7 @@ export default {
             }
           });
       }, 1000);
+      this.loading = false;
     },
     sort() {
       switch (this.sortingType) {
@@ -146,8 +171,8 @@ export default {
           break;
         case "Od najstarszych":
           this.offers.sort((a, b) => {
-            if (a.createdAt < b.createdAt) return -1;
-            if (a.createdAt > b.createdAt) return 1;
+            if (a.createdAt > b.createdAt) return -1;
+            if (a.createdAt < b.createdAt) return 1;
             return 0;
           });
           break;
@@ -160,8 +185,8 @@ export default {
           break;
         case "Od najdroższych":
           this.offers.sort((a, b) => {
-            if (a.price < b.price) return -1;
-            if (a.price > b.price) return 1;
+            if (a.price > b.price) return -1;
+            if (a.price < b.price) return 1;
             return 0;
           });
           break;

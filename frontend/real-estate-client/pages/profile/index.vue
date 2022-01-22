@@ -38,7 +38,7 @@ export default {
   data() {
     return {
       offers: [],
-      layout: "grid",
+      layout: "table",
     };
   },
   mounted() {

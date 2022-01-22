@@ -180,6 +180,7 @@ public class CommonAssembler {
                 .realEstateId(entity.getRealEstateId())
                 .title(entity.getTitle())
                 .description(entity.getDescription())
+                .offerType(entity.getOfferType().getLabel())
                 .price(entity.getPrice())
                 .size(entity.getSize())
                 .sold(entity.isSold())

@@ -5,9 +5,6 @@
         v-for="item in offers"
         :key="item.id"
         class="d-flex justify-center"
-        cols="12"
-        sm="6"
-        lg="3"
       >
         <OfferTile :offer="item" />
       </v-col>

@@ -10,9 +10,11 @@
     ></v-text-field>
     <v-text-field
       v-model="password"
-      type="password"
       required
       label="Hasło"
+      :type="showPass ? 'text' : 'password'"
+      :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
+      @click:append="showPass = !showPass"
     ></v-text-field>
     <v-btn color="success" @click="register"> Utwórz konto </v-btn>
   </div>
@@ -27,6 +29,7 @@ export default {
       mail: "",
       phoneNumber: "",
       password: "",
+      showPass: false,
     };
   },
   methods: {

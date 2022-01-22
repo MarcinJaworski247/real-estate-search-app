@@ -37,7 +37,14 @@
           <v-btn color="blue darken-1" text @click="closePhotoModal"
             >Anuluj</v-btn
           >
-          <v-btn color="blue darken-1" text @click="photoModalConfirm"
+          <v-btn
+            v-if="photos"
+            color="blue darken-1"
+            text
+            @click="photoModalConfirm"
+            >Dodaj</v-btn
+          >
+          <v-btn v-if="!photos" disabled color="blue darken-1" text
             >Dodaj</v-btn
           >
         </v-card-actions>
@@ -92,14 +99,14 @@ export default {
       this.photoModalVisible = false;
       this.photos = null;
     },
-    photoModalConfirm() {
+    async photoModalConfirm() {
       this.photoModalVisible = false;
       const formData = new FormData();
 
       for (const item of this.photos) {
         formData.append("file", item);
       }
-      this.$store
+      await this.$store
         .dispatch("uploadPhotos", {
           offerId: this.$route.params.basicInfoId,
           photos: formData,
@@ -110,6 +117,7 @@ export default {
             realEstateId: this.$route.params.realEstateId,
           });
         });
+      this.photos = null;
     },
     selectImage(photos) {
       this.photos = photos;

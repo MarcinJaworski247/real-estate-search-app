@@ -3,7 +3,7 @@
     <v-row>
       <v-col
         ><v-text-field
-          v-model="offerForm.level"
+          v-model="offerForm.floorNumber"
           type="number"
           label="Piętro"
         ></v-text-field
@@ -83,7 +83,7 @@
       ></v-col>
       <v-col v-if="offerForm.category === `Biura i lokale`"
         ><v-select
-          v-model="offerForm.premisePurspose"
+          v-model="offerForm.premisesPurpose"
           label="Przeznaczenie lokalu"
           :items="premisePurposes"
           item-text="name"

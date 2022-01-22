@@ -10,9 +10,28 @@
     </v-row>
     <v-row>
       <v-col cols="12" lg="12" sm="12">
-        <v-btn medium left icon text @click="saveOffer">
-          <v-icon class="ico-fav"> favorite_border </v-icon>
-        </v-btn>
+        <v-tooltip top>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              medium
+              left
+              icon
+              text
+              @click="saveOffer"
+              v-bind="attrs"
+              v-on="on"
+            >
+              <v-icon v-if="offer && !offer.favourite" class="ico-fav">
+                favorite_border
+              </v-icon>
+              <v-icon v-if="offer && offer.favourite" class="ico-fav red--text">
+                favorite
+              </v-icon>
+            </v-btn>
+          </template>
+          <span v-if="offer && !offer.favourite">Dodaj do obserwowanych</span>
+          <span v-if="offer && offer.favourite">Usuń z obserwowanych</span>
+        </v-tooltip>
       </v-col>
     </v-row>
     <v-row justify="center" align="center">
@@ -37,33 +56,47 @@
     </v-row>
     <div class="text-h5 grey--text my-4">Informacje dodatkowe</div>
     <v-row>
-      <v-col cols="12" sm="4" lg="4">Powierzchnia: {{ offer.size }} m2 </v-col>
       <v-col cols="12" sm="4" lg="4"
-        >Wynajem/sprzedaż: {{ offer.offerType }}
+        ><span class="grey--text">Powierzchnia:</span> {{ offer.size }} m2
+      </v-col>
+      <v-col cols="12" sm="4" lg="4">
+        <span class="grey--text">Wynajem/sprzedaż:</span> {{ offer.offerType }}
       </v-col>
       <v-col cols="12" sm="4" lg="4"
-        >Piętro: {{ offer.level }} / {{ offer.floors }}
+        ><span class="grey--text">Piętro:</span> {{ offer.floorNumber }}
       </v-col>
     </v-row>
     <v-row>
       <v-col cols="12" sm="4" lg="4">
-        Ilość pokojów: {{ offer.roomsNumber }}
+        <span class="grey--text">Ilość pokojów:</span> {{ offer.roomsNumber }}
       </v-col>
       <v-col cols="12" sm="4" lg="4"
-        >Rodzaj zabudowy: {{ offer.flatType }}
+        ><span class="grey--text">Rodzaj zabudowy:</span> {{ offer.flatType }}
       </v-col>
       <v-col cols="12" sm="4" lg="4"
-        >Umeblowane: <span v-if="offer.furnished">tak</span>
+        ><span class="grey--text">Umeblowane:</span>
+        <span v-if="offer.furnished">tak</span>
         <span v-if="!offer.furnished"></span>
       </v-col>
     </v-row>
     <div class="text-h5 grey--text my-4">Kontakt</div>
     <v-row>
       <v-col cols="12" sm="12" lg="12">
-        <div><v-icon class="mr-2">person</v-icon>{{ offer.user.username }}</div>
+        <div>
+          <v-icon class="mr-2">person</v-icon>{{ offer.user.firstName }}
+          {{ offer.user.lastName.charAt(0) }}.
+        </div>
         <div class="my-2">
           <v-icon class="mr-2">phone_iphone</v-icon>
-          {{ offer.user.phoneNumber }}
+          {{ phoneNumber }}
+          <v-tooltip top>
+            <template v-slot:activator="{ on, attrs }">
+              <v-icon class="ml-2" @click="showNumber" v-bind="attrs" v-on="on">
+                visibility
+              </v-icon>
+            </template>
+            <span>Pokaż numer</span>
+          </v-tooltip>
         </div>
       </v-col>
     </v-row>
@@ -81,21 +114,49 @@ export default {
     return {
       offer: null,
       photos: null,
+      phoneNumber: null,
     };
   },
-  mounted() {
-    this.$store
+  async mounted() {
+    await this.$store
       .dispatch("getOffer", {
         basicInfoId: this.$route.params.basicInfoId,
         realEstateId: this.$route.params.realEstateId,
       })
       .then((response) => {
         this.offer = response;
+        this.phoneNumber = `${this.offer.user.phoneNumber.substring(
+          0,
+          3
+        )}******`;
       });
+
+    if (this.offer.user.username !== this.$store.state.currentUser.name) {
+      this.$store.dispatch("incrementViews", this.offer.basicInfoId);
+    }
   },
   methods: {
     saveOffer() {
-      // TODO
+      if (this.offer.favourite) {
+        this.$store
+          .dispatch("removeFromFavourites", this.offer.basicInfoId)
+          .then(() => {
+            this.offer.favourite = false;
+          });
+      } else if (!this.offer.favourite) {
+        this.$store
+          .dispatch("saveToFavourites", this.offer.basicInfoId)
+          .then(() => {
+            this.offer.favourite = true;
+          });
+      }
+    },
+    showNumber() {
+      this.$store
+        .dispatch("showPhoneNumber", this.offer.basicInfoId)
+        .then(() => {
+          this.phoneNumber = this.offer.user.phoneNumber;
+        });
     },
   },
 };

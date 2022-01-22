@@ -20,7 +20,7 @@ const createStore = () => {
         plotSize: null,
         houseType: null,
         plotType: null,
-        premisePurpose: null,
+        premisesPurpose: null,
         avatar: null,
         files: [],
         basicInfoId: null,
@@ -51,12 +51,13 @@ const createStore = () => {
         state.offerForm.floors = null;
         state.offerForm.houseType = null;
         state.offerForm.plotType = null;
-        state.offerForm.premisePurpose = null;
+        state.offerForm.premisesPurpose = null;
         state.offerForm.avatar = null;
         state.offerForm.files = [];
         state.offerForm.basicInfoId = null;
         state.offerForm.realEstateId = null;
         state.offerForm.rent = null;
+        state.offerForm.floorNumber = null;
       },
       SET_OFFER_TO_EDIT(state, response) {
         state.offerForm.id = response.id;
@@ -75,12 +76,13 @@ const createStore = () => {
         state.offerForm.floors = response.floors;
         state.offerForm.houseType = response.houseType;
         state.offerForm.plotType = response.plotType;
-        state.offerForm.premisePurpose = response.premisePurpose;
+        state.offerForm.premisesPurpose = response.premisesPurpose;
         state.offerForm.avatar = response.avatar;
         state.offerForm.files = response.files;
         state.offerForm.basicInfoId = response.basicInfoId;
         state.offerForm.realEstateId = response.realEstateId;
         state.offerForm.rent = response.rent;
+        state.offerForm.floorNumber = response.floorNumber;
       },
       SET_OFFER_PHOTOS(state, response) {
         state.offerForm.files = response;
@@ -105,9 +107,17 @@ const createStore = () => {
             params: {
               category: searchParams.category,
               offerType: searchParams.offerType,
-              localizationId: +searchParams.localizationId,
-              priceFrom: +searchParams.priceFrom,
-              priceTo: +searchParams.priceTo,
+              localizationId: searchParams.localizationId
+                ? +searchParams.localizationId
+                : null,
+              priceFrom:
+                searchParams.priceFrom === "0" || !searchParams.priceFrom
+                  ? null
+                  : +searchParams.priceFrom,
+              priceTo:
+                searchParams.priceTo === "0" || !searchParams.priceTo
+                  ? null
+                  : +searchParams.priceTo,
             },
           },
           {
@@ -174,6 +184,11 @@ const createStore = () => {
               "tokenExpiration",
               new Date().getTime() + 3600 * 1000
             );
+            vuexContext.dispatch("getProfileData").then((res) => {
+              vuexContext.state.currentUser.id = res.id;
+              vuexContext.state.currentUser.name =
+                res.firstName + " " + res.lastName;
+            });
           });
       },
       getProfileData(vuexContext) {
@@ -185,17 +200,24 @@ const createStore = () => {
         return this.$axios.$post("http://localhost:8081/register", {
           username: registerForm.mail,
           password: registerForm.password,
+          firstName: registerForm.firstName,
+          lastName: registerForm.lastName,
           phoneNumber: registerForm.phoneNumber,
         });
       },
       logOut(vuexContext) {
         vuexContext.state.token = null;
-        vuexContext.state.currentUser = null;
+        vuexContext.state.currentUser.id = null;
+        vuexContext.state.currentUser.name = null;
         localStorage.removeItem("token");
         localStorage.removeItem("tokenExpiration");
       },
       editProfile(vuexContext, profileForm) {
-        // TODO
+        return this.$axios.$patch(
+          "http://localhost:8081/users/current",
+          profileForm,
+          { headers: { Authorization: vuexContext.state.token } }
+        );
       },
       getUserOffers(vuexContext) {
         return this.$axios.$get(
@@ -300,8 +322,41 @@ const createStore = () => {
               });
           } else {
             vuexContext.dispatch("logOut");
+            // this.$router.push("/login");
           }
         }
+      },
+      showPhoneNumber(vuexContext, basicInfoId) {
+        return this.$axios.$post(
+          `http://localhost:8081/real-estate/${basicInfoId}/phone-views`,
+          {
+            headers: { Authorization: vuexContext.state.token },
+          }
+        );
+      },
+      saveToFavourites(vuexContext, basicInfoId) {
+        return this.$axios.$patch(
+          `http://localhost:8081/real-estate/${basicInfoId}/set-favourite`,
+          {
+            headers: { Authorization: vuexContext.state.token },
+          }
+        );
+      },
+      removeFromFavourites(vuexContext, basicInfoId) {
+        return this.$axios.$patch(
+          `http://localhost:8081/real-estate/${basicInfoId}/unset-favourite`,
+          {
+            headers: { Authorization: vuexContext.state.token },
+          }
+        );
+      },
+      incrementViews(vuexContext, basicInfoId) {
+        return this.$axios.$post(
+          `http://localhost:8081/real-estate/${basicInfoId}/offer-visits`,
+          {
+            headers: { Authorization: vuexContext.state.token },
+          }
+        );
       },
     },
     namespaced: false,
