@@ -61,7 +61,7 @@ public class RealEstate {
     @Column(name = "TITLE", nullable = false)
     private String title;
 
-    @Column(name = "DESCRIPTION", nullable = false)
+    @Column(name = "DESCRIPTION", nullable = false, length = 1024)
     private String description;
 
     @Enumerated(EnumType.STRING)

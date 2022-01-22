@@ -51,7 +51,9 @@
     <div class="text-h5 grey--text my-4">Opis</div>
     <v-row>
       <v-col cols="12" sm="12" lg="12">
-        <div class="">{{ offer.description }}</div>
+        <div style="text-align: justify; text-justify: inter-word">
+          {{ offer.description }}
+        </div>
       </v-col>
     </v-row>
     <div class="text-h5 grey--text my-4">Informacje dodatkowe</div>
