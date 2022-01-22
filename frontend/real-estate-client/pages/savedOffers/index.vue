@@ -16,8 +16,8 @@ export default {
     return { offers: [] };
   },
   mounted() {
-    this.$store.dispatch("getUserOffers").then((response) => {
-      this.offers = response._embedded.realEstateResourceList;
+    this.$store.dispatch("getUserFavourites").then((response) => {
+      this.offers = response;
     });
   },
 };

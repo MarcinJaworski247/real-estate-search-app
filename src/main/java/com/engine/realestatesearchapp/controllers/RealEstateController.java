@@ -113,7 +113,7 @@ public class RealEstateController {
         realEstateService.removeRealEstateFromCurrentUserFavourites(realEstateId);
     }
 
-    @PreAuthorize("hasRole('USER')")
+//    @PreAuthorize("hasRole('USER')")
     @PostMapping("/{basic_info_id}/offer-visits")
     @ApiOperation(value = "Increment offer visits counter")
     public RealEstateResource incrementVisitsCounter(@PathVariable("basic_info_id") UUID realEstateId) {

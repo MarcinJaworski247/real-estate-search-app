@@ -262,6 +262,7 @@ const createStore = () => {
       markAsSold(vuexContext, offerId) {
         return this.$axios.$patch(
           `http://localhost:8081/real-estate/${offerId}/set-sold`,
+          { withCredentials: true },
           {
             headers: { Authorization: vuexContext.state.token },
           }
@@ -339,7 +340,8 @@ const createStore = () => {
       },
       showPhoneNumber(vuexContext, basicInfoId) {
         return this.$axios.$post(
-          `http://localhost:8081/real-estate/${basicInfoId}/phone-views`,
+          `http://localhost:8081/real-estate/${basicInfoId}/phone-views `,
+          { withCredentials: true },
           {
             headers: { Authorization: vuexContext.state.token },
           }
@@ -348,6 +350,7 @@ const createStore = () => {
       saveToFavourites(vuexContext, basicInfoId) {
         return this.$axios.$patch(
           `http://localhost:8081/real-estate/${basicInfoId}/set-favourite`,
+          { withCredentials: true },
           {
             headers: { Authorization: vuexContext.state.token },
           }
@@ -356,6 +359,15 @@ const createStore = () => {
       removeFromFavourites(vuexContext, basicInfoId) {
         return this.$axios.$patch(
           `http://localhost:8081/real-estate/${basicInfoId}/unset-favourite`,
+          { withCredentials: true },
+          {
+            headers: { Authorization: vuexContext.state.token },
+          }
+        );
+      },
+      getUserFavourites(vuexContext) {
+        return this.$axios.$get(
+          `http://localhost:8081/real-estate/favourites`,
           {
             headers: { Authorization: vuexContext.state.token },
           }
@@ -364,9 +376,10 @@ const createStore = () => {
       incrementViews(vuexContext, basicInfoId) {
         return this.$axios.$post(
           `http://localhost:8081/real-estate/${basicInfoId}/offer-visits`,
-          {
-            headers: { Authorization: vuexContext.state.token },
-          }
+          { withCredentials: true }
+          // {
+          //   headers: { Authorization: vuexContext.state.token },
+          // }
         );
       },
     },
