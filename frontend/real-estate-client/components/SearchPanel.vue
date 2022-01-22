@@ -71,11 +71,11 @@ export default {
   name: "SearchPanel",
   data() {
     return {
-      categoryId: "",
-      priceFrom: "",
-      priceTo: "",
-      townId: "",
-      offerType: "",
+      categoryId: null,
+      priceFrom: null,
+      priceTo: null,
+      townId: null,
+      offerType: null,
       categories: [],
       towns: [],
       offerTypes: [],
@@ -94,11 +94,20 @@ export default {
   },
   methods: {
     goToSearchResults() {
-      if (this.priceFrom == null || this.priceFrom === "") {
+      if (!this.priceFrom) {
         this.priceFrom = 0;
       }
-      if (this.priceTo == null || this.priceTo === "") {
+      if (!this.priceTo) {
         this.priceTo = 0;
+      }
+      if (!this.categoryId) {
+        this.categoryId = 0;
+      }
+      if (!this.townId) {
+        this.townId = 0;
+      }
+      if (!this.offerType) {
+        this.offerType = 0;
       }
       this.$router.push(
         `/searchResults/${this.categoryId}/${this.townId}/${this.offerType}/${this.priceFrom}/${this.priceTo}`

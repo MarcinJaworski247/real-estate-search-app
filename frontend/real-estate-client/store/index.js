@@ -105,11 +105,19 @@ const createStore = () => {
 
           {
             params: {
-              category: searchParams.category,
-              offerType: searchParams.offerType,
-              localizationId: searchParams.localizationId
-                ? +searchParams.localizationId
-                : null,
+              category:
+                searchParams.category === "0" || !searchParams.category
+                  ? null
+                  : searchParams.category,
+              offerType:
+                searchParams.offerType === "0" || !searchParams.offerType
+                  ? null
+                  : searchParams.offerType,
+              localizationId:
+                searchParams.localizationId &&
+                searchParams.localizationId !== "0"
+                  ? +searchParams.localizationId
+                  : null,
               priceFrom:
                 searchParams.priceFrom === "0" || !searchParams.priceFrom
                   ? null

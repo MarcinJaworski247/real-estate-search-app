@@ -112,15 +112,16 @@ export default {
   },
   async mounted() {
     // get filters from url
-    this.searchParams.category = this.$route.params.categoryId;
-    this.searchParams.localizationId = +this.$route.params.localizationId;
-    this.searchParams.offerType = this.$route.params.offerType;
+    const params = this.$route.params;
+    this.searchParams.category = params.categoryId ? params.categoryId : null;
+    this.searchParams.localizationId = params.localizationId
+      ? +params.localizationId
+      : null;
+    this.searchParams.offerType = params.offerType ? params.offerType : null;
     this.searchParams.priceFrom =
-      this.$route.params.priceFrom === "0"
-        ? null
-        : this.$route.params.priceFrom;
+      params.priceFrom === "0" || !params.priceFrom ? null : params.priceFrom;
     this.searchParams.priceTo =
-      this.$route.params.priceTo === "0" ? null : this.$route.params.priceTo;
+      params.priceTo === "0" || !params.priceTo ? null : params.priceTo;
 
     this.$store.dispatch("getCategoriesToSelect").then((response) => {
       this.categories = response;
@@ -132,10 +133,12 @@ export default {
       this.offerTypes = response;
     });
     this.loading = true;
-    await this.$store.dispatch("getAllOffers").then((response) => {
-      if (response._embedded && response._embedded.realEstateResourceList)
-        this.offers = response._embedded.realEstateResourceList;
-    });
+    await this.$store
+      .dispatch("searchOffers", this.searchParams)
+      .then((response) => {
+        if (response._embedded && response._embedded.realEstateResourceList)
+          this.offers = response._embedded.realEstateResourceList;
+      });
     this.loading = false;
   },
   methods: {
