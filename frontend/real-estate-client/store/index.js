@@ -197,6 +197,9 @@ const createStore = () => {
               vuexContext.state.currentUser.name =
                 res.firstName + " " + res.lastName;
             });
+          })
+          .catch((err) => {
+            console.log(err);
           });
       },
       getProfileData(vuexContext) {

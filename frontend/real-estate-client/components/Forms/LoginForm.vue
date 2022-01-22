@@ -9,7 +9,7 @@
       :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
       @click:append="showPass = !showPass"
     ></v-text-field>
-
+    <div v-if="fail" class="red--text">Niepoprawny mail lub hasło!</div>
     <v-btn color="success" @click="logIn"> Zaloguj </v-btn>
   </div>
 </template>
@@ -21,16 +21,25 @@ export default {
       mail: "",
       password: "",
       showPass: false,
+      fail: false,
     };
   },
   methods: {
     async logIn() {
-      await this.$store.dispatch("login", {
-        username: this.mail,
-        password: this.password,
-      });
+      await this.$store
+        .dispatch("login", {
+          username: this.mail,
+          password: this.password,
+        })
+        .then((res) => {
+          console.log(res);
+        });
       if (this.$store.getters.isAuthenticated) {
         this.$router.push("/");
+      } else {
+        this.fail = true;
+        this.mail = "";
+        this.password = "";
       }
     },
   },

@@ -217,25 +217,40 @@ public class RealEstateService {
 
     public RealEstateResource getRealEstateResourceById(UUID basicInfoId, UUID realEstateId) {
         RealEstate basicInfo = getRealEstateById(basicInfoId);
+        RealEstateResource realEstateResource;
         switch (basicInfo.getCategory()) {
             case HOUSES:
                 House house = getHouseById(realEstateId);
-                return assembler.mapToHouseResource(house);
+                realEstateResource = assembler.mapToHouseResource(house);
+                break;
             case PLOTS:
                 Plot plot = getPlotById(realEstateId);
-                return assembler.mapToPlotResource(plot);
+                realEstateResource =  assembler.mapToPlotResource(plot);
+                break;
             case OFFICES_AND_PREMISES:
                 Premises premises = getPremisesById(realEstateId);
-                return assembler.mapToPremisesResource(premises);
+                realEstateResource =  assembler.mapToPremisesResource(premises);
+                break;
             case FLATS:
                 Flat flat = getFlatById(realEstateId);
-                return assembler.mapToFlatResource(flat);
+                realEstateResource =  assembler.mapToFlatResource(flat);
+                break;
             case ROOMS:
                 Room room = getRoomById(realEstateId);
-                return assembler.mapToRoomResource(room);
+                realEstateResource =  assembler.mapToRoomResource(room);
+                break;
             default:
                 throw new InvalidRequestException("Category not supported");
         }
+
+        realEstateResource.setFavourite(getIsFavourite(basicInfo));
+
+        return realEstateResource;
+    }
+
+    public boolean getIsFavourite(RealEstate realEstate) {
+        User user = userService.getCurrentUser();
+        return user.getFavourites().contains(realEstate);
     }
 
     public House getHouseById(UUID id) {
