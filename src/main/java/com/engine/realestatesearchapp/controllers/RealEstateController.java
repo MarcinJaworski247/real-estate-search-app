@@ -66,6 +66,14 @@ public class RealEstateController {
         return realEstateService.getRealEstateResourceById(basicInfoId, realEstateId);
     }
 
+    @GetMapping("/proposed")
+    @ApiOperation(value = "Get current user proposed offers")
+    public List<RealEstateResource> getCurrentUserProposedOffers() {
+        return realEstateService.getCurrentUserProposedOffers().stream()
+                .map(assembler::mapToResourceWithAvatar)
+                .collect(Collectors.toList());
+    }
+
     @GetMapping("/favourites")
     @ApiOperation(value = "Get current user favourite offers")
     public List<RealEstateResource> getCurrentUserFavourites() {

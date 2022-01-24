@@ -9,6 +9,7 @@ import com.engine.realestatesearchapp.repositiories.enums.*;
 import com.engine.realestatesearchapp.utilities.exceptions.*;
 import com.engine.realestatesearchapp.utilities.filters.*;
 import java.util.*;
+import java.util.stream.Collectors;
 import lombok.*;
 import org.apache.commons.io.*;
 import org.springframework.data.domain.*;
@@ -193,6 +194,21 @@ public class RealEstateService {
 
   public List<RealEstate> getCurrentUserFavourites() {
     return userService.getCurrentUser().getFavourites();
+  }
+
+  public List<RealEstate> getCurrentUserProposedOffers() {
+    List<RealEstate> favourites = userService.getCurrentUser().getFavourites();
+    List<String> favouriteCities = favourites.stream()
+            .map(v -> v.getLocalization().getCity())
+            .collect(Collectors.toList());
+    List<RealEstateCategory> favouriteCategories = favourites.stream()
+            .map(RealEstate::getCategory)
+            .collect(Collectors.toList());
+    return realEstateRepository.findAll().stream()
+            .filter(v-> favouriteCities.contains(v.getLocalization().getCity()))
+            .filter(v-> favouriteCategories.contains(v.getCategory()))
+            .filter(v-> !favourites.contains(v))
+            .collect(Collectors.toList());
   }
 
   public RealEstate getRealEstateById(UUID id) {
