@@ -2,6 +2,7 @@ package com.engine.realestatesearchapp.controllers.resources;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModelProperty;
+import java.util.Collection;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,6 +11,7 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import java.util.UUID;
+import org.springframework.security.core.GrantedAuthority;
 
 @Getter
 @Setter
@@ -23,4 +25,5 @@ public class UserResource {
     private String firstName;
     private String lastName;
     private String phoneNumber;
+    private String roleName;
 }

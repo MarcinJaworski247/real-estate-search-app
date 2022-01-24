@@ -28,6 +28,7 @@ public class RealEstateResource extends RepresentationModel<RealEstateResource> 
     private String title;
     private String description;
     private String category;
+    private String comment;
     private BigDecimal price;
     private BigDecimal size;
     private BigDecimal rent;
@@ -45,6 +46,7 @@ public class RealEstateResource extends RepresentationModel<RealEstateResource> 
     private String premisesPurpose;
     private boolean favourite;
     private boolean sold;
+    private boolean banned;
     private int visitsCounter;
     private int phoneViewsCounter;
     private Localization localization;

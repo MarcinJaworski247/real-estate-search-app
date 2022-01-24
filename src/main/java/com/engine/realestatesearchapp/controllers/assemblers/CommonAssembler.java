@@ -19,19 +19,20 @@ import com.engine.realestatesearchapp.repositiories.enums.PlotType;
 import com.engine.realestatesearchapp.repositiories.enums.PremisesPurpose;
 import com.engine.realestatesearchapp.repositiories.enums.RealEstateCategory;
 import com.engine.realestatesearchapp.repositiories.enums.RoomType;
+import com.engine.realestatesearchapp.services.CurrentUserService;
 import com.engine.realestatesearchapp.services.FileService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class CommonAssembler {
 
     private final FileService fileService;
+    private final CurrentUserService currentUserService;
 
     public FileResource mapToResource(File entity) {
         return FileResource.builder()
@@ -108,6 +109,7 @@ public class CommonAssembler {
                 .firstName(entity.getFirstName())
                 .lastName(entity.getLastName())
                 .phoneNumber(entity.getPhoneNumber())
+                .roleName(entity.getRole().name())
                 .build();
     }
 
@@ -184,6 +186,8 @@ public class CommonAssembler {
                 .price(entity.getPrice())
                 .size(entity.getSize())
                 .sold(entity.isSold())
+                .banned(entity.isBanned())
+                .comment(entity.getComment())
                 .visitsCounter(entity.getVisitsCounter())
                 .phoneViewsCounter(entity.getPhoneViewsCounter())
                 .category(entity.getCategory().getLabel())

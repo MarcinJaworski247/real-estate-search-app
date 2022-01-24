@@ -2,8 +2,7 @@ package com.engine.realestatesearchapp.controllers;
 
 import com.engine.realestatesearchapp.controllers.assemblers.CommonAssembler;
 import com.engine.realestatesearchapp.controllers.assemblers.RealEstateAssembler;
-import com.engine.realestatesearchapp.controllers.requests.RealEstateRequest;
-import com.engine.realestatesearchapp.controllers.requests.UpdateRealEstateRequest;
+import com.engine.realestatesearchapp.controllers.requests.*;
 import com.engine.realestatesearchapp.controllers.resources.FileResource;
 import com.engine.realestatesearchapp.controllers.resources.RealEstateResource;
 import com.engine.realestatesearchapp.repositiories.entities.File;
@@ -90,6 +89,14 @@ public class RealEstateController {
     @ApiOperation(value = "Delete real estate offer by id")
     public void deleteRealEstate(@PathVariable("basic_info_id") UUID realEstateId) {
         realEstateService.deleteRealEstate(realEstateId);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/{basic_info_id}/change-banned")
+    @ApiOperation(value = "Ban or unban real estate offer")
+    public void banRealEstate(@PathVariable("basic_info_id") UUID realEstateId, @RequestBody @Valid
+        BanRealEstateRequest request) {
+        realEstateService.changeRealEstateBanStatus(realEstateId, request);
     }
 
     @PreAuthorize("hasRole('USER')")

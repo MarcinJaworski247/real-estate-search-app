@@ -40,6 +40,11 @@ public class RealEstateQueryFilters {
     private String offerType;
 
     @ApiModelProperty(
+            notes = "Whether offer is banned",
+            example = "true")
+    private Boolean banned;
+
+    @ApiModelProperty(
             notes = "Offer price from",
             example = "1000")
     private BigDecimal priceFrom;

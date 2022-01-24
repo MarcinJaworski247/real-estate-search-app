@@ -64,6 +64,9 @@ public class RealEstate {
     @Column(name = "DESCRIPTION", nullable = false, length = 1024)
     private String description;
 
+    @Column(name = "COMMENT", length = 1024)
+    private String comment;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "CATEGORY", nullable = false)
     private RealEstateCategory category;
@@ -89,6 +92,9 @@ public class RealEstate {
 
     @Column(name = "SOLD")
     private boolean sold;
+
+    @Column(name = "BANNED")
+    private boolean banned;
 
     @Column(name = "REAL_ESTATE_ID")
     private UUID realEstateId;

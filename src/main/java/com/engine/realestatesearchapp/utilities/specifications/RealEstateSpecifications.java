@@ -33,6 +33,9 @@ public class RealEstateSpecifications {
         if (filters.getPriceFrom() != null) {
             specification = specification.and(priceGreaterThanOrEqualTo(filters.getPriceFrom()));
         }
+        if (filters.getBanned() != null) {
+            specification = specification.and(banStatusEquals(filters.getBanned()));
+        }
         if (filters.getPriceTo() != null) {
             specification = specification.and(priceLessThanOrEqualTo(filters.getPriceTo()));
         }
@@ -48,6 +51,11 @@ public class RealEstateSpecifications {
     public static Specification<RealEstate> categoryEquals(String category) {
         return (root, query, criteriaBuilder) ->
                 criteriaBuilder.equal(root.get(RealEstate_.CATEGORY), RealEstateCategory.valueOfLabel(category));
+    }
+
+    public static Specification<RealEstate> banStatusEquals(Boolean banned) {
+        return (root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get(RealEstate_.BANNED), banned);
     }
 
     public static Specification<RealEstate> offerTypeEquals(String offerType) {
