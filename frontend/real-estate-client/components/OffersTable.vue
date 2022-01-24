@@ -117,6 +117,7 @@ export default {
           align: "center",
         },
         { text: "Wyświetleń", value: "visitsCounter", align: "center" },
+        { text: "Zbanowana", value: "banned", align: "center" },
         {
           text: "Wyświetleń numeru",
           value: "phoneViewsCounter",

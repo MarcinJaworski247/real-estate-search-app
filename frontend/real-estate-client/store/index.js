@@ -31,6 +31,7 @@ const createStore = () => {
       currentUser: {
         id: null,
         name: null,
+        role: null,
       },
     },
     mutations: {
@@ -92,6 +93,7 @@ const createStore = () => {
       isAuthenticated(state) {
         return state.token != null;
       },
+      currentUserRole: (state) => state.currentUser.role,
     },
     actions: {
       getAllOffers(vuexContext) {
@@ -196,6 +198,7 @@ const createStore = () => {
               vuexContext.state.currentUser.id = res.id;
               vuexContext.state.currentUser.name =
                 res.firstName + " " + res.lastName;
+              vuexContext.state.currentUser.role = res.roleName;
             });
           })
           .catch((err) => {
@@ -331,6 +334,7 @@ const createStore = () => {
               .then((response) => {
                 vuexContext.state.currentUser.id = response.id;
                 vuexContext.state.currentUser.name = response.username;
+                vuexContext.state.currentUser.role = response.roleName;
               });
           } else {
             vuexContext.dispatch("logOut");
@@ -380,6 +384,25 @@ const createStore = () => {
           // {
           //   headers: { Authorization: vuexContext.state.token },
           // }
+        );
+      },
+      getProposedOffers(vuexContext) {
+        return this.$axios.$get(
+          `http://localhost:8081/real-estate/proposed`,
+          // { withCredentials: true },
+          {
+            headers: { Authorization: vuexContext.state.token },
+          }
+        );
+      },
+      banOffer(vuexContext, offer) {
+        const offerParam = { banned: offer.banned, comment: offer.comment };
+        return this.$axios.$patch(
+          `http://localhost:8081/real-estate/${offer.basicInfoId}/change-banned`,
+          offerParam,
+          {
+            headers: { Authorization: vuexContext.state.token },
+          }
         );
       },
     },
