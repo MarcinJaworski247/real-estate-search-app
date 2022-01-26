@@ -1,6 +1,6 @@
 server:
   port: 8081
-#SWAGGER CONFIG http://localhost:8080/documentation/swagger-ui/
+#SWAGGER CONFIG
 documentation:
   host: localhost:8081
 springfox:
@@ -9,7 +9,7 @@ springfox:
       base-url: /documentation
 #FILE SERVICE CONFIG
 files:
-  upload-path: /home/beatinho/Downloads
+  upload-path: D:\real-estate-drive
 
 #DATABASE CONFIG
 spring:
@@ -17,7 +17,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/postgres
     driverClassName: org.postgresql.Driver
     username: postgres
-    password: postgres
+    password: admin
   servlet:
     multipart:
       max-file-size: -1

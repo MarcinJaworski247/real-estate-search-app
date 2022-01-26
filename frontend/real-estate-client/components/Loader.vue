@@ -23,8 +23,8 @@ export default {
   height: 0;
   margin: 8px;
   box-sizing: border-box;
-  border: 32px solid #fff;
-  border-color: #fff transparent #fff transparent;
+  border: 32px solid orange;
+  border-color: orange transparent #fff transparent;
   animation: lds-hourglass 1.2s infinite;
 }
 @keyframes lds-hourglass {

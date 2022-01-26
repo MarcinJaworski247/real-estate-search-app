@@ -53,7 +53,7 @@
     </v-main>
     <v-footer class="mt-5">
       <v-col class="text-center" cols="12">
-        2021 - Real Estate Search App
+        2022 - Real Estate Search App
       </v-col>
     </v-footer>
   </v-app>
