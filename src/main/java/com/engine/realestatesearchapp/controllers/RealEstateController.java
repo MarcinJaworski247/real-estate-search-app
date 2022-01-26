@@ -2,8 +2,7 @@ package com.engine.realestatesearchapp.controllers;
 
 import com.engine.realestatesearchapp.controllers.assemblers.CommonAssembler;
 import com.engine.realestatesearchapp.controllers.assemblers.RealEstateAssembler;
-import com.engine.realestatesearchapp.controllers.requests.RealEstateRequest;
-import com.engine.realestatesearchapp.controllers.requests.UpdateRealEstateRequest;
+import com.engine.realestatesearchapp.controllers.requests.*;
 import com.engine.realestatesearchapp.controllers.resources.FileResource;
 import com.engine.realestatesearchapp.controllers.resources.RealEstateResource;
 import com.engine.realestatesearchapp.repositiories.entities.File;
@@ -23,6 +22,7 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
@@ -59,48 +59,108 @@ public class RealEstateController {
         return paged.toModel(realEstateService.getRealEstatePage(filters, pageable), realEstateAssembler);
     }
 
-    @GetMapping("/{real_estate_id}")
+    @GetMapping("/{basic_info_id}/{real_estate_id}")
     @ApiOperation(value = "Get real estate offer by id")
-    public RealEstateResource getRealEstateById(@PathVariable("real_estate_id") UUID realEstateId) {
-        return assembler.mapToResourceWithFiles(realEstateService.getRealEstateById(realEstateId));
+    public RealEstateResource getRealEstateById(@PathVariable("basic_info_id") UUID basicInfoId,
+            @PathVariable("real_estate_id") UUID realEstateId) {
+        return realEstateService.getRealEstateResourceById(basicInfoId, realEstateId);
     }
 
-    @PatchMapping("/{real_estate_id}")
+    @GetMapping("/proposed")
+    @ApiOperation(value = "Get current user proposed offers")
+    public List<RealEstateResource> getCurrentUserProposedOffers() {
+        return realEstateService.getCurrentUserProposedOffers().stream()
+                .map(assembler::mapToResourceWithAvatar)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/favourites")
+    @ApiOperation(value = "Get current user favourite offers")
+    public List<RealEstateResource> getCurrentUserFavourites() {
+        return realEstateService.getCurrentUserFavourites().stream()
+                .map(assembler::mapToResourceWithAvatar)
+                .collect(Collectors.toList());
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PatchMapping("/{basic_info_id}/{real_estate_id}")
     @ApiOperation(value = "Update real estate offer by id")
-    public RealEstateResource updateRealEstate(@PathVariable("real_estate_id") UUID realEstateId,
+    public RealEstateResource updateRealEstate(@PathVariable("basic_info_id") UUID basicInfoId,
+            @PathVariable("real_estate_id") UUID realEstateId,
             @RequestBody @Valid UpdateRealEstateRequest request) {
-        return assembler.mapToResourceWithFiles(realEstateService.updateRealEstate(realEstateId, request));
+        return assembler.mapToResourceWithFiles(realEstateService.updateRealEstate(basicInfoId, realEstateId, request));
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping("/{real_estate_id}")
+    @DeleteMapping("/{basic_info_id}")
     @ApiOperation(value = "Delete real estate offer by id")
-    public void deleteRealEstate(@PathVariable("real_estate_id") UUID realEstateId) {
+    public void deleteRealEstate(@PathVariable("basic_info_id") UUID realEstateId) {
         realEstateService.deleteRealEstate(realEstateId);
     }
 
-    @PatchMapping("/{real_estate_id}/set-sold")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/{basic_info_id}/change-banned")
+    @ApiOperation(value = "Ban or unban real estate offer")
+    public void banRealEstate(@PathVariable("basic_info_id") UUID realEstateId, @RequestBody @Valid
+        BanRealEstateRequest request) {
+        realEstateService.changeRealEstateBanStatus(realEstateId, request);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PatchMapping("/{basic_info_id}/set-sold")
     @ApiOperation(value = "Mark real estate offer as sold")
-    public void sellRealEstate(@PathVariable("real_estate_id") UUID realEstateId) {
+    public void sellRealEstate(@PathVariable("basic_info_id") UUID realEstateId) {
         realEstateService.setRealEstateAsSold(realEstateId);
     }
 
+    @PreAuthorize("hasRole('USER')")
+    @PatchMapping("/{basic_info_id}/set-favourite")
+    @ApiOperation(value = "Mark real estate offer as user favourite")
+    public void setRealEstateAsFavourite(@PathVariable("basic_info_id") UUID realEstateId) {
+        realEstateService.addRealEstateToCurrentUserFavourites(realEstateId);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PatchMapping("/{basic_info_id}/unset-favourite")
+    @ApiOperation(value = "Unmark real estate offer as user favourite")
+    public void removeRealEstateFromFavourites(@PathVariable("basic_info_id") UUID realEstateId) {
+        realEstateService.removeRealEstateFromCurrentUserFavourites(realEstateId);
+    }
+
+//    @PreAuthorize("hasRole('USER')")
+    @PostMapping("/{basic_info_id}/offer-visits")
+    @ApiOperation(value = "Increment offer visits counter")
+    public RealEstateResource incrementVisitsCounter(@PathVariable("basic_info_id") UUID realEstateId) {
+        return assembler.mapToResourceWithFiles(realEstateService.incrementVisitsCounter(realEstateId));
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping("/{basic_info_id}/phone-views")
+    @ApiOperation(value = "Increment phone views counter of the offer")
+    public RealEstateResource incrementPhoneViewsCounter(@PathVariable("basic_info_id") UUID realEstateId) {
+        return assembler.mapToResourceWithFiles(realEstateService.incrementPhoneViewsCounter(realEstateId));
+    }
+
+    @PreAuthorize("hasRole('USER')")
     @PostMapping
     @ApiOperation(value = "Create real estate offer")
     public RealEstateResource createRealEstate(@RequestBody @Valid RealEstateRequest request) {
         return assembler.mapToResourceWithFiles(realEstateService.createRealEstate(request));
     }
 
-    @PostMapping(value = "/{real_estate_id}/files", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping(value = "/{basic_info_id}/files", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiOperation(value = "Upload file for the offer")
     @ResponseStatus(HttpStatus.CREATED)
-    public List<FileResource> uploadOfferFiles(@PathVariable("real_estate_id") UUID realEstateId,
+    public List<FileResource> uploadOfferFiles(@PathVariable("basic_info_id") UUID realEstateId,
             @RequestPart("file") MultipartFile[] files) {
         return realEstateService.uploadOfferFiles(realEstateId, files).stream()
                 .map(assembler::mapToResource)
                 .collect(Collectors.toList());
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping(value = "/{real_estate_id}/files/{file_id}")
     @ApiOperation(value = "Download file related to the offer")
     public ResponseEntity<StreamingResponseBody> downloadFile(@PathVariable("real_estate_id") UUID realEstateId,
@@ -110,6 +170,7 @@ public class RealEstateController {
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping(value = "/{real_estate_id}/files/{file_id}/img",
             produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_PNG_VALUE,
                     MediaType.APPLICATION_JSON_VALUE})
@@ -121,6 +182,7 @@ public class RealEstateController {
         return new ResponseEntity<>(logoBytes, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @DeleteMapping(value = "/{real_estate_id}/files/{file_id}")
     @ApiOperation(value = "Delete file related to the offer")
     public void deleteApplicationFile(@PathVariable("real_estate_id") UUID realEstateId,

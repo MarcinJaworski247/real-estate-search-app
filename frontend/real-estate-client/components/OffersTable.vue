@@ -7,22 +7,47 @@
       class="elevation-1"
     >
       <template #[`item.price`]="{ item }">
-        {{ item.price.toLocaleString() }}
+        <div style="max-width: 40px; overflow: hidden">
+          {{ item.price.toLocaleString() }}
+        </div>
       </template>
       <template #[`item.sold`]="{ item }">
         <v-icon v-if="!item.sold"> check_box_outline_blank </v-icon>
         <v-icon v-if="item.sold"> check_box </v-icon>
       </template>
       <template #[`item.actions`]="{ item }">
-        <v-btn text icon @click="goToEdit(item)">
-          <v-icon class="ico-details"> keyboard_arrow_right </v-icon>
-        </v-btn>
-        <v-btn text icon @click="markAsSold(item)">
-          <v-icon class="ico-sell"> check_circle </v-icon>
-        </v-btn>
-        <v-btn text icon @click="deleteOffer(item)">
-          <v-icon class="ico-delete"> delete </v-icon>
-        </v-btn>
+        <div style="width: 120px">
+          <v-tooltip top>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn text icon @click="goToEdit(item)">
+                <v-icon class="ico-details" v-bind="attrs" v-on="on">
+                  keyboard_arrow_right
+                </v-icon>
+              </v-btn>
+            </template>
+            <span>Edycja</span>
+          </v-tooltip>
+          <v-tooltip top>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn v-if="!item.sold" text icon @click="markAsSold(item)">
+                <v-icon class="ico-sell" v-bind="attrs" v-on="on">
+                  check_circle
+                </v-icon>
+              </v-btn>
+            </template>
+            <span>Oznacz jako zakończone</span>
+          </v-tooltip>
+          <v-tooltip top>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn text icon @click="deleteOffer(item)">
+                <v-icon class="ico-delete" v-bind="attrs" v-on="on">
+                  delete
+                </v-icon>
+              </v-btn>
+            </template>
+            <span>Usuń ofertę</span>
+          </v-tooltip>
+        </div>
       </template>
     </v-data-table>
     <v-dialog v-model="deleteModalVisible" max-width="500px">
@@ -91,6 +116,13 @@ export default {
           value: "sold",
           align: "center",
         },
+        { text: "Wyświetleń", value: "visitsCounter", align: "center" },
+        { text: "Zbanowana", value: "banned", align: "center" },
+        {
+          text: "Wyświetleń numeru",
+          value: "phoneViewsCounter",
+          align: "center",
+        },
         { text: "Akcje", value: "actions", sortable: false, align: "center" },
       ],
       offersList: this.offers,
@@ -104,7 +136,7 @@ export default {
   },
   methods: {
     deleteOffer(data) {
-      this.idToDelete = data.id;
+      this.idToDelete = data.basicInfoId;
       this.titleToDelete = data.title;
       this.deleteModalVisible = true;
     },
@@ -126,10 +158,10 @@ export default {
       this.deleteModalVisible = false;
     },
     goToEdit(data) {
-      this.$router.push(`/offer/edit/${data.id}`);
+      this.$router.push(`/offer/edit/${data.basicInfoId}/${data.realEstateId}`);
     },
     markAsSold(data) {
-      this.idToSold = data.id;
+      this.idToSold = data.basicInfoId;
       this.titleToSold = data.title;
       this.soldModalVisible = true;
     },

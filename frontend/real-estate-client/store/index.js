@@ -20,9 +20,18 @@ const createStore = () => {
         plotSize: null,
         houseType: null,
         plotType: null,
-        premisePurpose: null,
+        premisesPurpose: null,
         avatar: null,
         files: [],
+        basicInfoId: null,
+        realEstateId: null,
+        rent: null,
+      },
+      token: null,
+      currentUser: {
+        id: null,
+        name: null,
+        role: null,
       },
     },
     mutations: {
@@ -43,9 +52,13 @@ const createStore = () => {
         state.offerForm.floors = null;
         state.offerForm.houseType = null;
         state.offerForm.plotType = null;
-        state.offerForm.premisePurpose = null;
+        state.offerForm.premisesPurpose = null;
         state.offerForm.avatar = null;
         state.offerForm.files = [];
+        state.offerForm.basicInfoId = null;
+        state.offerForm.realEstateId = null;
+        state.offerForm.rent = null;
+        state.offerForm.floorNumber = null;
       },
       SET_OFFER_TO_EDIT(state, response) {
         state.offerForm.id = response.id;
@@ -64,16 +77,64 @@ const createStore = () => {
         state.offerForm.floors = response.floors;
         state.offerForm.houseType = response.houseType;
         state.offerForm.plotType = response.plotType;
-        state.offerForm.premisePurpose = response.premisePurpose;
+        state.offerForm.premisesPurpose = response.premisesPurpose;
         state.offerForm.avatar = response.avatar;
         state.offerForm.files = response.files;
+        state.offerForm.basicInfoId = response.basicInfoId;
+        state.offerForm.realEstateId = response.realEstateId;
+        state.offerForm.rent = response.rent;
+        state.offerForm.floorNumber = response.floorNumber;
       },
       SET_OFFER_PHOTOS(state, response) {
         state.offerForm.files = response;
       },
     },
-    getters: {},
+    getters: {
+      isAuthenticated(state) {
+        return state.token != null;
+      },
+      currentUserRole: (state) => state.currentUser.role,
+    },
     actions: {
+      getAllOffers(vuexContext) {
+        return this.$axios.$get("http://localhost:8081/real-estate", {
+          headers: { Authorization: vuexContext.state.token },
+        });
+      },
+      searchOffers(vuexContext, searchParams) {
+        return this.$axios.$get(
+          "http://localhost:8081/real-estate",
+
+          {
+            params: {
+              category:
+                searchParams.category === "0" || !searchParams.category
+                  ? null
+                  : searchParams.category,
+              offerType:
+                searchParams.offerType === "0" || !searchParams.offerType
+                  ? null
+                  : searchParams.offerType,
+              localizationId:
+                searchParams.localizationId &&
+                searchParams.localizationId !== "0"
+                  ? +searchParams.localizationId
+                  : null,
+              priceFrom:
+                searchParams.priceFrom === "0" || !searchParams.priceFrom
+                  ? null
+                  : +searchParams.priceFrom,
+              priceTo:
+                searchParams.priceTo === "0" || !searchParams.priceTo
+                  ? null
+                  : +searchParams.priceTo,
+            },
+          },
+          {
+            headers: { Authorization: vuexContext.state.token },
+          }
+        );
+      },
       addOffer(vuexContext) {
         vuexContext.state.offerForm.price = +vuexContext.state.offerForm.price;
         vuexContext.state.offerForm.size = +vuexContext.state.offerForm.size;
@@ -88,7 +149,13 @@ const createStore = () => {
           +vuexContext.state.offerForm.localizationId;
         return this.$axios.$post(
           "http://localhost:8081/real-estate",
-          vuexContext.state.offerForm
+          vuexContext.state.offerForm,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: vuexContext.state.token,
+            },
+          }
         );
       },
       getTownsToSelect(vuexContext) {
@@ -117,35 +184,102 @@ const createStore = () => {
       getRoomTypesToSelect(vuexContext) {
         return this.$axios.$get("http://localhost:8081/enums/room-type");
       },
-      login(vuexContext, loginForm) {
-        // TODO
+      async login(vuexContext, loginForm) {
+        await this.$axios
+          .$post("http://localhost:8081/login", loginForm)
+          .then((response) => {
+            vuexContext.state.token = response;
+            localStorage.setItem("token", response);
+            localStorage.setItem(
+              "tokenExpiration",
+              new Date().getTime() + 3600 * 1000
+            );
+            vuexContext.dispatch("getProfileData").then((res) => {
+              vuexContext.state.currentUser.id = res.id;
+              vuexContext.state.currentUser.name =
+                res.firstName + " " + res.lastName;
+              vuexContext.state.currentUser.role = res.roleName;
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      },
+      getProfileData(vuexContext) {
+        return this.$axios.$get("http://localhost:8081/users/current", {
+          headers: { Authorization: vuexContext.state.token },
+        });
       },
       register(vuexContext, registerForm) {
-        // TODO
+        return this.$axios.$post("http://localhost:8081/register", {
+          username: registerForm.mail,
+          password: registerForm.password,
+          firstName: registerForm.firstName,
+          lastName: registerForm.lastName,
+          phoneNumber: registerForm.phoneNumber,
+        });
+      },
+      logOut(vuexContext) {
+        vuexContext.state.token = null;
+        vuexContext.state.currentUser.id = null;
+        vuexContext.state.currentUser.name = null;
+        localStorage.removeItem("token");
+        localStorage.removeItem("tokenExpiration");
       },
       editProfile(vuexContext, profileForm) {
-        // TODO
+        return this.$axios.$patch(
+          "http://localhost:8081/users/current",
+          profileForm,
+          { headers: { Authorization: vuexContext.state.token } }
+        );
       },
       getUserOffers(vuexContext) {
-        return this.$axios.$get("http://localhost:8081/real-estate");
+        return this.$axios.$get(
+          "http://localhost:8081/real-estate",
+          {
+            params: {
+              userId: vuexContext.state.currentUser.id,
+            },
+          },
+          {
+            headers: { Authorization: vuexContext.state.token },
+          }
+        );
       },
-      getOffer(vuexContext, offerId) {
-        return this.$axios.$get(`http://localhost:8081/real-estate/${offerId}`);
+      getOffer(vuexContext, params) {
+        return this.$axios.$get(
+          `http://localhost:8081/real-estate/${params.basicInfoId}/${params.realEstateId}`,
+          {
+            headers: { Authorization: vuexContext.state.token },
+          }
+        );
       },
       deleteOffer(vuexContext, offerId) {
         return this.$axios.$delete(
-          `http://localhost:8081/real-estate/${offerId}`
+          `http://localhost:8081/real-estate/${offerId}`,
+          {
+            headers: { Authorization: vuexContext.state.token },
+          }
         );
       },
       markAsSold(vuexContext, offerId) {
         return this.$axios.$patch(
-          `http://localhost:8081/real-estate/${offerId}/set-sold`
+          `http://localhost:8081/real-estate/${offerId}/set-sold`,
+          { withCredentials: true },
+          {
+            headers: { Authorization: vuexContext.state.token },
+          }
         );
       },
-      getOfferToEdit(vuexContext, offerId) {
+      getOfferToEdit(vuexContext, params) {
         vuexContext.commit("RESET_OFFER_FORM");
         this.$axios
-          .$get(`http://localhost:8081/real-estate/${offerId}`)
+          .$get(
+            `http://localhost:8081/real-estate/${params.basicInfoId}/${params.realEstateId}`,
+            {
+              headers: { Authorization: vuexContext.state.token },
+            }
+          )
           .then((response) => {
             vuexContext.commit("SET_OFFER_TO_EDIT", response);
           });
@@ -163,19 +297,112 @@ const createStore = () => {
         vuexContext.state.offerForm.localizationId =
           +vuexContext.state.offerForm.localizationId;
         return this.$axios.$patch(
-          `http://localhost:8081/real-estate/${vuexContext.state.offerForm.id}`,
-          vuexContext.state.offerForm
+          `http://localhost:8081/real-estate/${vuexContext.state.offerForm.basicInfoId}/${vuexContext.state.offerForm.realEstateId}`,
+          vuexContext.state.offerForm,
+          {
+            headers: { Authorization: vuexContext.state.token },
+          }
         );
       },
       uploadPhotos(vuexContext, params) {
         return this.$axios.$post(
           `http://localhost:8081/real-estate/${params.offerId}/files`,
-          params.photos
+          params.photos,
+          {
+            headers: { Authorization: vuexContext.state.token },
+          }
         );
       },
       removePhoto(vuexContext, params) {
         return this.$axios.$delete(
-          `http://localhost:8081/real-estate/${params.offerId}/files/${params.photoId}`
+          `http://localhost:8081/real-estate/${params.offerId}/files/${params.photoId}`,
+          {
+            headers: { Authorization: vuexContext.state.token },
+          }
+        );
+      },
+      async initAuth(vuexContext) {
+        if (!vuexContext.state.token) {
+          const token = localStorage.getItem("token");
+          const expirationDate = localStorage.getItem("tokenExpiration");
+          if (token && new Date().getTime() < +expirationDate) {
+            vuexContext.state.token = token;
+            await this.$axios
+              .$get("http://localhost:8081/users/current", {
+                headers: { Authorization: vuexContext.state.token },
+              })
+              .then((response) => {
+                vuexContext.state.currentUser.id = response.id;
+                vuexContext.state.currentUser.name = response.username;
+                vuexContext.state.currentUser.role = response.roleName;
+              });
+          } else {
+            vuexContext.dispatch("logOut");
+            // this.$router.push("/login");
+          }
+        }
+      },
+      showPhoneNumber(vuexContext, basicInfoId) {
+        return this.$axios.$post(
+          `http://localhost:8081/real-estate/${basicInfoId}/phone-views `,
+          { withCredentials: true },
+          {
+            headers: { Authorization: vuexContext.state.token },
+          }
+        );
+      },
+      saveToFavourites(vuexContext, basicInfoId) {
+        return this.$axios.$patch(
+          `http://localhost:8081/real-estate/${basicInfoId}/set-favourite`,
+          { withCredentials: true },
+          {
+            headers: { Authorization: vuexContext.state.token },
+          }
+        );
+      },
+      removeFromFavourites(vuexContext, basicInfoId) {
+        return this.$axios.$patch(
+          `http://localhost:8081/real-estate/${basicInfoId}/unset-favourite`,
+          { withCredentials: true },
+          {
+            headers: { Authorization: vuexContext.state.token },
+          }
+        );
+      },
+      getUserFavourites(vuexContext) {
+        return this.$axios.$get(
+          `http://localhost:8081/real-estate/favourites`,
+          {
+            headers: { Authorization: vuexContext.state.token },
+          }
+        );
+      },
+      incrementViews(vuexContext, basicInfoId) {
+        return this.$axios.$post(
+          `http://localhost:8081/real-estate/${basicInfoId}/offer-visits`,
+          { withCredentials: true }
+          // {
+          //   headers: { Authorization: vuexContext.state.token },
+          // }
+        );
+      },
+      getProposedOffers(vuexContext) {
+        return this.$axios.$get(
+          `http://localhost:8081/real-estate/proposed`,
+          // { withCredentials: true },
+          {
+            headers: { Authorization: vuexContext.state.token },
+          }
+        );
+      },
+      banOffer(vuexContext, offer) {
+        const offerParam = { banned: offer.banned, comment: offer.comment };
+        return this.$axios.$patch(
+          `http://localhost:8081/real-estate/${offer.basicInfoId}/change-banned`,
+          offerParam,
+          {
+            headers: { Authorization: vuexContext.state.token },
+          }
         );
       },
     },

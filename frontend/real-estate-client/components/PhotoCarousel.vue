@@ -4,10 +4,6 @@
       v-for="(photo, index) in photos"
       :key="index"
       class="d-flex justify-center"
-      cols="12"
-      lg="4"
-      md="3"
-      sm="2"
       @mouseenter="removeIconVisible = true"
       @mouseleave="removeIconVisible = false"
     >
@@ -50,13 +46,12 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.tile {
-  height: 220px;
-  width: 420px;
-}
+// .tile {
+//   height: 220px;
+//   width: 420px;
+// }
 .photo {
-  width: 100%;
-  height: 100%;
+  width: 280px;
 }
 .trash-ico {
   &:hover {

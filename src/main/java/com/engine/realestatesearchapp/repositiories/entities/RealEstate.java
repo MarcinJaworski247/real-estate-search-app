@@ -1,11 +1,7 @@
 package com.engine.realestatesearchapp.repositiories.entities;
 
-import com.engine.realestatesearchapp.repositiories.enums.FlatType;
-import com.engine.realestatesearchapp.repositiories.enums.HouseType;
 import com.engine.realestatesearchapp.repositiories.enums.OfferType;
-import com.engine.realestatesearchapp.repositiories.enums.PlotType;
-import com.engine.realestatesearchapp.repositiories.enums.PremisesPurpose;
-import com.engine.realestatesearchapp.repositiories.enums.RoomType;
+import com.engine.realestatesearchapp.repositiories.enums.RealEstateCategory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -18,17 +14,20 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -59,44 +58,52 @@ public class RealEstate {
     @org.hibernate.annotations.Type(type = "pg-uuid")
     private UUID id;
 
-    @Column(name = "TITLE", nullable = false, length = 2048)
+    @Column(name = "TITLE", nullable = false)
     private String title;
 
-    @Column(name = "DESCRIPTION", nullable = false, length = 2048)
+    @Column(name = "DESCRIPTION", nullable = false, length = 1024)
     private String description;
+
+    @Column(name = "COMMENT", length = 1024)
+    private String comment;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "CATEGORY", nullable = false)
+    private RealEstateCategory category;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "OFFER_TYPE", nullable = false)
+    private OfferType offerType;
 
     @Column(name = "PRICE", nullable = false)
     private BigDecimal price;
 
-    @Column(name = "RENT")
-    private BigDecimal rent;
-
     @Column(name = "SIZE", nullable = false)
     private BigDecimal size;
 
-    @Column(name = "PLOT_SIZE")
-    private BigDecimal plotSize;
-
     @Column(name = "DELETED")
-    private boolean deleted = false;
+    private boolean deleted;
+
+    @Column(name = "VISITS_COUNTER")
+    private int visitsCounter;
+
+    @Column(name = "PHONE_VIEWS_COUNTER")
+    private int phoneViewsCounter;
 
     @Column(name = "SOLD")
-    private boolean sold = false;
+    private boolean sold;
 
-    @Column(name = "ROOMS")
-    private short roomsNumber;
+    @Column(name = "BANNED")
+    private boolean banned;
 
-    @Column(name = "FLOORS")
-    private short floors;
-
-    @Column(name = "FURNISHED")
-    private Boolean furnished;
+    @Column(name = "REAL_ESTATE_ID")
+    private UUID realEstateId;
 
     @ManyToOne
     private Localization localization;
 
-    @Embedded
-    private RealEstateTypes types;
+    @ManyToOne
+    private User user;
 
     @OneToMany(mappedBy = "realEstateOffer", fetch = FetchType.LAZY)
     private List<File> files;
@@ -109,28 +116,6 @@ public class RealEstate {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    public void setOfferType(String offerType) {
-        this.types.setOfferType(OfferType.valueOfLabel(offerType));
+    public void setOfferType(String s) {
     }
-
-    public void setPlotType(String plotType) {
-        this.types.setPlotType(PlotType.valueOfLabel(plotType));
-    }
-
-    public void setRoomType(String roomType) {
-        this.types.setRoomType(RoomType.valueOfLabel(roomType));
-    }
-
-    public void setHouseType(String houseType) {
-        this.types.setHouseType(HouseType.valueOfLabel(houseType));
-    }
-
-    public void setFlatType(String flatType) {
-        this.types.setFlatType(FlatType.valueOfLabel(flatType));
-    }
-
-    public void setPremisesPurpose(String premisesPurpose) {
-        this.types.setPremisesPurpose(PremisesPurpose.valueOfLabel(premisesPurpose));
-    }
-
 }

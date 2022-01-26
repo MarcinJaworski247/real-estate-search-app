@@ -90,8 +90,8 @@ public class FileService {
         ByteArrayInputStream in = new ByteArrayInputStream(fileData);
         try {
             BufferedImage img = ImageIO.read(in);
-            int height = (int) (img.getHeight()*0.5);
-            int width = (int) (img.getWidth()*0.5);
+            int height = (int) (img.getHeight() * 0.5);
+            int width = (int) (img.getWidth() * 0.5);
             Image scaledImage = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
             BufferedImage imageBuff = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
             imageBuff.getGraphics().drawImage(scaledImage, 0, 0, new Color(0, 0, 0), null);

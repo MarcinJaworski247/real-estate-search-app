@@ -3,9 +3,15 @@ package com.engine.realestatesearchapp.controllers.assemblers;
 import com.engine.realestatesearchapp.controllers.requests.RealEstateRequest;
 import com.engine.realestatesearchapp.controllers.resources.FileResource;
 import com.engine.realestatesearchapp.controllers.resources.RealEstateResource;
+import com.engine.realestatesearchapp.controllers.resources.UserResource;
 import com.engine.realestatesearchapp.repositiories.entities.File;
+import com.engine.realestatesearchapp.repositiories.entities.Flat;
+import com.engine.realestatesearchapp.repositiories.entities.House;
+import com.engine.realestatesearchapp.repositiories.entities.Plot;
+import com.engine.realestatesearchapp.repositiories.entities.Premises;
 import com.engine.realestatesearchapp.repositiories.entities.RealEstate;
-import com.engine.realestatesearchapp.repositiories.entities.RealEstateTypes;
+import com.engine.realestatesearchapp.repositiories.entities.Room;
+import com.engine.realestatesearchapp.repositiories.entities.User;
 import com.engine.realestatesearchapp.repositiories.enums.FlatType;
 import com.engine.realestatesearchapp.repositiories.enums.HouseType;
 import com.engine.realestatesearchapp.repositiories.enums.OfferType;
@@ -13,19 +19,20 @@ import com.engine.realestatesearchapp.repositiories.enums.PlotType;
 import com.engine.realestatesearchapp.repositiories.enums.PremisesPurpose;
 import com.engine.realestatesearchapp.repositiories.enums.RealEstateCategory;
 import com.engine.realestatesearchapp.repositiories.enums.RoomType;
+import com.engine.realestatesearchapp.services.CurrentUserService;
 import com.engine.realestatesearchapp.services.FileService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class CommonAssembler {
 
     private final FileService fileService;
+    private final CurrentUserService currentUserService;
 
     public FileResource mapToResource(File entity) {
         return FileResource.builder()
@@ -50,18 +57,115 @@ public class CommonAssembler {
         return resource;
     }
 
+    public House mapToHouseEntity(RealEstateRequest request) {
+        House house = new House();
+        house.setPlotSize(request.getPlotSize());
+        house.setFurnished(request.isFurnished());
+        house.setType(HouseType.valueOfLabel(request.getHouseType()));
+        house.setRoomsNumber(request.getRoomsNumber());
+        house.setFloorsNumber(request.getRoomsNumber());
+        return house;
+    }
+
+    public Plot mapToPlotEntity(RealEstateRequest request) {
+        Plot plot = new Plot();
+        plot.setType(PlotType.valueOfLabel(request.getPlotType()));
+        return plot;
+    }
+
+    public Premises mapToPremisesEntity(RealEstateRequest request) {
+        Premises premises = new Premises();
+        premises.setPurpose(PremisesPurpose.valueOfLabel(request.getPremisesPurpose()));
+        premises.setFurnished(request.isFurnished());
+        return premises;
+    }
+
+    public Flat mapToFlatEntity(RealEstateRequest request) {
+        Flat flat = new Flat();
+        flat.setRent(request.getRent());
+        flat.setType(FlatType.valueOfLabel(request.getFlatType()));
+        flat.setFurnished(request.isFurnished());
+        flat.setRoomsNumber(request.getRoomsNumber());
+        flat.setLevel(request.getFloors());
+        return flat;
+    }
+
+    public Room mapToRoomEntity(RealEstateRequest request) {
+        Room room = new Room();
+        room.setType(RoomType.valueOfLabel(request.getRoomType()));
+        return room;
+    }
+
     public RealEstate mapToEntity(RealEstateRequest request) {
-        RealEstateTypes types = mapToRealEstateTypes(request);
         RealEstate entity = mapToRealEstateEntity(request);
-        entity.setTypes(types);
         entity.setFiles(new ArrayList<>());
         return entity;
+    }
+
+    public UserResource mapToUserResource(User entity) {
+        return UserResource.builder()
+                .id(entity.getId())
+                .username(entity.getUsername())
+                .firstName(entity.getFirstName())
+                .lastName(entity.getLastName())
+                .phoneNumber(entity.getPhoneNumber())
+                .roleName(entity.getRole().name())
+                .build();
     }
 
     public RealEstateResource mapToResourceWithFiles(RealEstate entity) {
         RealEstateResource resource = mapToResource(entity);
         resource.setFiles(entity.getFiles().isEmpty() ? new ArrayList<>() :
                 entity.getFiles().stream().map(this::mapToOfferFileResource).collect(Collectors.toList()));
+        return resource;
+    }
+
+    public RealEstateResource mapToHouseResource(House house) {
+        RealEstateResource resource = mapToResourceWithFiles(house.getBasicInfo());
+        resource.setCategory(RealEstateCategory.HOUSES.getLabel());
+        resource.setRealEstateId(house.getId());
+        resource.setPlotSize(house.getPlotSize());
+        resource.setFurnished(house.getFurnished());
+        resource.setHouseType(house.getType().getLabel());
+        resource.setRoomsNumber(house.getRoomsNumber());
+        resource.setFloorsNumber(house.getRoomsNumber());
+        return resource;
+    }
+
+    public RealEstateResource mapToPlotResource(Plot plot) {
+        RealEstateResource resource = mapToResourceWithFiles(plot.getBasicInfo());
+        resource.setCategory(RealEstateCategory.PLOTS.getLabel());
+        resource.setRealEstateId(plot.getId());
+        resource.setPlotType(plot.getType().getLabel());
+        return resource;
+    }
+
+    public RealEstateResource mapToPremisesResource(Premises premises) {
+        RealEstateResource resource = mapToResourceWithFiles(premises.getBasicInfo());
+        resource.setCategory(RealEstateCategory.OFFICES_AND_PREMISES.getLabel());
+        resource.setRealEstateId(premises.getId());
+        resource.setPremisesPurpose(premises.getPurpose().getLabel());
+        resource.setFurnished(premises.getFurnished());
+        return resource;
+    }
+
+    public RealEstateResource mapToFlatResource(Flat flat) {
+        RealEstateResource resource = mapToResourceWithFiles(flat.getBasicInfo());
+        resource.setCategory(RealEstateCategory.FLATS.getLabel());
+        resource.setRealEstateId(flat.getId());
+        resource.setRent(flat.getRent());
+        resource.setFlatType(flat.getType().getLabel());
+        resource.setFurnished(flat.isFurnished());
+        resource.setRoomsNumber(flat.getRoomsNumber());
+        resource.setFloorNumber(flat.getLevel());
+        return resource;
+    }
+
+    public RealEstateResource mapToRoomResource(Room room) {
+        RealEstateResource resource = mapToResourceWithFiles(room.getBasicInfo());
+        resource.setCategory(RealEstateCategory.ROOMS.getLabel());
+        resource.setRealEstateId(room.getId());
+        resource.setRoomType(room.getType().getLabel());
         return resource;
     }
 
@@ -73,28 +177,26 @@ public class CommonAssembler {
     }
 
     private RealEstateResource mapToResource(RealEstate entity) {
-        RealEstateTypes types = entity.getTypes();
         return RealEstateResource.builder()
-                .id(entity.getId())
+                .basicInfoId(entity.getId())
+                .realEstateId(entity.getRealEstateId())
                 .title(entity.getTitle())
                 .description(entity.getDescription())
+                .offerType(entity.getOfferType().getLabel())
                 .price(entity.getPrice())
-                .rent(entity.getRent())
                 .size(entity.getSize())
-                .roomsNumber(entity.getRoomsNumber())
-                .floors(entity.getFloors())
-                .furnished(entity.getFurnished())
                 .sold(entity.isSold())
+                .banned(entity.isBanned())
+                .comment(entity.getComment())
+                .visitsCounter(entity.getVisitsCounter())
+                .phoneViewsCounter(entity.getPhoneViewsCounter())
+                .category(entity.getCategory().getLabel())
                 .localization(entity.getLocalization())
-                .category(types.getCategory() != null ? types.getCategory().getLabel() : null)
-                .offerType(types.getOfferType() != null ? types.getOfferType().getLabel() : null)
-                .houseType(types.getHouseType() != null ? types.getHouseType().getLabel() : null)
-                .roomType(types.getRoomType() != null ? types.getRoomType().getLabel() : null)
-                .plotType(types.getPlotType() != null ? types.getPlotType().getLabel() : null)
-                .flatType(types.getFlatType() != null ? types.getFlatType().getLabel() : null)
-                .premisesPurpose(types.getPremisesPurpose() != null ? types.getPremisesPurpose().getLabel() : null)
                 .files(entity.getFiles().isEmpty() ? new ArrayList<>() :
                         Collections.singletonList(this.mapToResource(entity.getFiles().get(0))))
+                .createdAt(entity.getCreatedAt())
+                .updatedAt(entity.getUpdatedAt())
+                .user(mapToUserResource(entity.getUser()))
                 .build();
     }
 
@@ -103,26 +205,12 @@ public class CommonAssembler {
                 .title(request.getTitle())
                 .description(request.getDescription())
                 .price(request.getPrice())
-                .rent(request.getRent())
                 .size(request.getSize())
-                .roomsNumber(request.getRoomsNumber())
-                .plotSize(request.getPlotSize())
-                .floors(request.getFloors())
-                .furnished(request.isFurnished())
+                .category(RealEstateCategory.valueOfLabel(request.getCategory()))
+                .offerType(OfferType.valueOfLabel(request.getOfferType()))
                 .deleted(false)
                 .sold(false)
                 .build();
     }
 
-    private RealEstateTypes mapToRealEstateTypes(RealEstateRequest request) {
-        return RealEstateTypes.builder()
-                .category(RealEstateCategory.valueOfLabel(request.getCategory()))
-                .offerType(OfferType.valueOfLabel(request.getOfferType()))
-                .houseType(HouseType.valueOfLabel(request.getHouseType()))
-                .roomType(RoomType.valueOfLabel(request.getRoomType()))
-                .plotType(PlotType.valueOfLabel(request.getPlotType()))
-                .flatType(FlatType.valueOfLabel(request.getFlatType()))
-                .premisesPurpose(PremisesPurpose.valueOfLabel(request.getPremisesPurpose()))
-                .build();
-    }
 }

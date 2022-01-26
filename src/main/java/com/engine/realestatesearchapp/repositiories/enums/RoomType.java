@@ -1,5 +1,7 @@
 package com.engine.realestatesearchapp.repositiories.enums;
 
+import com.engine.realestatesearchapp.utilities.exceptions.InvalidRequestException;
+
 public enum RoomType {
     ONE_PERSON("Jednoosobowe"),
     TWO_PEOPLE("Dwuosobowe"),
@@ -21,6 +23,6 @@ public enum RoomType {
                 return e;
             }
         }
-        return null;
+        throw new InvalidRequestException(String.format("Invalid label %s - doesn't exist in enum RoomType", label));
     }
 }

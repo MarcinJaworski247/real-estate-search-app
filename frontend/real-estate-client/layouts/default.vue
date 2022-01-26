@@ -6,19 +6,44 @@
           REAL ESTATE
         </v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-btn class="mr-2" @click="addOffer"> Dodaj ogłoszenie </v-btn>
-        <v-btn class="mr-2" @click="goToSavedOffers">
+        <v-btn
+          v-if="isAuthenticated && getCurrentUserRole === `USER`"
+          class="mr-2"
+          @click="addOffer"
+        >
+          Dodaj ogłoszenie
+        </v-btn>
+        <v-btn
+          v-if="isAuthenticated && getCurrentUserRole === `USER`"
+          class="mr-2"
+          @click="goToSavedOffers"
+        >
           <v-icon left> favorite_border </v-icon>
           Obserwowane
         </v-btn>
-        <v-btn class="mr-2" @click="goToMyProfile">
+        <v-btn
+          v-if="isAuthenticated && getCurrentUserRole === `USER`"
+          class="mr-2"
+          @click="goToMyProfile"
+        >
           <v-icon left> person_outline </v-icon>
           Mój profil
         </v-btn>
-        <v-btn @click="goToLogin">
+        <v-btn
+          v-if="isAuthenticated && getCurrentUserRole === `ADMIN`"
+          class="mr-2"
+          @click="goToAdminPanel"
+        >
+          <!-- <v-icon right ml-2 mr-2> admin_panel_settings </v-icon> -->
+          Administracja
+        </v-btn>
+        <v-btn v-if="!isAuthenticated" @click="goToLogin">
           <v-icon left>account_circle</v-icon>
           Zaloguj
         </v-btn>
+        <div v-if="isAuthenticated">
+          <v-btn @click="logOut"> Wyloguj </v-btn>
+        </div>
       </v-app-bar>
     </nav>
     <v-main class="main-container">
@@ -35,6 +60,17 @@
 </template>
 <script>
 export default {
+  computed: {
+    isAuthenticated() {
+      return this.$store.getters.isAuthenticated;
+    },
+    getCurrentUserName() {
+      return this.$store.getters.currentUser;
+    },
+    getCurrentUserRole() {
+      return this.$store.getters.currentUserRole;
+    },
+  },
   methods: {
     goToLogin() {
       this.$router.push("/login");
@@ -50,6 +86,14 @@ export default {
     },
     goToMyProfile() {
       this.$router.push("/profile");
+    },
+    async logOut() {
+      await this.$store.dispatch("logOut");
+      this.$router.push("/login");
+    },
+    goToAdminPanel() {
+      // this.$router.push("/adminPanel");
+      this.$router.push("/adminPanel");
     },
   },
 };

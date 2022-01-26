@@ -1,10 +1,5 @@
 <template>
-  <div
-    class="tile"
-    @click="goToDetails"
-    @mouseenter="actionsVisible = true"
-    @mouseleave="actionsVisible = false"
-  >
+  <div class="tile" @click="goToDetails">
     <img
       v-if="offer.files.length"
       class="avatar"
@@ -32,9 +27,6 @@
         </div>
       </div>
     </div>
-    <div v-if="editable && actionsVisible">
-      <v-icon @click="goToEdit">keyboard_arrow_right</v-icon>
-    </div>
   </div>
 </template>
 <script>
@@ -45,33 +37,20 @@ export default {
       type: Object,
       required: true,
     },
-    editable: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
-  },
-  data() {
-    return {
-      actionsVisible: false,
-    };
   },
   methods: {
     goToDetails() {
-      if (!this.editable) {
-        this.$router.push(`/offer/${this.offer.id}`);
-      }
-    },
-    goToEdit() {
-      this.$router.push(`/offer/edit/${this.offer.id}`);
+      this.$router.push(
+        `/offer/${this.offer.basicInfoId}/${this.offer.realEstateId}`
+      );
     },
   },
 };
 </script>
 <style scoped>
 .tile {
-  width: 380px;
-  height: 220px;
+  width: 290px;
+  height: 240px;
   position: relative;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }

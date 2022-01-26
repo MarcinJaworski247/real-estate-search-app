@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Setter
 @Getter
@@ -17,15 +19,40 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class RealEstateQueryFilters {
 
-/*    @ApiModelProperty(
+    @ApiModelProperty(
             notes = "Real estate category",
             example = "Domy")
-    private RealEstateCategory category;
+    private String category;
+
+    @ApiModelProperty(
+            notes = "Real estate localization",
+            example = "1")
+    private Long localizationId;
+
+    @ApiModelProperty(
+            notes = "User id",
+            example = "84e3ff3d-f6e9-434b-83c3-73e70ee86622")
+    private UUID userId;
 
     @ApiModelProperty(
             notes = "Offer type",
             example = "Wynajem")
-    private OfferType offerType;*/
+    private String offerType;
+
+    @ApiModelProperty(
+            notes = "Whether offer is banned",
+            example = "true")
+    private Boolean banned;
+
+    @ApiModelProperty(
+            notes = "Offer price from",
+            example = "1000")
+    private BigDecimal priceFrom;
+
+    @ApiModelProperty(
+            notes = "Offer price to",
+            example = "1000")
+    private BigDecimal priceTo;
 
     @ApiModelProperty(
             notes = "Timestamp to filter out created date-time earlier than it / ISO8601",

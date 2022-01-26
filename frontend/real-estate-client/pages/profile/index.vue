@@ -19,12 +19,12 @@
         </v-btn>
       </v-col>
     </v-row>
-    <OffersList v-if="layout === `grid`" :offers="offers" editable />
+    <OffersList v-if="layout === `grid`" :offers="offers" />
     <OffersTable v-if="layout === `table`" :offers="offers" />
   </v-container>
 </template>
 <script>
-import OffersList from "@/components/OffersList";
+import OffersList from "@/components/OffersList.vue";
 import ProfileForm from "@/components/Forms/ProfileForm.vue";
 import OffersTable from "@/components/OffersTable.vue";
 
@@ -38,7 +38,7 @@ export default {
   data() {
     return {
       offers: [],
-      layout: "grid",
+      layout: "table",
     };
   },
   mounted() {

@@ -1,5 +1,7 @@
 package com.engine.realestatesearchapp.repositiories.enums;
 
+import com.engine.realestatesearchapp.utilities.exceptions.InvalidRequestException;
+
 public enum Voivodeship {
     DOLNOSLASKIE("dolnośląskie"),
     KUJAWSKO_POMORSKIE("kujawsko-pomorskie"),
@@ -34,6 +36,6 @@ public enum Voivodeship {
                 return e;
             }
         }
-        return null;
+        throw new InvalidRequestException(String.format("Invalid label %s - doesn't exist in enum Voivodeship", label));
     }
 }

@@ -48,9 +48,19 @@
           suffix="zł"
         ></v-text-field>
       </v-col>
-      <v-col class="d-flex justify-center" cols="12" sm="2">
+      <v-col
+        class="d-flex justify-center"
+        cols="12"
+        sm="2"
+        @click="goToSearchResults"
+      >
         <v-btn fab medium>
-          <v-icon>search</v-icon>
+          <v-tooltip top>
+            <template v-slot:activator="{ on, attrs }">
+              <v-icon v-bind="attrs" v-on="on">search</v-icon>
+            </template>
+            <span>Szukaj</span>
+          </v-tooltip>
         </v-btn>
       </v-col>
     </v-row>
@@ -61,11 +71,11 @@ export default {
   name: "SearchPanel",
   data() {
     return {
-      category: "",
-      priceFrom: "",
-      priceTo: "",
-      townId: "",
-      offerType: "",
+      categoryId: null,
+      priceFrom: null,
+      priceTo: null,
+      townId: null,
+      offerType: null,
       categories: [],
       towns: [],
       offerTypes: [],
@@ -81,6 +91,28 @@ export default {
     this.$store.dispatch("getTypesToSelect").then((response) => {
       this.offerTypes = response;
     });
+  },
+  methods: {
+    goToSearchResults() {
+      if (!this.priceFrom) {
+        this.priceFrom = 0;
+      }
+      if (!this.priceTo) {
+        this.priceTo = 0;
+      }
+      if (!this.categoryId) {
+        this.categoryId = 0;
+      }
+      if (!this.townId) {
+        this.townId = 0;
+      }
+      if (!this.offerType) {
+        this.offerType = 0;
+      }
+      this.$router.push(
+        `/searchResults/${this.categoryId}/${this.townId}/${this.offerType}/${this.priceFrom}/${this.priceTo}`
+      );
+    },
   },
 };
 </script>

@@ -14,7 +14,12 @@
     </v-row>
     <v-row>
       <v-col
-        ><v-text-field v-model="mail" required label="Email"></v-text-field
+        ><v-text-field
+          v-model="mail"
+          required
+          label="Email"
+          disabled
+        ></v-text-field
       ></v-col>
       <v-col
         ><v-text-field v-model="mobilePhone" required label="Nr tel.">
@@ -36,13 +41,21 @@ export default {
       mobilePhone: "",
     };
   },
+  mounted() {
+    this.$store.dispatch("getProfileData").then((response) => {
+      this.firstName = response.firstName;
+      this.lastName = response.lastName;
+      this.mail = response.username;
+      this.mobilePhone = response.phoneNumber;
+    });
+  },
   methods: {
     save() {
       this.$store.dispatch("editProfile", {
         firstName: this.firstName,
         lastName: this.lastName,
-        mail: this.mail,
-        mobilePhone: this.mobilePhone,
+        // mail: this.mail,
+        phoneNumber: this.mobilePhone,
       });
     },
   },

@@ -4,10 +4,10 @@
     <v-form ref="form">
       <div class="text-h6 mt-2">Dane ogólne</div>
       <BaseOfferForm />
-      <v-btn class="mb-2" color="success" @click="addPhotos">
+      <v-btn class="mb-2 mb-2" color="success" @click="addPhotos">
         Dodaj zdjęcia
       </v-btn>
-      <v-row v-if="offerForm.files.length" align="baseline">
+      <v-row v-if="offerForm.files.length" align="baseline" class="my-2">
         <PhotoCarousel
           :photos="offerForm.files"
           editable
@@ -37,7 +37,14 @@
           <v-btn color="blue darken-1" text @click="closePhotoModal"
             >Anuluj</v-btn
           >
-          <v-btn color="blue darken-1" text @click="photoModalConfirm"
+          <v-btn
+            v-if="photos"
+            color="blue darken-1"
+            text
+            @click="photoModalConfirm"
+            >Dodaj</v-btn
+          >
+          <v-btn v-if="!photos" disabled color="blue darken-1" text
             >Dodaj</v-btn
           >
         </v-card-actions>
@@ -69,7 +76,10 @@ export default {
     ...mapState(["offerForm"]),
   },
   mounted() {
-    this.$store.dispatch("getOfferToEdit", this.$route.params.offerId);
+    this.$store.dispatch("getOfferToEdit", {
+      basicInfoId: this.$route.params.basicInfoId,
+      realEstateId: this.$route.params.realEstateId,
+    });
   },
   beforeDestroy() {
     this.$store.commit("RESET_OFFER_FORM");
@@ -89,21 +99,25 @@ export default {
       this.photoModalVisible = false;
       this.photos = null;
     },
-    photoModalConfirm() {
+    async photoModalConfirm() {
       this.photoModalVisible = false;
       const formData = new FormData();
 
       for (const item of this.photos) {
         formData.append("file", item);
       }
-      this.$store
+      await this.$store
         .dispatch("uploadPhotos", {
-          offerId: this.$route.params.offerId,
+          offerId: this.$route.params.basicInfoId,
           photos: formData,
         })
         .then(() => {
-          this.$store.dispatch("getOfferToEdit", this.$route.params.offerId);
+          this.$store.dispatch("getOfferToEdit", {
+            basicInfoId: this.$route.params.basicInfoId,
+            realEstateId: this.$route.params.realEstateId,
+          });
         });
+      this.photos = null;
     },
     selectImage(photos) {
       this.photos = photos;

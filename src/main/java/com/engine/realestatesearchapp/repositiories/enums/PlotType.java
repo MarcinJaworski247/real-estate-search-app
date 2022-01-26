@@ -1,5 +1,7 @@
 package com.engine.realestatesearchapp.repositiories.enums;
 
+import com.engine.realestatesearchapp.utilities.exceptions.InvalidRequestException;
+
 public enum PlotType {
     RECREATIONAL("Rekreacyjne"),
     BUILDING("Budowlane"),
@@ -26,7 +28,7 @@ public enum PlotType {
                 return e;
             }
         }
-        return null;
+        throw new InvalidRequestException(String.format("Invalid label %s - doesn't exist in enum PlotType", label));
     }
 
 }

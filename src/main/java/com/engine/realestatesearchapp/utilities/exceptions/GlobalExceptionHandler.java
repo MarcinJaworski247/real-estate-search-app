@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
     }
 
     @ResponseBody
-    @ExceptionHandler({InvalidRequestException.class})
+    @ExceptionHandler({InvalidRequestException.class, Exception.class, AlreadyExistsException.class})
     ResponseEntity<ErrorMessage> handle400(HttpServletRequest req, Exception ex) {
         return sendExceptionMessage(ex, HttpStatus.BAD_REQUEST, req.getRequestURL().toString());
     }
