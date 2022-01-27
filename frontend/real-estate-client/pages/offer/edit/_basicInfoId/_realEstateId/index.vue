@@ -125,11 +125,14 @@ export default {
     removePhoto(id) {
       this.$store
         .dispatch("removePhoto", {
-          offerId: this.$route.params.offerId,
+          offerId: this.$route.params.basicInfoId,
           photoId: id,
         })
         .then(() => {
-          this.$store.dispatch("getOfferToEdit", this.$route.params.offerId);
+          this.$store.dispatch("getOfferToEdit", {
+            basicInfoId: this.$route.params.basicInfoId,
+            realEstateId: this.$route.params.realEstateId,
+          });
         });
     },
   },

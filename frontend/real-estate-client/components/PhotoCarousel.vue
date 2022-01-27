@@ -9,12 +9,12 @@
     >
       <div class="tile">
         <img :src="`data:image/png;base64,${photo.bytes}`" class="mx-4 photo" />
-        <!-- <v-icon
+        <v-icon
             v-if="editable && removeIconVisible"
             class="trash-ico"
             @click="removePhoto(photo.id)"
             >delete</v-icon
-          > -->
+          >
       </div>
     </v-col>
   </v-row>
